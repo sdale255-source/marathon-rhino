@@ -124,40 +124,36 @@ async function saveRunToDB(dateKey, run) {
 }
 
 async function saveRaceToDB(race) {
-  if (!state.user?.id) { console.warn('saveRaceToDB: no user'); return; }
-  try {
-    if (race.id) {
-      await dbUpdate('races', {
-        name: race.name, location: race.location, date: race.date,
-        finish_time: race.time, photos: race.photos || [],
-        race_type: race.raceType || 'marathon',
-        lat: race.lat || null, lng: race.lng || null,
-        updated_at: new Date().toISOString()
-      }, 'id=eq.'+race.id);
-    } else {
-      console.log('Inserting race with user_id:', state.user.id, 'token present:', !!_sbToken);
-      // Geocode the location for map pins
-      if (!race.lat || !race.lng) {
+  if (!state.user?.id) { console.warn('saveRaceToDB: no user'); throw new Error('Not logged in'); }
+  if (race.id) {
+    await dbUpdate('races', {
+      name: race.name, location: race.location, date: race.date,
+      finish_time: race.time, photos: race.photos || [],
+      race_type: race.raceType || 'marathon',
+      lat: race.lat || null, lng: race.lng || null,
+      updated_at: new Date().toISOString()
+    }, 'id=eq.'+race.id);
+  } else {
+    // Geocode the location for map pins. Non-critical — don't let a geocode failure
+    // block the actual race save.
+    if (!race.lat || !race.lng) {
+      try {
         const coords = await geocodeLocation(race.location, race.name);
         if (coords) { race.lat = coords.lat; race.lng = coords.lng; }
-      }
-      const inserted = await dbInsert('races', {
-        user_id: state.user.id, name: race.name, location: race.location || '',
-        date: race.date || '', finish_time: race.time || '',
-        photos: race.photos || [], sort_order: Math.floor(Date.now() / 1000),
-        race_type: race.raceType || 'marathon',
-        lat: race.lat || null, lng: race.lng || null
-      });
-      if (inserted?.id) {
-        race.id = inserted.id;
-        console.log('Race saved, id:', race.id);
-      } else {
-        console.warn('Race insert returned no id:', inserted);
-      }
+      } catch(e) { console.warn('Geocode error (non-fatal):', e); }
     }
-  } catch(e) {
-    console.error('Race save error:', e.message);
-    alert('Race save error: ' + e.message);
+    const inserted = await dbInsert('races', {
+      user_id: state.user.id, name: race.name, location: race.location || '',
+      date: race.date || '', finish_time: race.time || '',
+      photos: race.photos || [], sort_order: Math.floor(Date.now() / 1000),
+      race_type: race.raceType || 'marathon',
+      lat: race.lat || null, lng: race.lng || null
+    });
+    if (inserted?.id) {
+      race.id = inserted.id;
+    } else {
+      throw new Error('Race insert returned no id');
+    }
   }
 }
 
@@ -181,99 +177,3 @@ async function deleteRaceFromDB(raceId) {
     localStorage.removeItem('sb_session');
     console.warn('Session check failed:', e);
     document.getElementById('loadingScreen').style.display = 'none';
-    document.getElementById('authPage').style.display = 'flex';
-  }
-})();
-const COUNTRY_MAP_DEFAULTS={
-  us:{showUSMap:true,showNAMap:false,showSAMap:false,showEUMap:false,showAFMap:false,showASMap:false,showOCMap:false,showGlobe:true},
-  ca:{showUSMap:false,showNAMap:true,showSAMap:false,showEUMap:false,showAFMap:false,showASMap:false,showOCMap:false,showGlobe:true},
-  gb:{showUSMap:false,showNAMap:false,showSAMap:false,showEUMap:true,showAFMap:false,showASMap:false,showOCMap:false,showGlobe:true},
-  eu:{showUSMap:false,showNAMap:false,showSAMap:false,showEUMap:true,showAFMap:false,showASMap:false,showOCMap:false,showGlobe:true},
-  na:{showUSMap:false,showNAMap:true,showSAMap:false,showEUMap:false,showAFMap:false,showASMap:false,showOCMap:false,showGlobe:true},
-  sa:{showUSMap:false,showNAMap:false,showSAMap:true,showEUMap:false,showAFMap:false,showASMap:false,showOCMap:false,showGlobe:true},
-  af:{showUSMap:false,showNAMap:false,showSAMap:false,showEUMap:false,showAFMap:true,showASMap:false,showOCMap:false,showGlobe:true},
-  as:{showUSMap:false,showNAMap:false,showSAMap:false,showEUMap:false,showAFMap:false,showASMap:true,showOCMap:false,showGlobe:true},
-  oc:{showUSMap:false,showNAMap:false,showSAMap:false,showEUMap:false,showAFMap:false,showASMap:false,showOCMap:true,showGlobe:true},
-  other:{showUSMap:false,showNAMap:false,showSAMap:false,showEUMap:false,showAFMap:false,showASMap:false,showOCMap:false,showGlobe:true},
-};
-function applyMapDefaults(c){
-  const d=COUNTRY_MAP_DEFAULTS[c]||COUNTRY_MAP_DEFAULTS['other'];Object.assign(state,d);
-  state.unit=(c==='us')?'mi':'km';
-  ['Globe','USMap','NAMap','SAMap','EUMap','AFMap','ASMap','OCMap'].forEach(k=>{const el=document.getElementById('toggle'+k);if(el)el.checked=state['show'+k];});
-}
-function syncUnitUI(){
-  const u=state.unit;
-  const mi=document.getElementById('unitMi');const km=document.getElementById('unitKm');const lbl=document.getElementById('distanceLabel');
-  if(mi)mi.classList.toggle('active',u==='mi');if(km)km.classList.toggle('active',u==='km');
-  if(lbl)lbl.textContent=u==='mi'?'Miles run':'Kilometers run';
-}
-function syncMapDefaults(){if(state.country&&!state.mapsInitialized){applyMapDefaults(state.country);state.mapsInitialized=true;}}
-
-function enterApp(){
-  // Show splash for 2 seconds
-  var splash = document.getElementById('splash');
-  splash.style.display = 'flex';
-  var vid = document.getElementById('splashVideo');
-  if (vid) {
-    vid.currentTime = 0;
-    vid.playbackRate = 1.5;
-    vid.play().catch(function() {
-      vid.style.display = 'none';
-      var fb = document.getElementById('splashFallback');
-      if (fb) fb.style.display = 'block';
-    });
-    vid.addEventListener('error', function() {
-      vid.style.display = 'none';
-      var fb = document.getElementById('splashFallback');
-      if (fb) fb.style.display = 'block';
-    });
-  }
-  setTimeout(function(){ splash.style.display = 'none'; }, 2000);
-
-  document.getElementById('authPage').style.display='none';
-  document.getElementById('appShell').classList.add('visible');
-  const np=state.user.name.trim().split(' ');
-  const initials=np.length>=2?(np[0][0]+np[np.length-1][0]).toUpperCase():np[0].slice(0,2).toUpperCase();
-  document.getElementById('profileAvatar').textContent=initials;
-  const firstName=state.user.name.trim().split(' ')[0];
-  document.getElementById('topbarWelcome').textContent='Welcome back, '+firstName+'!';
-  document.getElementById('profileName').textContent=state.user.name;
-  document.getElementById('profileEmail').textContent=state.user.email;
-  const mEl=document.getElementById('profileMemberSince');if(mEl)mEl.textContent=state.user.joinDate?'Member since '+state.user.joinDate:'';
-  // Always start on home page
-  showPage('pageHome');
-  renderWeek();renderCalendar();renderHomeMonthly();renderRaceHistory();
-  updateWeeklyTotal();renderStats();renderNews();renderAchievements();updateRaceDisplay();
-  updateGlobe();updateUSMap();updateNAMap();updateSAMap();updateEUMap();updateAFMap();updateASMap();updateOCMap();
-  initUnlockedAchievements();
-}
-
-
-// ===================== PAGES =====================
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  const m={pageHome:'navHome',pageCalendar:'navCalendar',pageCharity:'navCharity',pageSettings:'navSettings',pageNews:'navHome',pageAdvice:'navHome',pageRun:'navHome'};
-  if(m[id])document.getElementById(m[id]).classList.add('active');
-  if(id==='pageCalendar')renderCalendar();
-  if(id==='pageNews')renderNews();
-  if(id==='pageAchievements')renderAchievements();
-  if(id==='pageRun'){
-    const useKm=state.unit==='km';
-    const du=document.getElementById('runDistUnit');
-    const pu=document.getElementById('runPaceUnit');
-    if(du) du.textContent=useKm?'km':'mi';
-    if(pu) pu.textContent=useKm?'/ km':'/ mi';
-    // Show GPS permission explanation on first ever visit to the Run page
-    if(!hasSeenGpsPrompt()) {
-      setTimeout(()=>openModal('gpsPermModal'), 400);
-    }
-  }
-  if(id==='pageSettings') { renderSubSettings(); renderGpsSettings(); }
-}
-
-// ===================== UNIT =====================
-function setUnit(u){state.unit=u;debouncedSaveProfile();syncUnitUI();renderWeek();renderCalendar();renderHomeMonthly();renderRaceHistory();updateWeeklyTotal();renderStats();}
-function displayDist(m){if(state.unit==='km')return(m*1.60934).toFixed(1)+' km';return m.toFixed(1)+' mi';}
-
