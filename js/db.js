@@ -97,6 +97,40 @@ async function sbResetPassword(email) {
 }
 
 // Database helpers - all use _sbToken for authenticated requests
+// Decodes the access token's expiry and refreshes it via the refresh_token if it's
+// expired or about to be. Without this, any request made more than ~1hr after login
+// (or after the page has been open a while) fails with "exp claim timestamp check failed".
+async function ensureFreshToken() {
+  if (!_sbToken) {
+    const saved = localStorage.getItem('sb_session');
+    if (saved) { try { _sbToken = JSON.parse(saved).access_token; } catch(e) {} }
+  }
+  if (!_sbToken) return;
+  let expMs = null;
+  try {
+    const payload = JSON.parse(atob(_sbToken.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+    if (payload.exp) expMs = payload.exp * 1000;
+  } catch(e) { /* couldn't decode — fall through and just try the request as-is */ }
+  if (expMs && expMs - Date.now() > 60000) return; // still valid for more than another minute
+  const saved = localStorage.getItem('sb_session');
+  if (!saved) return;
+  try {
+    const session = JSON.parse(saved);
+    if (!session.refresh_token) return;
+    const res = await fetch(SB_URL + '/auth/v1/token?grant_type=refresh_token', {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: session.refresh_token })
+    });
+    if (!res.ok) return; // couldn't refresh — let the caller's own request fail normally
+    const refreshed = await res.json();
+    if (refreshed?.access_token) {
+      const newSession = { ...refreshed, expires_at: Math.floor(Date.now()/1000) + refreshed.expires_in };
+      localStorage.setItem('sb_session', JSON.stringify(newSession));
+      _sbToken = newSession.access_token;
+    }
+  } catch(e) { console.warn('Token refresh failed:', e); }
+}
 function dbHeaders(extra={}) {
   if (!_sbToken) console.warn('dbHeaders: no _sbToken set!');
   return {
@@ -107,6 +141,7 @@ function dbHeaders(extra={}) {
   };
 }
 async function dbSelect(table, filters='') {
+  await ensureFreshToken();
   const url = SB_URL + '/rest/v1/' + table + (filters ? '?' + filters + '&limit=1000' : '?limit=1000');
   const res = await fetch(url, { headers: dbHeaders() });
   const text = await res.text();
@@ -114,6 +149,7 @@ async function dbSelect(table, filters='') {
   return text ? JSON.parse(text) : [];
 }
 async function dbUpsert(table, body) {
+  await ensureFreshToken();
   const res = await fetch(SB_URL + '/rest/v1/' + table, {
     method: 'POST',
     headers: dbHeaders({ 'Prefer': 'resolution=merge-duplicates,return=representation' }),
@@ -124,6 +160,7 @@ async function dbUpsert(table, body) {
   return text ? JSON.parse(text) : null;
 }
 async function dbInsert(table, body) {
+  await ensureFreshToken();
   console.log('dbInsert', table, 'token:', _sbToken ? 'present ('+_sbToken.slice(0,15)+'...)' : 'MISSING');
   const res = await fetch(SB_URL + '/rest/v1/' + table, {
     method: 'POST',
@@ -137,6 +174,7 @@ async function dbInsert(table, body) {
   return Array.isArray(data) ? data[0] : data;
 }
 async function dbUpdate(table, body, filter) {
+  await ensureFreshToken();
   const res = await fetch(SB_URL + '/rest/v1/' + table + '?' + filter, {
     method: 'PATCH',
     headers: dbHeaders({ 'Prefer': 'return=representation' }),
@@ -147,6 +185,7 @@ async function dbUpdate(table, body, filter) {
   return text ? JSON.parse(text) : null;
 }
 async function dbDelete(table, filter) {
+  await ensureFreshToken();
   const res = await fetch(SB_URL + '/rest/v1/' + table + '?' + filter, {
     method: 'DELETE',
     headers: dbHeaders()
@@ -158,10 +197,7 @@ async function dbDelete(table, filter) {
 // Uploads a File to a private bucket. Returns the storage path (NOT a public URL —
 // private buckets require a signed URL, generated on demand, to actually view the file).
 async function sbUploadFile(bucket, path, file) {
-  if (!_sbToken) {
-    const saved = localStorage.getItem('sb_session');
-    if (saved) { try { _sbToken = JSON.parse(saved).access_token; } catch(e) {} }
-  }
+  await ensureFreshToken();
   const res = await fetch(SB_URL + '/storage/v1/object/' + bucket + '/' + path, {
     method: 'POST',
     headers: {
@@ -180,6 +216,7 @@ async function sbUploadFile(bucket, path, file) {
 // block the user-facing action (e.g. removing a photo from a race).
 async function sbDeleteFile(bucket, path) {
   try {
+    await ensureFreshToken();
     await fetch(SB_URL + '/storage/v1/object/' + bucket + '/' + path, {
       method: 'DELETE',
       headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + (_sbToken || '') }
@@ -197,6 +234,7 @@ async function getSignedPhotoUrl(path) {
   const cached = _signedUrlCache.get(path);
   if (cached && cached.expiresAt > Date.now()) return cached.url;
   try {
+    await ensureFreshToken();
     const res = await fetch(SB_URL + '/storage/v1/object/sign/race-photos/' + path, {
       method: 'POST',
       headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + (_sbToken || ''), 'Content-Type': 'application/json' },
