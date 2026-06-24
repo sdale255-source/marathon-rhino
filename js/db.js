@@ -154,3 +154,71 @@ async function dbDelete(table, filter) {
   if (!res.ok) { const text = await res.text(); throw new Error('dbDelete error ' + res.status + ': ' + text); }
 }
 
+// ===================== STORAGE (private buckets, e.g. race-photos) =====================
+// Uploads a File to a private bucket. Returns the storage path (NOT a public URL —
+// private buckets require a signed URL, generated on demand, to actually view the file).
+async function sbUploadFile(bucket, path, file) {
+  if (!_sbToken) {
+    const saved = localStorage.getItem('sb_session');
+    if (saved) { try { _sbToken = JSON.parse(saved).access_token; } catch(e) {} }
+  }
+  const res = await fetch(SB_URL + '/storage/v1/object/' + bucket + '/' + path, {
+    method: 'POST',
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + (_sbToken || ''),
+      'Content-Type': file.type || 'application/octet-stream',
+      'x-upsert': 'true'
+    },
+    body: file
+  });
+  const text = await res.text();
+  if (!res.ok) throw new Error('Storage upload error ' + res.status + ': ' + text);
+  return path;
+}
+// Best-effort delete of a storage object. Never throws — a failed cleanup shouldn't
+// block the user-facing action (e.g. removing a photo from a race).
+async function sbDeleteFile(bucket, path) {
+  try {
+    await fetch(SB_URL + '/storage/v1/object/' + bucket + '/' + path, {
+      method: 'DELETE',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + (_sbToken || '') }
+    });
+  } catch(e) { console.warn('Storage delete error:', e); }
+}
+// Signed URLs are needed to view files in a PRIVATE bucket. They expire, so we cache
+// each one in memory (per page session) and refresh shortly before it would expire.
+const _signedUrlCache = new Map(); // path -> {url, expiresAt}
+async function getSignedPhotoUrl(path) {
+  if (!path) return '';
+  // Backward compatibility: photos saved before this fix are raw base64 data URLs
+  // (or could be a plain http(s) URL) rather than a storage path — use them as-is.
+  if (path.startsWith('data:') || path.startsWith('http://') || path.startsWith('https://')) return path;
+  const cached = _signedUrlCache.get(path);
+  if (cached && cached.expiresAt > Date.now()) return cached.url;
+  try {
+    const res = await fetch(SB_URL + '/storage/v1/object/sign/race-photos/' + path, {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + (_sbToken || ''), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ expiresIn: 3600 })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.signedURL) throw new Error(data.message || 'Could not load photo');
+    const url = SB_URL + data.signedURL;
+    _signedUrlCache.set(path, { url, expiresAt: Date.now() + 55*60*1000 }); // refresh 5 min early
+    return url;
+  } catch(e) {
+    console.warn('getSignedPhotoUrl error:', path, e.message);
+    return '';
+  }
+}
+// Call after inserting any HTML containing <img data-photo-path="..."> placeholders —
+// fills in the real (signed) src for each one.
+async function hydratePhotoImages(root) {
+  const imgs = (root || document).querySelectorAll('img[data-photo-path]');
+  await Promise.all(Array.from(imgs).map(async img => {
+    const path = img.getAttribute('data-photo-path');
+    const url = await getSignedPhotoUrl(path);
+    if (url) img.src = url;
+  }));
+}
