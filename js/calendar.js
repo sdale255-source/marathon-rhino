@@ -92,12 +92,13 @@ async function saveRaceHistory(){
   const raceType = typeRadio ? typeRadio.value : 'marathon';
   const newRace={name,location,date,time,raceType,photos:[]};
   state.raceHistory.unshift(newRace);
-  // Save to DB
   try {
     await saveRaceToDB(newRace);
-    console.log('Race saved OK, id:', newRace.id);
   } catch(e) {
-    console.error('saveRaceHistory error:', e.message);
+    state.raceHistory.shift(); // roll back — it never actually saved
+    if(saveBtn){saveBtn.textContent='Save race';saveBtn.disabled=false;}
+    alert("Couldn't save this race — check your connection and try again.\n("+e.message+')');
+    return;
   }
   document.getElementById('rhName').value='';document.getElementById('rhLocation').value='';
   document.getElementById('rhDate').value='';document.getElementById('rhTime').value='';
@@ -119,7 +120,7 @@ function renderRaceHistory(){
     if(photoCount>0){
       strip='<div class="photo-strip">';
       for(let i=0;i<Math.min(photoCount,5);i++){
-        strip+=`<div class="photo-thumb" onclick="openLightbox(${idx},${i})" title="View photo"><img src="${photos[i]}" alt="Race photo ${i+1}"></div>`;
+        strip+=`<div class="photo-thumb" onclick="openLightbox(${idx},${i})" title="View photo"><img data-photo-path="${photos[i]}" alt="Race photo ${i+1}"></div>`;
       }
       strip+='</div>';
     }
@@ -150,7 +151,8 @@ function renderRaceHistory(){
   };
   const html=state.raceHistory.length===0?empty:state.raceHistory.map((r,i)=>buildItem(r,i)).join('');
   const e1=document.getElementById('raceHistoryList');const e2=document.getElementById('homeRaceHistoryList');
-  if(e1)e1.innerHTML=html;if(e2)e2.innerHTML=html;
+  if(e1){e1.innerHTML=html;hydratePhotoImages(e1);}
+  if(e2){e2.innerHTML=html;hydratePhotoImages(e2);}
 }
 
 // ===================== RACE PHOTOS =====================
@@ -177,7 +179,7 @@ function renderPhotoModalGrid(){
   for(let i=0;i<5;i++){
     if(i<photos.length){
       html+=`<div class="photo-modal-slot has-photo" style="position:relative;">
-        <img src="${photos[i]}" alt="Race photo ${i+1}" onclick="openLightbox(${state.activePhotoRaceIdx},${i})" style="cursor:zoom-in;">
+        <img data-photo-path="${photos[i]}" alt="Race photo ${i+1}" onclick="openLightbox(${state.activePhotoRaceIdx},${i})" style="cursor:zoom-in;">
       </div>`;
     } else {
       const isMedal=i===0;
@@ -190,6 +192,7 @@ function renderPhotoModalGrid(){
     }
   }
   grid.innerHTML=html;
+  hydratePhotoImages(grid);
 }
 
 function triggerPhotoUpload(){
@@ -199,29 +202,51 @@ function triggerPhotoUpload(){
   input.multiple=true;input.value='';input.click();
 }
 
-function handlePhotoFiles(event){
+async function handlePhotoFiles(event){
   const files=Array.from(event.target.files);if(!files.length)return;
   const race=state.raceHistory[state.activePhotoRaceIdx];
   if(!race.photos)race.photos=[];
+  if(!race.id){
+    alert("This race hasn't finished saving yet — please wait a moment and try again.");
+    event.target.value='';
+    return;
+  }
   const remaining=5-race.photos.length;
   const toProcess=files.slice(0,remaining);
-  let loaded=0;
-  toProcess.forEach(file=>{
-    const reader=new FileReader();
-    reader.onload=e=>{
-      race.photos.push(e.target.result);loaded++;
-      if(loaded===toProcess.length){saveRaceToDB(race);renderPhotoModalGrid();renderRaceHistory();}
-    };
-    reader.readAsDataURL(file);
-  });
+  const uploadBtn=document.getElementById('photoUploadTrigger');
+  if(uploadBtn){uploadBtn.style.opacity='0.4';uploadBtn.style.pointerEvents='none';}
+  for(let i=0;i<toProcess.length;i++){
+    const file=toProcess[i];
+    const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
+    const path=`${state.user.id}/${race.id}/${Date.now()}_${i}.${ext}`;
+    try{
+      await sbUploadFile('race-photos',path,file);
+      race.photos.push(path);
+      await saveRaceToDB(race);
+    }catch(e){
+      console.error('Photo upload error:',e.message);
+      alert("Couldn't upload one of your photos — check your connection and try again.\n("+e.message+')');
+      break; // stop here; don't keep trying the rest of the batch
+    }
+  }
+  event.target.value='';
+  renderPhotoModalGrid();renderRaceHistory();
 }
 
-function deleteRacePhoto(photoIdx){
+async function deleteRacePhoto(photoIdx){
   const race=state.raceHistory[state.activePhotoRaceIdx];
   if(!race||!race.photos)return;
+  const removedPath=race.photos[photoIdx];
   race.photos.splice(photoIdx,1);
-  saveRaceToDB(race);
-  renderPhotoModalGrid();renderRaceHistory();
+  renderPhotoModalGrid();renderRaceHistory(); // optimistic UI update
+  try{
+    await saveRaceToDB(race);
+    if(removedPath && !removedPath.startsWith('data:')) sbDeleteFile('race-photos',removedPath); // best-effort cleanup
+  }catch(e){
+    race.photos.splice(photoIdx,0,removedPath); // roll back — delete never actually saved
+    renderPhotoModalGrid();renderRaceHistory();
+    alert("Couldn't delete that photo — check your connection and try again.");
+  }
 }
 
 let _lbRaceIdx=null, _lbPhotoIdx=null;
@@ -232,12 +257,14 @@ function openLightbox(raceIdx,photoIdx){
   _renderLightbox();
   openModal('photoLightbox');
 }
-function _renderLightbox(){
+async function _renderLightbox(){
   const race=state.raceHistory[_lbRaceIdx];
   if(!race||!race.photos)return;
   const photos=race.photos.filter(Boolean);
   const total=photos.length;
-  document.getElementById('lightboxImg').src=photos[_lbPhotoIdx]||'';
+  const imgEl=document.getElementById('lightboxImg');
+  const path=photos[_lbPhotoIdx];
+  imgEl.src=await getSignedPhotoUrl(path)||'';
   // counter
   document.getElementById('lightboxCounter').textContent=total>1?`${_lbPhotoIdx+1} / ${total}`:'';
   // arrows — hide if only 1 photo
@@ -257,11 +284,19 @@ function lightboxNav(dir){
   _lbPhotoIdx=newIdx;
   _renderLightbox();
 }
-function deleteRacePhotoFromLightbox(){
+async function deleteRacePhotoFromLightbox(){
   const race=state.raceHistory[_lbRaceIdx];
   if(!race||!race.photos)return;
+  const removedPath=race.photos[_lbPhotoIdx];
   race.photos.splice(_lbPhotoIdx,1);
-  saveRaceToDB(race);
+  try{
+    await saveRaceToDB(race);
+    if(removedPath && !removedPath.startsWith('data:')) sbDeleteFile('race-photos',removedPath);
+  }catch(e){
+    race.photos.splice(_lbPhotoIdx,0,removedPath); // roll back
+    alert("Couldn't delete that photo — check your connection and try again.");
+    return;
+  }
   renderRaceHistory();
   const remaining=race.photos.filter(Boolean);
   if(remaining.length===0){closeModal('photoLightbox');renderPhotoModalGrid();return;}
