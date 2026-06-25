@@ -242,7 +242,9 @@ async function getSignedPhotoUrl(path) {
     });
     const data = await res.json();
     if (!res.ok || !data.signedURL) throw new Error(data.message || 'Could not load photo');
-    const url = SB_URL + data.signedURL;
+    let suffix = data.signedURL;
+    if (!suffix.startsWith('/storage/v1')) suffix = '/storage/v1' + suffix; // Supabase sometimes omits this prefix
+    const url = SB_URL + suffix;
     _signedUrlCache.set(path, { url, expiresAt: Date.now() + 55*60*1000 }); // refresh 5 min early
     return url;
   } catch(e) {
