@@ -13,6 +13,11 @@ let runState = {
 
 const MARATHON_METERS = 42195;
 
+// Max GPS accuracy (in metres) we'll trust for COUNTING distance.
+// iPhone Safari frequently reports 40-65 m indoors and for the first
+// several seconds of a run, so keep this generous or distance never moves.
+const GPS_ACCURACY_LIMIT = 50;
+
 function haversineMeters(lat1, lon1, lat2, lon2) {
   const R = 6371000;
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -163,20 +168,42 @@ function startGPS() {
 
   runState.watchId = navigator.geolocation.watchPosition(
     (pos) => {
-      setGpsStatus('dot-green', 'GPS locked ✓');
-      if (runState.status !== 'running') return;
-      const { latitude: lat, longitude: lng } = pos.coords;
-      // Only count positions with reasonable accuracy (< 30 m)
-      if (pos.coords.accuracy && pos.coords.accuracy > 30) return;
-      if (runState.lastPos) {
-        const d = haversineMeters(runState.lastPos.lat, runState.lastPos.lng, lat, lng);
-        const dt = (pos.timestamp - runState.lastPos.ts) / 1000;
-        // Filter GPS noise: ignore jumps > 50 m in < 3 s
-        if (d < 50 || dt > 3) {
-          runState.totalDistMeters += d;
-        }
+      const { latitude: lat, longitude: lng, accuracy } = pos.coords;
+      const acc = accuracy || 0;
+
+      // Show the real accuracy so it's obvious what the GPS is doing.
+      const accTxt = acc ? ` (±${Math.round(acc)}m)` : '';
+      if (acc && acc > GPS_ACCURACY_LIMIT) {
+        setGpsStatus('dot-amber', `GPS warming up…${accTxt}`);
+      } else {
+        setGpsStatus('dot-green', `GPS locked ✓${accTxt}`);
       }
-      runState.lastPos = { lat, lng, ts: pos.timestamp };
+
+      if (runState.status !== 'running') return;
+
+      // Always seed / update lastPos, even for weak fixes, so that once
+      // accuracy improves we already have a reference point to measure from.
+      if (!runState.lastPos) {
+        runState.lastPos = { lat, lng, ts: pos.timestamp, acc };
+        return;
+      }
+
+      // Only ACCUMULATE distance from reasonably accurate fixes.
+      if (acc && acc > GPS_ACCURACY_LIMIT) {
+        runState.lastPos = { lat, lng, ts: pos.timestamp, acc };
+        return;
+      }
+
+      const d = haversineMeters(runState.lastPos.lat, runState.lastPos.lng, lat, lng);
+      const dt = (pos.timestamp - runState.lastPos.ts) / 1000;
+
+      // Ignore sub-2 m GPS jitter while essentially stationary, and reject
+      // impossible teleports (> 50 m in under 3 s).
+      if (d >= 2 && (d < 50 || dt > 3)) {
+        runState.totalDistMeters += d;
+      }
+
+      runState.lastPos = { lat, lng, ts: pos.timestamp, acc };
     },
     (err) => {
       if (err.code === 1) {
@@ -454,4 +481,3 @@ function showAchievementPopup(list, idx) {
   };
   openModal('achievementModal');
 }
-
