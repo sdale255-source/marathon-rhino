@@ -206,39 +206,17 @@ function syncUnitUI(){
 function syncMapDefaults(){if(state.country&&!state.mapsInitialized){applyMapDefaults(state.country);state.mapsInitialized=true;}}
 
 function enterApp(){
-  // Splash plays for up to 2 seconds (video gets cut off early if it's still
-  // running) — or dismisses sooner if there's no video, or if the video
-  // somehow finishes before that. The video is longer than 2s by design,
-  // so the cap is what actually controls timing here.
+  // Splash: show the animated rhino (transparent APNG) briefly, then dismiss.
+  // APNG is an image, so there's no 'ended' event — we cap the display time.
   var splash = document.getElementById('splash');
   splash.style.display = 'flex';
-  var vid = document.getElementById('splashVideo');
   var splashDismissed = false;
   function dismissSplash(){
     if (splashDismissed) return;
     splashDismissed = true;
     splash.style.display = 'none';
   }
-  if (vid) {
-    vid.currentTime = 0;
-    vid.playbackRate = 1.5;
-    vid.addEventListener('ended', dismissSplash);
-    vid.play().catch(function() {
-      vid.style.display = 'none';
-      var fb = document.getElementById('splashFallback');
-      if (fb) fb.style.display = 'block';
-      setTimeout(dismissSplash, 700); // brief branded pause, nothing to wait for
-    });
-    vid.addEventListener('error', function() {
-      vid.style.display = 'none';
-      var fb = document.getElementById('splashFallback');
-      if (fb) fb.style.display = 'block';
-      setTimeout(dismissSplash, 700);
-    });
-    setTimeout(dismissSplash, 2000); // cap the splash duration — video is longer than this, so it gets cut off here rather than making users wait for the whole thing
-  } else {
-    setTimeout(dismissSplash, 700);
-  }
+  setTimeout(dismissSplash, 2000); // how long the splash stays up, in ms
 
   document.getElementById('authPage').style.display='none';
   document.getElementById('appShell').classList.add('visible');
