@@ -46,6 +46,9 @@ async function doLogin() {
   const btn = document.getElementById('loginBtn');
   errEl.style.display = 'none';
   if (!email || !password) { errEl.textContent = 'Please enter your email and password.'; errEl.style.display = 'block'; return; }
+  // Release the login field's focus/undo-manager state now that we've read
+  // its value — avoids the iOS "Undo Typing" popup surfacing later in the app.
+  blurActiveInput();
   btn.textContent = 'Signing in...'; btn.disabled = true;
   try {
     const session = await sbSignIn(email, password);
@@ -79,6 +82,8 @@ async function doSignup() {
   if (!password){err.textContent='Please create a password.';err.style.display='block';return;}
   if (password!==confirm){err.textContent='Passwords do not match.';err.style.display='block';return;}
   if (password.length<6){err.textContent='Password must be at least 6 characters.';err.style.display='block';return;}
+  // Same fix as doLogin() — see blurActiveInput() in globals.js.
+  blurActiveInput();
   if (btn){btn.textContent='Creating account...';btn.disabled=true;}
   try {
     const name = lastName ? firstName+' '+lastName : firstName;
@@ -131,4 +136,3 @@ async function doLogout() {
   document.getElementById('authPage').style.display='flex';
   document.getElementById('appShell').classList.remove('visible');
 }
-
