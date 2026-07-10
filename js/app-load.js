@@ -239,6 +239,9 @@ function enterApp(){
 
 // ===================== PAGES =====================
 function showPage(id){
+  // See blurActiveInput() in globals.js — prevents the iOS "Undo Typing" bug
+  // by releasing any lingering focus/undo-manager state before navigating.
+  blurActiveInput();
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
