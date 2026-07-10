@@ -320,6 +320,10 @@ function handleRunBtn() {
 
   if (runState.status === 'idle') {
     // START — request GPS permission first if needed
+    // Belt-and-suspenders fix for the iOS "Undo Typing" popup: make sure no
+    // input is focused before we start the once-a-second display updates.
+    // See blurActiveInput() in globals.js for the full explanation.
+    blurActiveInput();
     runState.status = 'running';
     runState.startTime = Date.now();
     runState.pausedMs = 0;
