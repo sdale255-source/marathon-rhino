@@ -13,11 +13,18 @@ function renderCalendar(){
     const card=document.getElementById('calCard'+idx);card.style.border=isCurr?'2px solid #E8720C':'none';
     document.getElementById('calDow'+idx).innerHTML=dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
     const fl=new Date(yr,mo,1);const ll=new Date(yr,mo+1,0);const sd=(fl.getDay()+6)%7;
-    let cells='';
+    let cells='';let monthMiles=0;
     for(let i=0;i<sd;i++)cells+=calCell(new Date(yr,mo,1-(sd-i)),true);
-    for(let i=1;i<=ll.getDate();i++)cells+=calCell(new Date(yr,mo,i),false);
+    for(let i=1;i<=ll.getDate();i++){
+      const d=new Date(yr,mo,i);
+      cells+=calCell(d,false);
+      const run=state.runs[dateKey(d)];
+      if(run&&run.type==='run'&&run.miles>0)monthMiles+=run.miles;
+    }
     const rem=7-((sd+ll.getDate())%7);if(rem<7)for(let i=1;i<=rem;i++)cells+=calCell(new Date(yr,mo+1,i),true);
     document.getElementById('calGrid'+idx).innerHTML=cells;
+    const milesEl=document.getElementById('calMiles'+idx);
+    if(milesEl)milesEl.textContent=monthMiles>0?displayDist(monthMiles):'';
   });
 }
 function calCell(d,otherMonth){
