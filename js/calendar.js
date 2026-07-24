@@ -115,6 +115,9 @@ async function saveRaceHistory(){
 }
 
 function renderRaceHistory(){
+  // Show races in chronological order, most recent first; undated races sink to the bottom.
+  // Sorting the array in place keeps every index reference (photos, edit, delete) consistent.
+  state.raceHistory.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   const mN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const el=document.getElementById('homeRaceHistoryList');
   if(el) el.style.maxHeight = state.raceHistory.length > 3 ? '320px' : 'none';
