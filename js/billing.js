@@ -94,6 +94,23 @@ function wireBillingButtons() {
   } catch (e) {}
 })();
 
+// ---- Access gate ------------------------------------------------------------
+// No app access without an active/trialing subscription. If someone is logged
+// in but hasn't completed Stripe checkout (e.g. they hit "back" on the payment
+// page), send them straight back to Stripe. Admins always get in; a user who
+// just paid is let in while the webhook catches up.
+// Returns true if it redirected away (caller should stop rendering the app).
+async function enforceAccessGate(justPaid) {
+  if (!state || !state.user) return false;              // not logged in yet
+  if (typeof isAdmin === 'function' && isAdmin()) return false;
+  if (justPaid) return false;
+  await loadSubscription();
+  if (state.isSubscribed) return false;
+  const tier = (state.user && state.user.subscriptionTier) || 'standard';
+  await startCheckout(tier);                            // redirect back to Stripe
+  return true;
+}
+
 // After login + data load: pull real status, wire buttons, handle Stripe returns.
 (function () {
   const _laea = window.loadAndEnterApp;
@@ -101,11 +118,10 @@ function wireBillingButtons() {
     window.loadAndEnterApp = async function () {
       const r = await _laea.apply(this, arguments);
       try {
-        await loadSubscription();
         wireBillingButtons();
-        const params = new URLSearchParams(location.search);
-        const returningFromCheckout = params.get('checkout') === 'success';
-        if (returningFromCheckout) {
+        const success = new URLSearchParams(location.search).get('checkout') === 'success';
+        await loadSubscription();
+        if (success) {
           // The webhook may land a moment after the redirect — poll briefly.
           for (let i = 0; i < 6 && !state.isSubscribed; i++) {
             await new Promise(res => setTimeout(res, 1500));
@@ -113,23 +129,20 @@ function wireBillingButtons() {
           }
           history.replaceState({}, '', location.pathname);
         }
-
-        // ---- Access gate -----------------------------------------------------
-        // No app access without an active/trialing subscription. If someone is
-        // logged in but hasn't completed Stripe checkout (e.g. they hit "back"
-        // on the payment page), send them straight back to Stripe.
-        // Admins always get in; a user just back from checkout is allowed in
-        // case the webhook is still catching up.
-        const admin = typeof isAdmin === 'function' && isAdmin();
-        if (!state.isSubscribed && !admin && !returningFromCheckout) {
-          const tier = (state.user && state.user.subscriptionTier) || 'standard';
-          await startCheckout(tier); // redirects to Stripe; the app is not shown
-          return r;
-        }
-
+        if (await enforceAccessGate(success)) return r;  // redirected to Stripe
         if (typeof renderSubSettings === 'function') renderSubSettings();
       } catch (e) { console.warn('billing post-load', e); }
       return r;
     };
   }
 })();
+
+// Also enforce the gate when the page is restored from the browser's
+// back-forward cache (i.e. the user hit "back" from Stripe). In that case no
+// scripts re-run and loadAndEnterApp is NOT called again, so pageshow is our
+// only hook. It fires on the normal first load too, but there state.user isn't
+// set yet, so the gate simply no-ops and the wrapper above handles it.
+window.addEventListener('pageshow', function () {
+  const success = new URLSearchParams(location.search).get('checkout') === 'success';
+  enforceAccessGate(success);
+});
