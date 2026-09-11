@@ -104,14 +104,29 @@ function wireBillingButtons() {
         await loadSubscription();
         wireBillingButtons();
         const params = new URLSearchParams(location.search);
-        if (params.get('checkout') === 'success') {
+        const returningFromCheckout = params.get('checkout') === 'success';
+        if (returningFromCheckout) {
           // The webhook may land a moment after the redirect — poll briefly.
-          for (let i = 0; i < 5 && !state.isSubscribed; i++) {
+          for (let i = 0; i < 6 && !state.isSubscribed; i++) {
             await new Promise(res => setTimeout(res, 1500));
             await loadSubscription();
           }
           history.replaceState({}, '', location.pathname);
         }
+
+        // ---- Access gate -----------------------------------------------------
+        // No app access without an active/trialing subscription. If someone is
+        // logged in but hasn't completed Stripe checkout (e.g. they hit "back"
+        // on the payment page), send them straight back to Stripe.
+        // Admins always get in; a user just back from checkout is allowed in
+        // case the webhook is still catching up.
+        const admin = typeof isAdmin === 'function' && isAdmin();
+        if (!state.isSubscribed && !admin && !returningFromCheckout) {
+          const tier = (state.user && state.user.subscriptionTier) || 'standard';
+          await startCheckout(tier); // redirects to Stripe; the app is not shown
+          return r;
+        }
+
         if (typeof renderSubSettings === 'function') renderSubSettings();
       } catch (e) { console.warn('billing post-load', e); }
       return r;
