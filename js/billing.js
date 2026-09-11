@@ -82,6 +82,18 @@ function wireBillingButtons() {
   }
 }
 
+// Signup: hide the old fake card fields — Stripe now collects the card securely
+// on its own page right after the account is created.
+(function hideSignupCardForm() {
+  try {
+    const name = document.getElementById('signupCardName');
+    if (name) {
+      const box = name.closest('div[style*="border-radius:12px"]');
+      if (box) box.style.display = 'none';
+    }
+  } catch (e) {}
+})();
+
 // After login + data load: pull real status, wire buttons, handle Stripe returns.
 (function () {
   const _laea = window.loadAndEnterApp;
