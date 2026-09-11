@@ -107,7 +107,15 @@ async function doSignup() {
       subscription_tier: plan, trial_end: trialEnd, payment_last4: paymentLast4
     });
     state.country = country; state.mapsInitialized = false;
-    await loadAndEnterApp(session.user);
+           // Send the new user to Stripe to put a card on file (30-day free trial).
+       try {
+         const { url } = await callFn('create-checkout-session', { tier: plan });
+         window.location.href = url;
+         return;
+       } catch (e) {
+         console.warn('Signup checkout redirect failed, entering app:', e);
+       }
+       await loadAndEnterApp(session.user);
   } catch(e) {
     err.textContent = e.message || 'Signup failed. Please try again.';
     err.style.display='block';
