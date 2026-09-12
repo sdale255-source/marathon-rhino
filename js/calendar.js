@@ -39,7 +39,7 @@ function calCell(d,otherMonth){
 function renderHomeMonthly(){
   const now=new Date();const yr=now.getFullYear();const mo=now.getMonth();
   const mN=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('homeMonthlabel').textContent=mN[mo]+' at a glance';
+  document.getElementById('homeMonthlabel').textContent=mN[mo]+' training';
   const fl=new Date(yr,mo,1);const ll=new Date(yr,mo+1,0);let tm=0,rd=0,rsd=0;
   for(let i=1;i<=ll.getDate();i++){const key=dateKey(new Date(yr,mo,i));const run=state.runs[key];if(run&&run.type==='run'&&run.miles>0){tm+=run.miles;rd++;}else if(run&&run.type==='rest'){rsd++;}}
   const ds=state.unit==='km'?(tm*1.60934).toFixed(1)+'<span style="font-size:13px;font-weight:700;margin-left:2px;">km</span>':tm.toFixed(1)+'<span style="font-size:13px;font-weight:700;margin-left:2px;">mi</span>';
