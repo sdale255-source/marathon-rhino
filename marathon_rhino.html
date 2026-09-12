@@ -310,6 +310,24 @@
   </div>
 </div>
 
+<!-- RESET PASSWORD (opened from the email reset link) -->
+<div class="auth-wrap" id="resetPasswordPage" style="display:none;">
+  <div class="auth-logo" style="flex-direction:column;align-items:center;gap:6px;margin-bottom:1.5rem;">
+    <img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Logo.png" alt="Marathon Rhino" style="width:130px;height:130px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));">
+    <span style="font-size:28px;font-weight:800;">Marathon Rhino</span>
+  </div>
+  <div class="auth-card">
+    <div style="font-size:20px;font-weight:800;color:var(--navy-deeper);text-align:center;margin-bottom:6px;">Set a new password</div>
+    <div style="font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:1.25rem;">Choose a new password for your Marathon Rhino account.</div>
+    <div class="auth-form">
+      <input type="password" placeholder="New password (at least 6 characters)" id="rpNew" autocomplete="new-password">
+      <input type="password" placeholder="Confirm new password" id="rpConfirm" autocomplete="new-password">
+      <div id="rpMessage" style="font-size:13px;font-weight:600;display:none;text-align:center;"></div>
+      <button class="btn-primary" id="rpSubmitBtn" onclick="submitResetPassword()">Update password</button>
+    </div>
+  </div>
+</div>
+
 <!-- APP -->
 <div class="app" id="appShell">
   <div class="topbar">
