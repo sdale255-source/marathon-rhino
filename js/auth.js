@@ -128,7 +128,7 @@ async function doForgotPassword() {
   const email = document.getElementById('loginEmail').value.trim();
   if (!email) { alert('Please enter your email address first.'); return; }
   try {
-    await sbResetPassword(email);
+    await sbResetPassword(email, window.location.origin);
     alert('Password reset email sent! Check your inbox.');
   } catch(e) { alert('Error: ' + e.message); }
 }
