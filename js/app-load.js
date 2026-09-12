@@ -162,9 +162,87 @@ async function deleteRaceFromDB(raceId) {
   try { await dbDelete('races', 'id=eq.'+raceId); } catch(e) { console.warn('Race delete error:', e); }
 }
 
+// ===================== PASSWORD RESET (from email link) =====================
+// When a user clicks the reset link in their email, Supabase verifies the link
+// and redirects back here with the recovery tokens in the URL hash, e.g.
+//   #access_token=...&type=recovery&refresh_token=...
+// We detect that, show the "Set a new password" screen, and use the recovery
+// token to update the password.
+var _recoveryToken = null;
+function parseHashParams(){
+  var h = (window.location.hash || '').replace(/^#/, '');
+  var out = {};
+  h.split('&').forEach(function(kv){
+    if(!kv) return;
+    var i = kv.indexOf('=');
+    var k = i >= 0 ? kv.slice(0, i) : kv;
+    var v = i >= 0 ? kv.slice(i+1) : '';
+    try { out[decodeURIComponent(k)] = decodeURIComponent(v.replace(/\+/g,' ')); }
+    catch(e) { out[k] = v; }
+  });
+  return out;
+}
+function showResetScreen(){
+  var ls = document.getElementById('loadingScreen'); if(ls) ls.style.display = 'none';
+  var ap = document.getElementById('authPage'); if(ap) ap.style.display = 'none';
+  var rp = document.getElementById('resetPasswordPage'); if(rp) rp.style.display = 'flex';
+}
+function _rpShowMessage(text, ok){
+  var msg = document.getElementById('rpMessage'); if(!msg) return;
+  msg.textContent = text;
+  msg.style.color = ok ? '#2d7a2d' : '#e24b4a';
+  msg.style.display = 'block';
+}
+// Returns true if a password-recovery link was detected (and handled).
+function handleRecoveryFlow(){
+  var p = parseHashParams();
+  // Expired / invalid link — Supabase redirects with error params
+  if((p.error || p.error_description) && (p.type === 'recovery' || /recover|expired|otp/i.test((p.error_description||'') + (p.error_code||'')))){
+    showResetScreen();
+    _rpShowMessage((p.error_description || 'This reset link is invalid or has expired.') + ' Please request a new password reset from the login screen.', false);
+    var sb = document.getElementById('rpSubmitBtn'); if(sb) sb.style.display = 'none';
+    try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch(e){}
+    return true;
+  }
+  if(p.type === 'recovery' && p.access_token){
+    _recoveryToken = p.access_token;
+    showResetScreen();
+    // Strip the tokens from the URL so they aren't left sitting in history
+    try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch(e){}
+    return true;
+  }
+  return false;
+}
+async function submitResetPassword(){
+  var nw = (document.getElementById('rpNew').value || '');
+  var cf = (document.getElementById('rpConfirm').value || '');
+  if(!nw || !cf){ _rpShowMessage('Please fill in both fields.', false); return; }
+  if(nw.length < 6){ _rpShowMessage('Password must be at least 6 characters.', false); return; }
+  if(nw !== cf){ _rpShowMessage('Passwords do not match.', false); return; }
+  if(!_recoveryToken){ _rpShowMessage('Your reset link is missing or has expired. Please request a new one from the login screen.', false); return; }
+  var btn = document.getElementById('rpSubmitBtn');
+  if(btn){ btn.disabled = true; btn.textContent = 'Updating…'; }
+  try {
+    await sbFetch('/auth/v1/user', 'PUT', { password: nw }, _recoveryToken);
+    _recoveryToken = null;
+    _rpShowMessage('Password updated! You can now log in with your new password.', true);
+    setTimeout(function(){
+      var rp = document.getElementById('resetPasswordPage'); if(rp) rp.style.display = 'none';
+      var ap = document.getElementById('authPage'); if(ap) ap.style.display = 'flex';
+      if(typeof switchAuth === 'function') switchAuth('login');
+    }, 1800);
+  } catch(err){
+    _rpShowMessage((err && err.message) ? err.message : 'Could not update password. Your link may have expired — please request a new reset.', false);
+    if(btn){ btn.disabled = false; btn.textContent = 'Update password'; }
+  }
+}
+
 // Auto-login via saved session
 (async function checkSession() {
   try {
+    // If the user arrived from a password-reset email link, show the reset
+    // screen and stop here (don't auto-login into the app).
+    if (handleRecoveryFlow()) return;
     const session = await sbGetSession();
     if (session?.user) {
       document.getElementById('loadingScreen').style.display = 'none';
