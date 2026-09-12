@@ -262,10 +262,26 @@ function showPage(id){
     }
   }
   if(id==='pageSettings') { renderSubSettings(); renderGpsSettings(); }
-  // Always open each page scrolled to the top (each .page is its own scroll container)
-  const _pg=document.getElementById(id);
-  if(_pg) _pg.scrollTop=0;
-  window.scrollTo(0,0);
+  // Always open each page scrolled to the top, whichever element is the scroller.
+  // Run now, after the next paint, and once more shortly after (covers async
+  // content like maps/images that can shift layout and move the scroll position).
+  scrollPageToTop(id);
+  requestAnimationFrame(function(){ scrollPageToTop(id); });
+  setTimeout(function(){ scrollPageToTop(id); }, 60);
+}
+function scrollPageToTop(id){
+  try{
+    var pg = id && document.getElementById(id);
+    if(pg) pg.scrollTop = 0;
+    var app = document.getElementById('appShell');
+    if(app) app.scrollTop = 0;
+    var ac = document.querySelector('.app-container');
+    if(ac) ac.scrollTop = 0;
+    if(document.scrollingElement) document.scrollingElement.scrollTop = 0;
+    if(document.documentElement) document.documentElement.scrollTop = 0;
+    if(document.body) document.body.scrollTop = 0;
+    window.scrollTo(0, 0);
+  }catch(e){}
 }
 
 // ===================== UNIT =====================
