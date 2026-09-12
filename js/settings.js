@@ -239,6 +239,64 @@ function openModal(id){const el=document.getElementById(id);if(el)el.classList.a
 function closeModal(id){const el=document.getElementById(id);if(el)el.classList.remove('open');}
 document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});});
 
+// ===================== CHANGE PASSWORD =====================
+function openChangePasswordModal(){
+  ['cpCurrent','cpNew','cpConfirm'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  _cpShowMessage('', true, true);
+  var btn=document.getElementById('cpSubmitBtn');
+  if(btn){btn.disabled=false;btn.textContent='Update password';}
+  openModal('changePasswordModal');
+}
+function _cpShowMessage(text, ok, hide){
+  var msg=document.getElementById('cpMessage');
+  if(!msg) return;
+  if(hide){ msg.style.display='none'; msg.textContent=''; return; }
+  msg.textContent=text;
+  msg.style.color = ok ? '#2d7a2d' : '#e24b4a';
+  msg.style.display='block';
+}
+async function submitChangePassword(){
+  var cur=(document.getElementById('cpCurrent').value||'');
+  var nw=(document.getElementById('cpNew').value||'');
+  var cf=(document.getElementById('cpConfirm').value||'');
+  if(!cur || !nw || !cf){ _cpShowMessage('Please fill in all three fields.', false); return; }
+  if(nw.length < 6){ _cpShowMessage('New password must be at least 6 characters.', false); return; }
+  if(nw !== cf){ _cpShowMessage('New passwords do not match.', false); return; }
+  if(nw === cur){ _cpShowMessage('New password must be different from your current password.', false); return; }
+  var email = state.user && state.user.email;
+  if(!email){ _cpShowMessage('Could not verify your account. Please log out and back in.', false); return; }
+  var btn=document.getElementById('cpSubmitBtn');
+  if(btn){ btn.disabled=true; btn.textContent='Updating…'; }
+  _cpShowMessage('Updating…', true);
+  try{
+    // 1) Verify the current password by re-authenticating
+    var session;
+    try{
+      session = await sbSignIn(email, cur);
+    }catch(e){
+      _cpShowMessage('Current password is incorrect.', false);
+      if(btn){ btn.disabled=false; btn.textContent='Update password'; }
+      return;
+    }
+    // Keep the freshly issued session so the app stays authenticated
+    if(session && session.access_token){
+      _sbToken = session.access_token;
+      try{
+        var newSession = Object.assign({}, session, { expires_at: Math.floor(Date.now()/1000) + (session.expires_in||3600) });
+        localStorage.setItem('sb_session', JSON.stringify(newSession));
+      }catch(e){}
+    }
+    // 2) Update to the new password
+    await sbFetch('/auth/v1/user', 'PUT', { password: nw });
+    _cpShowMessage('Password updated successfully.', true);
+    if(btn){ btn.textContent='Password updated'; }
+    setTimeout(function(){ closeModal('changePasswordModal'); }, 1200);
+  }catch(err){
+    _cpShowMessage((err && err.message) ? err.message : 'Something went wrong. Please try again.', false);
+    if(btn){ btn.disabled=false; btn.textContent='Update password'; }
+  }
+}
+
 // ===================== PRELOAD & SEED =====================
 fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(r=>r.json()).then(w=>{window.worldAtlas=w;}).catch(()=>{});
 fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r=>r.json()).then(w=>{window.globeAtlas=w;}).catch(()=>{});
