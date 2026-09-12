@@ -87,8 +87,12 @@ async function sbGetSession() {
     return session;
   } catch(e) { localStorage.removeItem('sb_session'); return null; }
 }
-async function sbResetPassword(email) {
-  const res = await fetch(SB_URL + '/auth/v1/recover', {
+async function sbResetPassword(email, redirectTo) {
+  // Tell Supabase where to send the user after they click the reset link.
+  // Must also be allow-listed under Auth > URL Configuration > Redirect URLs.
+  let url = SB_URL + '/auth/v1/recover';
+  if (redirectTo) url += '?redirect_to=' + encodeURIComponent(redirectTo);
+  const res = await fetch(url, {
     method: 'POST',
     headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
     body: JSON.stringify({ email })
