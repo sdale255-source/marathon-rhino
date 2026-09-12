@@ -262,6 +262,10 @@ function showPage(id){
     }
   }
   if(id==='pageSettings') { renderSubSettings(); renderGpsSettings(); }
+  // Always open each page scrolled to the top (each .page is its own scroll container)
+  const _pg=document.getElementById(id);
+  if(_pg) _pg.scrollTop=0;
+  window.scrollTo(0,0);
 }
 
 // ===================== UNIT =====================
