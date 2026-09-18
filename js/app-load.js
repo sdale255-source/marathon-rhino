@@ -199,7 +199,7 @@ function handleRecoveryFlow(){
   // Expired / invalid link — Supabase redirects with error params
   if((p.error || p.error_description) && (p.type === 'recovery' || /recover|expired|otp/i.test((p.error_description||'') + (p.error_code||'')))){
     showResetScreen();
-    _rpShowMessage((p.error_description || 'This reset link is invalid or has expired.') + ' Please request a new password reset from the login screen.', false);
+    _rpShowMessage('This reset link has already been used or has expired. Please request a new password reset from the login screen.', false);
     var sb = document.getElementById('rpSubmitBtn'); if(sb) sb.style.display = 'none';
     try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch(e){}
     return true;
@@ -212,6 +212,11 @@ function handleRecoveryFlow(){
     return true;
   }
   return false;
+}
+function backToLoginFromReset(){
+  var rp = document.getElementById('resetPasswordPage'); if(rp) rp.style.display = 'none';
+  var ap = document.getElementById('authPage'); if(ap) ap.style.display = 'flex';
+  if(typeof switchAuth === 'function') switchAuth('login');
 }
 async function submitResetPassword(){
   var nw = (document.getElementById('rpNew').value || '');
