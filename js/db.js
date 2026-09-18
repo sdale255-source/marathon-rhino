@@ -97,7 +97,15 @@ async function sbResetPassword(email, redirectTo) {
     headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
     body: JSON.stringify({ email })
   });
-  if (!res.ok) { const d = await res.json(); throw new Error(d.message || 'Reset failed'); }
+  if (!res.ok) {
+    let d = {};
+    try { d = await res.json(); } catch(e) {}
+    const msg = d.msg || d.message || d.error_description || d.error || '';
+    if (res.status === 429) {
+      throw new Error(msg || 'Too many requests — please wait about a minute before requesting another reset email.');
+    }
+    throw new Error(msg || 'Reset failed');
+  }
 }
 
 // Database helpers - all use _sbToken for authenticated requests
