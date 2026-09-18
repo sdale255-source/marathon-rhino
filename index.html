@@ -1,2 +1,19 @@
-
-<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=marathon_rhino.html"><title>Marathon Rhino</title></head><body>Loading...</body></html></body></title></head></html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Marathon Rhino</title>
+<script>
+  // Forward to the app, preserving the query string and hash fragment.
+  // This matters for the password-reset link: Supabase appends the recovery
+  // token after a "#", and a plain redirect would drop it.
+  (function () {
+    var target = 'marathon_rhino.html' + window.location.search + window.location.hash;
+    window.location.replace(target);
+  })();
+</script>
+<!-- Fallback for browsers with JavaScript disabled -->
+<noscript><meta http-equiv="refresh" content="0; url=marathon_rhino.html"></noscript>
+</head>
+<body>Loading…</body>
+</html>
