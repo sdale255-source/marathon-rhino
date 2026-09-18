@@ -130,7 +130,7 @@ async function doForgotPassword() {
   try {
     await sbResetPassword(email, window.location.origin + window.location.pathname);
     alert('Password reset email sent! Check your inbox.');
-  } catch(e) { alert('Error: ' + e.message); }
+  } catch(e) { alert(e.message || 'Something went wrong sending the reset email. Please try again in a minute.'); }
 }
 
 async function doLogout() {
