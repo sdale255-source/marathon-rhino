@@ -378,6 +378,9 @@
       </div>
     </div>
 
+    <!-- RACE WEBSITE BUBBLE — filled by renderRaceWebsiteBubble(), hidden when there's no website -->
+    <div class="card" id="raceWebsiteBubble" style="display:none;"></div>
+
     <!-- START A RUN CARD -->
     <div class="card" style="background:linear-gradient(135deg,#E8720C 0%,#c45e08 100%);cursor:pointer;" onclick="showPage('pageRun')">
       <div style="display:flex;align-items:center;justify-content:space-between;">
@@ -837,6 +840,10 @@
     <div class="modal-field"><label>Location</label><input type="text" id="inputRaceLocation" placeholder="e.g. Boston, MA"></div>
     <div class="modal-field"><label>Race date</label><input type="date" id="inputRaceDate"></div>
     <div class="modal-field">
+      <label>Race website <span style="font-weight:400;color:var(--text-muted);">(optional)</span></label>
+      <input type="url" id="inputRaceWebsite" placeholder="Leave blank — we'll find it for well-known races" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false">
+    </div>
+    <div class="modal-field">
       <label>Goal time <span style="font-weight:400;color:var(--text-muted);">(optional)</span></label>
       <div style="display:flex;gap:8px;align-items:center;">
         <div style="display:flex;align-items:center;gap:6px;flex:1;">
@@ -1154,6 +1161,7 @@
 <script src="js/globals.js" defer></script>
 <script src="js/auth.js" defer></script>
 <script src="js/app-load.js" defer></script>
+<script src="js/race-directory.js" defer></script>
 <script src="js/race.js" defer></script>
 <script src="js/calendar.js" defer></script>
 <script src="js/news.js" defer></script>
