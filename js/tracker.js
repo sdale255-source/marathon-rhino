@@ -431,43 +431,43 @@ function resetRunTracker() {
 // (handled inside showPage via the pageRun check already in nav map)
 
 // ===================== ACHIEVEMENT UNLOCK POPUP =====================
-let unlockedAchievements = new Set();
+// Tracks how many times each achievement has been earned (id -> count).
+// Count 0 -> 1 = first unlock (original popup). Count going up after that = repeat popup.
+let achievementCounts = {};
 
 function initUnlockedAchievements() {
-  // Pre-populate with any achievements already earned, so they don't re-trigger as "new"
-  ACHIEVEMENTS.forEach(a => {
-    if (a.check(state.runs)) unlockedAchievements.add(a.id);
-  });
+  // Snapshot current counts on load, so existing achievements don't re-trigger
+  achievementCounts = {};
+  ACHIEVEMENTS.forEach(a => { achievementCounts[a.id] = a.count(state.runs); });
 }
 
 function checkForNewAchievements() {
-  const newlyEarned = ACHIEVEMENTS.filter(a =>
-    a.check(state.runs) && !unlockedAchievements.has(a.id)
-  );
-  if (newlyEarned.length === 0) return;
-
-  // Mark all as unlocked
-  newlyEarned.forEach(a => unlockedAchievements.add(a.id));
-
-  // Group by category and only show the highest achievement per group
   // Categories: single run (run*), weekly (week*), monthly (month*)
   const getCategory = id => id.startsWith('run') ? 'run' : id.startsWith('week') ? 'week' : 'month';
 
-  // For each category, find the highest threshold achieved
-  // ACHIEVEMENTS array is ordered lowest→highest, so last match per category wins
+  // Find every achievement whose count went up, keeping only the highest one per category.
+  // ACHIEVEMENTS array is ordered lowest→highest, so the last match per category wins.
   const topPerCategory = {};
-  newlyEarned.forEach(a => {
-    const cat = getCategory(a.id);
-    topPerCategory[cat] = a; // later (higher) achievements overwrite earlier ones
+  ACHIEVEMENTS.forEach(a => {
+    const prev = achievementCounts[a.id] || 0;
+    const now = a.count(state.runs);
+    achievementCounts[a.id] = now;
+    if (now > prev) topPerCategory[getCategory(a.id)] = { a, count: now, isRepeat: prev > 0 };
   });
 
   const toShow = Object.values(topPerCategory);
+  if (toShow.length === 0) return;
   showAchievementPopup(toShow, 0);
+}
+
+function ordinal(n) {
+  const s = ['th', 'st', 'nd', 'rd'], v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
 function showAchievementPopup(list, idx) {
   if (idx >= list.length) return;
-  const a = list[idx];
+  const { a, count, isRepeat } = list[idx];
   const imgEl = document.getElementById('achievementModalImg');
   if (a.trophyImg) {
     imgEl.innerHTML = `<img src="${a.trophyImg}" style="height:110px;width:auto;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.2));">`;
@@ -475,7 +475,9 @@ function showAchievementPopup(list, idx) {
     imgEl.innerHTML = `<span style="font-size:72px;">${a.icon}</span>`;
   }
   document.getElementById('achievementModalTitle').textContent = a.label;
-  document.getElementById('achievementModalText').textContent = `Congrats! New achievement unlocked, ${a.label}.`;
+  document.getElementById('achievementModalText').textContent = isRepeat
+    ? `Congrats! You earned ${a.label} again. That's your ${ordinal(count)} time!`
+    : `Congrats! New achievement unlocked, ${a.label}.`;
   const btn = document.querySelector('#achievementModal .btn-primary');
   btn.onclick = function() {
     closeModal('achievementModal');
