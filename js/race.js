@@ -4,6 +4,8 @@ function openRaceModal(){
     document.getElementById('inputRaceName').value=state.nextRace.name||'';
     document.getElementById('inputRaceLocation').value=state.nextRace.location||'';
     document.getElementById('inputRaceDate').value=state.nextRace.date||'';
+    const webEl = document.getElementById('inputRaceWebsite');
+    if(webEl) webEl.value=state.nextRace.website||'';
     const gm = state.nextRace.goalMins;
     const noGoalEl = document.getElementById('inputNoGoal');
     const hrsEl = document.getElementById('inputGoalHours');
@@ -21,7 +23,7 @@ function openRaceModal(){
     }
   } else {
     // Reset form
-    ['inputRaceName','inputRaceLocation','inputRaceDate','inputGoalHours','inputGoalMins'].forEach(id=>{
+    ['inputRaceName','inputRaceLocation','inputRaceDate','inputRaceWebsite','inputGoalHours','inputGoalMins'].forEach(id=>{
       const el=document.getElementById(id); if(el) el.value='';
     });
     const noGoalEl=document.getElementById('inputNoGoal');
@@ -58,7 +60,10 @@ async function saveRace(){
   const hrs = parseInt(document.getElementById('inputGoalHours')?.value || '0') || 0;
   const mins = parseInt(document.getElementById('inputGoalMins')?.value || '0') || 0;
   const goalMins = (!noGoal && (hrs > 0 || mins > 0)) ? hrs * 60 + mins : null;
-  state.nextRace={name, location, date, goalMins};
+  // Optional race website — blank is fine, the bubble just won't show
+  const websiteRaw = document.getElementById('inputRaceWebsite')?.value || '';
+  const website = (typeof normaliseRaceUrl === 'function') ? normaliseRaceUrl(websiteRaw) : websiteRaw.trim();
+  state.nextRace={name, location, date, goalMins, website};
   // Geocode the next race location
   const coords = await geocodeLocation(location, name);
   if(coords){ state.nextRace.lat=coords.lat; state.nextRace.lng=coords.lng; }
@@ -79,6 +84,7 @@ function updateRaceDisplay(){
   if(!state.nextRace){
     empty.style.display='flex';display.style.display='none';
     document.getElementById('nextRaceMap').style.display='none';
+    if(typeof renderRaceWebsiteBubble==='function') renderRaceWebsiteBubble();
     return;
   }
   empty.style.display='none';display.style.display='block';
@@ -103,6 +109,8 @@ function updateRaceDisplay(){
   }
   // Show map if we have coordinates
   renderNextRaceMap();
+  // Show the race website bubble (hides itself if there's nothing to link to)
+  if(typeof renderRaceWebsiteBubble==='function') renderRaceWebsiteBubble();
 }
 
 function renderNextRaceMap() {
