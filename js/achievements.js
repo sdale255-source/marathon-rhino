@@ -1,22 +1,33 @@
 // ===================== ACHIEVEMENTS =====================
 const ACHIEVEMENTS=[
-  {id:'run10mi',label:'10 mile run',desc:'Complete a single run of 10 miles',icon:'🏃',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/10milerun.png',check:runs=>Object.values(runs).some(r=>r.type==='run'&&r.miles>=10)},
-  {id:'run20km',label:'20 km run',desc:'Complete a single run of 20 km (12.4 mi)',icon:'🏃',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/20krun.png',check:runs=>Object.values(runs).some(r=>r.type==='run'&&r.miles>=12.427)},
-  {id:'run20mi',label:'20 mile run',desc:'Complete a single run of 20 miles',icon:'🏃',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/20milerun.png',check:runs=>Object.values(runs).some(r=>r.type==='run'&&r.miles>=20)},
-  {id:'run35km',label:'35 km run',desc:'Complete a single run of 35 km (21.7 mi)',icon:'🏃',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/35krun.png',check:runs=>Object.values(runs).some(r=>r.type==='run'&&r.miles>=21.748)},
-  {id:'week30mi',label:'30 miles in a week',desc:'Log 30 miles in a calendar week',icon:'📅',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/30milesinaweek.png',check:runs=>checkWeeklyMiles(runs,30)},
-  {id:'week60km',label:'60 km in a week',desc:'Log 60 km in a calendar week',icon:'📅',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/60kinaweek.png',check:runs=>checkWeeklyMiles(runs,37.282)},
-  {id:'week40mi',label:'40 miles in a week',desc:'Log 40 miles in a calendar week',icon:'📅',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/40milesinaweek.png',check:runs=>checkWeeklyMiles(runs,40)},
-  {id:'week75km',label:'75 km in a week',desc:'Log 75 km in a calendar week',icon:'📅',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/75kinaweek.png',check:runs=>checkWeeklyMiles(runs,46.603)},
-  {id:'week50mi',label:'50 miles in a week',desc:'Log 50 miles in a calendar week',icon:'📅',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/50milesinaweek.png',check:runs=>checkWeeklyMiles(runs,50)},
-  {id:'week90km',label:'90 km in a week',desc:'Log 90 km in a calendar week',icon:'📅',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/90kinaweek.png',check:runs=>checkWeeklyMiles(runs,55.923)},
-  {id:'week60mi',label:'60 miles in a week',desc:'Log 60 miles in a calendar week',icon:'📅',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/60milesinaweek.png',check:runs=>checkWeeklyMiles(runs,60)},
-  {id:'month100mi',label:'100 miles in a month',desc:'Log 100 miles in a calendar month',icon:'🗓️',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/100milesinamonth.png',check:runs=>checkMonthlyMiles(runs,100)},
-  {id:'month250km',label:'250 km in a month',desc:'Log 250 km in a calendar month',icon:'🗓️',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/250kinamonth.png',check:runs=>checkMonthlyMiles(runs,155.343)},
-  {id:'month200mi',label:'200 miles in a month',desc:'Log 200 miles in a calendar month',icon:'🗓️',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/200milesinamonth.png',check:runs=>checkMonthlyMiles(runs,200)},
+  {id:'run10mi',label:'10 mile run',desc:'Complete a single run of 10 miles',icon:'🏃',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/10milerun.png',check:runs=>Object.values(runs).some(r=>r.type==='run'&&r.miles>=10),count:runs=>countRunsOver(runs,10)},
+  {id:'run20km',label:'20 km run',desc:'Complete a single run of 20 km (12.4 mi)',icon:'🏃',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/20krun.png',check:runs=>Object.values(runs).some(r=>r.type==='run'&&r.miles>=12.427),count:runs=>countRunsOver(runs,12.427)},
+  {id:'run20mi',label:'20 mile run',desc:'Complete a single run of 20 miles',icon:'🏃',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/20milerun.png',check:runs=>Object.values(runs).some(r=>r.type==='run'&&r.miles>=20),count:runs=>countRunsOver(runs,20)},
+  {id:'run35km',label:'35 km run',desc:'Complete a single run of 35 km (21.7 mi)',icon:'🏃',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/35krun.png',check:runs=>Object.values(runs).some(r=>r.type==='run'&&r.miles>=21.748),count:runs=>countRunsOver(runs,21.748)},
+  {id:'week30mi',label:'30 miles in a week',desc:'Log 30 miles in a calendar week',icon:'📅',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/30milesinaweek.png',check:runs=>checkWeeklyMiles(runs,30),count:runs=>countWeeksOver(runs,30)},
+  {id:'week60km',label:'60 km in a week',desc:'Log 60 km in a calendar week',icon:'📅',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/60kinaweek.png',check:runs=>checkWeeklyMiles(runs,37.282),count:runs=>countWeeksOver(runs,37.282)},
+  {id:'week40mi',label:'40 miles in a week',desc:'Log 40 miles in a calendar week',icon:'📅',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/40milesinaweek.png',check:runs=>checkWeeklyMiles(runs,40),count:runs=>countWeeksOver(runs,40)},
+  {id:'week75km',label:'75 km in a week',desc:'Log 75 km in a calendar week',icon:'📅',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/75kinaweek.png',check:runs=>checkWeeklyMiles(runs,46.603),count:runs=>countWeeksOver(runs,46.603)},
+  {id:'week50mi',label:'50 miles in a week',desc:'Log 50 miles in a calendar week',icon:'📅',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/50milesinaweek.png',check:runs=>checkWeeklyMiles(runs,50),count:runs=>countWeeksOver(runs,50)},
+  {id:'week90km',label:'90 km in a week',desc:'Log 90 km in a calendar week',icon:'📅',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/90kinaweek.png',check:runs=>checkWeeklyMiles(runs,55.923),count:runs=>countWeeksOver(runs,55.923)},
+  {id:'week60mi',label:'60 miles in a week',desc:'Log 60 miles in a calendar week',icon:'📅',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/60milesinaweek.png',check:runs=>checkWeeklyMiles(runs,60),count:runs=>countWeeksOver(runs,60)},
+  {id:'month100mi',label:'100 miles in a month',desc:'Log 100 miles in a calendar month',icon:'🗓️',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/100milesinamonth.png',check:runs=>checkMonthlyMiles(runs,100),count:runs=>countMonthsOver(runs,100)},
+  {id:'month250km',label:'250 km in a month',desc:'Log 250 km in a calendar month',icon:'🗓️',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/250kinamonth.png',check:runs=>checkMonthlyMiles(runs,155.343),count:runs=>countMonthsOver(runs,155.343)},
+  {id:'month200mi',label:'200 miles in a month',desc:'Log 200 miles in a calendar month',icon:'🗓️',trophyImg:'https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/trophies/200milesinamonth.png',check:runs=>checkMonthlyMiles(runs,200),count:runs=>countMonthsOver(runs,200)},
 ];
 function checkWeeklyMiles(runs,target){const weeks={};Object.entries(runs).forEach(([key,run])=>{if(run.type!=='run'||!run.miles)return;const d=new Date(key+'T00:00:00');const dow=(d.getDay()+6)%7;const mon=new Date(d);mon.setDate(d.getDate()-dow);const wk=dateKey(mon);weeks[wk]=(weeks[wk]||0)+run.miles;});return Object.values(weeks).some(t=>t>=target);}
 function checkMonthlyMiles(runs,target){const months={};Object.entries(runs).forEach(([key,run])=>{if(run.type!=='run'||!run.miles)return;const mk=key.slice(0,7);months[mk]=(months[mk]||0)+run.miles;});return Object.values(months).some(t=>t>=target);}
+// ---- Repeat-achievement counting: how many times each achievement has been earned ----
+// Single-run achievements: number of run days at/above the distance.
+// Weekly: number of calendar weeks (Mon–Sun) at/above the total. Monthly: number of calendar months.
+function countRunsOver(runs,min){return Object.values(runs).filter(r=>r&&r.type==='run'&&r.miles>=min).length;}
+function countWeeksOver(runs,target){const weeks={};Object.entries(runs).forEach(([key,run])=>{if(!run||run.type!=='run'||!run.miles)return;const d=new Date(key+'T00:00:00');const dow=(d.getDay()+6)%7;const mon=new Date(d);mon.setDate(d.getDate()-dow);const wk=dateKey(mon);weeks[wk]=(weeks[wk]||0)+run.miles;});return Object.values(weeks).filter(t=>t>=target).length;}
+function countMonthsOver(runs,target){const months={};Object.entries(runs).forEach(([key,run])=>{if(!run||run.type!=='run'||!run.miles)return;const mk=key.slice(0,7);months[mk]=(months[mk]||0)+run.miles;});return Object.values(months).filter(t=>t>=target).length;}
+function achievementCountBadge(n){
+  // Small dark blue circle, bottom-left of the trophy, showing total times earned (only from the 2nd time on)
+  if(!n||n<2)return'';
+  return`<div style="position:absolute;left:-4px;bottom:-4px;min-width:20px;height:20px;padding:0 5px;box-sizing:border-box;border-radius:10px;background:var(--navy-deeper);border:2px solid #fff;color:#fff;font-size:11px;font-weight:800;line-height:16px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.25);">${n}</div>`;
+}
 function renderAchievements(){
   const earned=ACHIEVEMENTS.filter(a=>a.check(state.runs));
   const hEl=document.getElementById('homeAchievements');const aEl=document.getElementById('allAchievementsList');
@@ -26,7 +37,7 @@ function renderAchievements(){
       const inner=a.trophyImg
         ?`<img src="${a.trophyImg}" style="width:44px;height:44px;object-fit:contain;">`
         :`<span style="font-size:26px;">${a.icon}</span>`;
-      return`<div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;"><div style="width:56px;height:56px;background:var(--navy-light);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.1);">${inner}</div><div style="font-size:9px;font-weight:600;color:var(--navy);text-align:center;line-height:1.2;">${a.label}</div></div>`;
+      return`<div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;"><div style="position:relative;width:56px;height:56px;background:var(--navy-light);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.1);">${inner}${achievementCountBadge(a.count(state.runs))}</div><div style="font-size:9px;font-weight:600;color:var(--navy);text-align:center;line-height:1.2;">${a.label}</div></div>`;
     }).join('')+'</div>';}
   }
   if(aEl){aEl.innerHTML=ACHIEVEMENTS.map(a=>{
