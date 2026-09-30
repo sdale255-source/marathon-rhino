@@ -26,7 +26,7 @@ function countMonthsOver(runs,target){const months={};Object.entries(runs).forEa
 function achievementCountBadge(n){
   // Small dark blue circle, bottom-left of the trophy, showing total times earned (only from the 2nd time on)
   if(!n||n<2)return'';
-  return`<div style="position:absolute;left:-4px;bottom:-4px;min-width:20px;height:20px;padding:0 5px;box-sizing:border-box;border-radius:10px;background:var(--navy-deeper);border:2px solid #fff;color:#fff;font-size:11px;font-weight:800;line-height:16px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.25);">${n}</div>`;
+  return`<div style="position:absolute;left:-4px;bottom:-4px;min-width:20px;height:20px;padding:0 5px;box-sizing:border-box;border-radius:10px;background:var(--navy);border:2px solid #fff;color:#fff;font-size:11px;font-weight:800;line-height:16px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.25);">${n}</div>`;
 }
 function renderAchievements(){
   const earned=ACHIEVEMENTS.filter(a=>a.check(state.runs));
