@@ -8,7 +8,7 @@ const LEGAL_CONTENT = {
       <p>Marathon Rhino ("we", "us", or "our") is committed to protecting your personal information. This Privacy Policy explains what data we collect, how we use it, and your rights regarding it. By using Marathon Rhino, you agree to the practices described here.</p>
 
       <h3 style="font-size:15px;font-weight:700;color:var(--navy);margin:1.2rem 0 0.5rem;">1. Who We Are</h3>
-      <p>Marathon Rhino is a marathon training tracking app with a built-in charity giving programme. We donate a portion of subscription proceeds to Save the Rhino International and World Land Trust. Our app is accessible at <strong>sdale255-source.github.io/marathon-rhino</strong>.</p>
+      <p>Marathon Rhino is a marathon training tracking app with a built-in charity giving programme. We donate 50% of subscription proceeds to charity — 25% to Save the Rhino International and 25% to World Land Trust. Our app is accessible at <strong>sdale255-source.github.io/marathon-rhino</strong>.</p>
 
       <h3 style="font-size:15px;font-weight:700;color:var(--navy);margin:1.2rem 0 0.5rem;">2. Data We Collect</h3>
       <p><strong>Account information:</strong> Name, email address, country of residence, and password (stored securely via Supabase Auth).</p>
@@ -71,7 +71,7 @@ const LEGAL_CONTENT = {
       <p>Please read these Terms of Service carefully before using Marathon Rhino. By creating an account or using the app, you agree to be bound by these terms.</p>
 
       <h3 style="font-size:15px;font-weight:700;color:var(--navy);margin:1.2rem 0 0.5rem;">1. The Service</h3>
-      <p>Marathon Rhino is a marathon training tracker app that helps runners log training, track races, and view their running data on maps. A portion of subscription proceeds is donated to conservation charities.</p>
+      <p>Marathon Rhino is a marathon training tracker app that helps runners log training, track races, and view their running data on maps. 50% of subscription proceeds is donated to conservation charities — 25% to Save the Rhino International and 25% to World Land Trust.</p>
 
       <h3 style="font-size:15px;font-weight:700;color:var(--navy);margin:1.2rem 0 0.5rem;">2. Your Account</h3>
       <p>You must be at least 13 years old to create an account. You are responsible for maintaining the confidentiality of your password and for all activity that occurs under your account. Please notify us immediately of any unauthorised use of your account.</p>
@@ -79,9 +79,9 @@ const LEGAL_CONTENT = {
       <h3 style="font-size:15px;font-weight:700;color:var(--navy);margin:1.2rem 0 0.5rem;">3. Subscription & Billing</h3>
       <p><strong>Free trial:</strong> All new accounts receive a 30-day free trial. No charge is made during the trial period.</p>
       <p><strong>Standard plan:</strong> $2.50/month after the trial ends.</p>
-      <p><strong>Awesome plan:</strong> $4.50/month after the trial ends. Includes an extra $2.00/month donated to conservation charities.</p>
+      <p><strong>Awesome plan:</strong> $4.50/month after the trial ends. In addition to 50% of the base $2.50 ($1.25), includes an extra $2.00/month donated to conservation charities — $3.25/month to charity in total.</p>
       <p><strong>Cancellation:</strong> You may cancel at any time. Cancellation takes effect at the end of the current billing period. No refunds are provided for partial billing periods.</p>
-      <p><strong>Charity donations:</strong> Charity contributions are made from subscription proceeds and are not tax-deductible by the subscriber.</p>
+      <p><strong>Charity donations:</strong> Marathon Rhino donates 50% of subscription proceeds to charity (25% each to Save the Rhino International and World Land Trust). Charity contributions are made from subscription proceeds and are not tax-deductible by the subscriber.</p>
 
       <h3 style="font-size:15px;font-weight:700;color:var(--navy);margin:1.2rem 0 0.5rem;">4. Acceptable Use</h3>
       <p>You agree not to:</p>
