@@ -22,7 +22,9 @@ function renderCalendar(){
       if(run&&run.type==='run'&&run.miles>0)monthMiles+=run.miles;
     }
     const rem=7-((sd+ll.getDate())%7);if(rem<7)for(let i=1;i<=rem;i++)cells+=calCell(new Date(yr,mo+1,i),true);
-    document.getElementById('calGrid'+idx).innerHTML=cells;
+    const gridEl=document.getElementById('calGrid'+idx);
+    gridEl.innerHTML=cells;
+    hydratePhotoImages(gridEl); // loads run photo thumbnails (if any)
     const milesEl=document.getElementById('calMiles'+idx);
     if(milesEl)milesEl.textContent=monthMiles>0?displayDist(monthMiles):'';
   });
@@ -30,7 +32,12 @@ function renderCalendar(){
 function calCell(d,otherMonth){
   const key=dateKey(d);const isToday=d.getTime()===today.getTime();const run=state.runs[key];
   let inner=`<div class="cal-day-num">${d.getDate()}</div>`;
-  if(run&&run.type==='run'&&run.miles>0){inner+=`<div class="cal-day-miles">${displayDist(run.miles)}</div>`;const rd=getRunDisplay(run);if(rd)inner+=`<div style="font-size:9px;color:var(--text-muted);">${rd}</div>`;}
+  if(run&&run.type==='run'&&run.miles>0){
+    // Small photo thumbnail beside the distance (only when a photo was taken on the run)
+    const thumb=run.photoPath?`<img class="cal-day-photo" data-photo-path="${run.photoPath}" alt="Run photo">`:'';
+    inner+=`<div class="cal-day-miles${thumb?' has-photo':''}"><span>${displayDist(run.miles)}</span>${thumb}</div>`;
+    const rd=getRunDisplay(run);if(rd)inner+=`<div style="font-size:9px;color:var(--text-muted);">${rd}</div>`;
+  }
   else if(run&&run.type==='rest'){inner+=`<div class="cal-day-rest">🌙</div>`;}
   return`<div class="cal-day${isToday?' today':''}${otherMonth?' other-month':''}" onclick="openDayModal('${key}')">${inner}</div>`;
 }
