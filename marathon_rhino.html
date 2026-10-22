@@ -107,6 +107,8 @@
   .cal-day.other-month { opacity: 0.35; }
   .cal-day-num { font-size: 10px; font-weight: 600; color: var(--text-muted); }
   .cal-day-miles { font-size: 10px; font-weight: 700; color: var(--navy); margin-top: auto; }
+  .cal-day-miles.has-photo { display: flex; align-items: center; flex-wrap: wrap; gap: 2px 3px; }
+  .cal-day-photo { width: 16px; height: 16px; border-radius: 4px; object-fit: cover; flex-shrink: 0; background: var(--border); display: block; }
   .cal-day-rest { font-size: 16px; display: flex; align-items: center; justify-content: center; flex: 1; }
   /* RACE HISTORY */
   .race-item { padding: 14px 0; border-bottom: 1px solid var(--border); }
@@ -515,6 +517,22 @@
       <button id="runMainBtn" onclick="handleRunBtn()" style="width:100%;padding:18px;border:none;border-radius:16px;font-size:18px;font-weight:800;cursor:pointer;background:#fff;color:#E8720C;letter-spacing:-0.3px;margin-bottom:12px;">
         Start Run
       </button>
+      <!-- Run photo (hidden until a run starts; one photo per run) -->
+      <input type="file" id="runPhotoInput" accept="image/*" capture="environment" style="display:none;" onchange="handleRunPhoto(event)">
+      <div id="runPhotoArea" style="display:none;width:100%;margin-bottom:12px;">
+        <button id="runPhotoBtn" onclick="takeRunPhoto()" style="width:100%;padding:14px;border:none;border-radius:16px;font-size:15px;font-weight:700;cursor:pointer;background:rgba(255,255,255,0.22);color:#fff;">
+          📷 Take a photo from my run
+        </button>
+        <div id="runPhotoPreview" style="display:none;align-items:center;gap:12px;background:rgba(255,255,255,0.22);border-radius:16px;padding:10px 12px;">
+          <img id="runPhotoThumb" alt="Run photo" style="width:52px;height:52px;border-radius:10px;object-fit:cover;flex-shrink:0;background:rgba(255,255,255,0.3);">
+          <div style="flex:1;min-width:0;color:#fff;">
+            <div style="font-size:14px;font-weight:700;">Photo added ✓</div>
+            <div style="font-size:12px;opacity:0.85;">Saved with this run</div>
+          </div>
+          <button onclick="takeRunPhoto()" style="border:none;border-radius:10px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:#E8720C;">Retake</button>
+          <button onclick="clearRunPhoto()" aria-label="Remove photo" style="border:none;background:transparent;color:#fff;font-size:22px;line-height:1;cursor:pointer;padding:4px;">×</button>
+        </div>
+      </div>
       <!-- Finish Run button (hidden until running) -->
       <button id="runStopBtn" onclick="confirmStopRun()" style="display:none;width:100%;padding:14px;border:2px solid rgba(255,255,255,0.5);border-radius:16px;font-size:15px;font-weight:700;cursor:pointer;background:transparent;color:#fff;">
         Finish Run
@@ -886,6 +904,9 @@
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-title" id="dayModalTitle"></div>
+    <div id="dayPhotoWrap" style="display:none;margin-bottom:12px;">
+      <img id="dayPhotoImg" alt="Photo from this run" style="width:100%;max-height:280px;object-fit:cover;border-radius:12px;display:block;background:var(--border);min-height:120px;">
+    </div>
     <div class="brick-preview" id="brickPreview"></div>
     <div class="modal-field">
       <label id="distanceLabel">Miles run</label>
