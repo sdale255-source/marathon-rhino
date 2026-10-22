@@ -51,7 +51,10 @@ async function loadAndEnterApp(supaUser) {
     const runsData = await dbSelect('runs', 'user_id=eq.'+supaUser.id);
     state.runs = {};
     if (Array.isArray(runsData)) {
-      runsData.forEach(r => { state.runs[r.date_key] = { type: r.type, miles: r.miles || 0, minutes: r.minutes || null }; });
+      runsData.forEach(r => {
+        state.runs[r.date_key] = { type: r.type, miles: r.miles || 0, minutes: r.minutes || null };
+        if (r.photo_path) state.runs[r.date_key].photoPath = r.photo_path; // photo taken during a tracked run
+      });
     }
   } catch(e) { state.runs = {}; console.warn('Runs load error:', e); }
 
@@ -101,26 +104,34 @@ async function saveProfileToDB() {
 }
 const debouncedSaveProfile = debounce(saveProfileToDB, 1000);
 
+// Returns true if the save worked, false if it failed (never throws).
 async function saveRunToDB(dateKey, run) {
-  if (!state.user?.id) return;
+  if (!state.user?.id) return false;
   try {
     if (!run) {
       await dbDelete('runs', 'user_id=eq.'+state.user.id+'&date_key=eq.'+encodeURIComponent(dateKey));
     } else {
       console.log('saveRunToDB', dateKey, 'token:', _sbToken ? 'present' : 'MISSING');
+      await ensureFreshToken();
+      const body = {
+        user_id: state.user.id, date_key: dateKey,
+        type: run.type, miles: run.miles || 0, minutes: run.minutes || null,
+        updated_at: new Date().toISOString()
+      };
+      // Only send photo_path when this run has (or is clearing) a photo, so runs
+      // without photos save exactly as before.
+      if (run.photoPath !== undefined) body.photo_path = run.photoPath || null;
       const res = await fetch(SB_URL + '/rest/v1/runs', {
         method: 'POST',
         headers: dbHeaders({ 'Prefer': 'resolution=merge-duplicates,return=representation' }),
-        body: JSON.stringify({
-          user_id: state.user.id, date_key: dateKey,
-          type: run.type, miles: run.miles || 0, minutes: run.minutes || null,
-          updated_at: new Date().toISOString()
-        })
+        body: JSON.stringify(body)
       });
       const text = await res.text();
       console.log('saveRunToDB response', res.status, text.slice(0,100));
+      if (!res.ok) { console.error('Run save error:', res.status, text); return false; }
     }
-  } catch(e) { console.error('Run save error:', e.message); }
+    return true;
+  } catch(e) { console.error('Run save error:', e.message); return false; }
 }
 
 async function saveRaceToDB(race) {
