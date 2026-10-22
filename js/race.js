@@ -182,6 +182,15 @@ function openDayModal(key){
   document.getElementById('inputMinutes').value=rm?Math.round(rm%60):'';
   document.getElementById('pacePreview').textContent='';
   document.getElementById('distanceLabel').textContent=state.unit==='mi'?'Miles run':'Kilometers run';
+  // Run photo (only shown if a photo was taken during a tracked run that day)
+  const pWrap=document.getElementById('dayPhotoWrap');const pImg=document.getElementById('dayPhotoImg');
+  if(pWrap&&pImg){
+    pImg.removeAttribute('src');
+    if(run&&run.type==='run'&&run.photoPath){
+      pWrap.style.display='block';
+      getSignedPhotoUrl(run.photoPath).then(url=>{if(url&&state.activeDayKey===key)pImg.src=url;});
+    }else{pWrap.style.display='none';}
+  }
   updatePreview();openModal('dayModal');
 }
 function updatePreview(){
@@ -199,13 +208,16 @@ function saveDay(){
   let miles=raw;if(state.unit==='km')miles=miles/1.60934;miles=Math.round(miles*10)/10;
   const hrs=parseFloat(document.getElementById('inputHours').value)||0;const mins=parseFloat(document.getElementById('inputMinutes').value)||0;
   const totalMinutes=hrs*60+mins||null;
-  state.runs[state.activeDayKey]={type:'run',miles,minutes:totalMinutes};
+  const prev=state.runs[state.activeDayKey];
+  const entry={type:'run',miles,minutes:totalMinutes};
+  if(prev&&prev.photoPath)entry.photoPath=prev.photoPath; // editing miles/time keeps the run photo
+  state.runs[state.activeDayKey]=entry;
   saveRunToDB(state.activeDayKey, state.runs[state.activeDayKey]);
   closeModal('dayModal');renderWeek();renderCalendar();renderHomeMonthly();syncMapDefaults();updateWeeklyTotal();renderStats();renderAchievements();
   checkForNewAchievements();
 }
-function saveRestDay(){state.runs[state.activeDayKey]={type:'rest',miles:0};saveRunToDB(state.activeDayKey,state.runs[state.activeDayKey]);closeModal('dayModal');renderWeek();renderCalendar();renderHomeMonthly();renderAchievements();syncMapDefaults();updateWeeklyTotal();renderStats();}
-function clearDayEntry(){saveRunToDB(state.activeDayKey,null);delete state.runs[state.activeDayKey];closeModal('dayModal');renderWeek();renderCalendar();renderHomeMonthly();renderAchievements();syncMapDefaults();updateWeeklyTotal();renderStats();}
+function saveRestDay(){const prev=state.runs[state.activeDayKey];const entry={type:'rest',miles:0};if(prev&&prev.photoPath){entry.photoPath=null;sbDeleteFile('race-photos',prev.photoPath);}state.runs[state.activeDayKey]=entry;saveRunToDB(state.activeDayKey,state.runs[state.activeDayKey]);closeModal('dayModal');renderWeek();renderCalendar();renderHomeMonthly();renderAchievements();syncMapDefaults();updateWeeklyTotal();renderStats();}
+function clearDayEntry(){const prev=state.runs[state.activeDayKey];if(prev&&prev.photoPath)sbDeleteFile('race-photos',prev.photoPath);saveRunToDB(state.activeDayKey,null);delete state.runs[state.activeDayKey];closeModal('dayModal');renderWeek();renderCalendar();renderHomeMonthly();renderAchievements();syncMapDefaults();updateWeeklyTotal();renderStats();}
 
 // ===================== CALENDAR =====================
 function changeMonth(dir){state.calMonth+=dir;if(state.calMonth>11){state.calMonth=0;state.calYear++;}if(state.calMonth<0){state.calMonth=11;state.calYear--;}renderCalendar();}
