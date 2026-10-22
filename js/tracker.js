@@ -9,6 +9,8 @@ let runState = {
   coords: [],           // [{lat,lng,ts}]
   totalDistMeters: 0,
   lastPos: null,
+  photoBlob: null,      // compressed photo taken during this run (one per run)
+  photoPreviewUrl: null // local object URL used for the on-screen preview
 };
 
 const MARATHON_METERS = 42195;
@@ -333,6 +335,7 @@ function handleRunBtn() {
     btn.textContent = 'Pause';
     btn.style.background = 'rgba(255,255,255,0.9)';
     stopBtn.style.display = 'block';
+    renderRunPhotoUI();
     // Permission-aware GPS start — skip if user disabled GPS in Settings
     if (!isGpsDisabledByUser()) {
       maybeShowGpsPrompt();
@@ -379,21 +382,63 @@ function confirmStopRun() {
   openModal('finishRunModal');
 }
 
-function saveAndFinishRun() {
+async function saveAndFinishRun() {
   closeModal('finishRunModal');
   const elapsed = getElapsedSeconds();
   const dist = runState.totalDistMeters;
   const miles = dist / 1609.344;
+  const photoBlob = runState.photoBlob;
 
   // Save to today's run log — this feeds both the weekly grid and monthly calendar
   if (miles > 0.01) {
     const key = dateKey(new Date());
-    state.runs[key] = {
+    const prev = state.runs[key];
+    const run = {
       type: 'run',
       miles: Math.round(miles * 100) / 100,
       minutes: Math.round(elapsed / 60)
     };
-    saveRunToDB(key, state.runs[key]);
+
+    // Upload the run photo first (if one was taken), so the run row can point to it
+    let newPhotoPath = null;
+    let photoError = null;
+    if (photoBlob) {
+      setRunSavingUI(true);
+      const ext = photoBlob.type === 'image/png' ? 'png' : photoBlob.type === 'image/heic' ? 'heic' : 'jpg';
+      const path = `${state.user.id}/runs/${key}_${Date.now()}.${ext}`;
+      try {
+        await sbUploadFile('race-photos', path, photoBlob);
+        newPhotoPath = path;
+      } catch (e) {
+        photoError = e.message;
+        console.error('Run photo upload error:', e.message);
+      }
+    }
+
+    // One photo per day: a new photo replaces the old one; a run with no photo
+    // keeps any photo already saved earlier the same day.
+    if (newPhotoPath) run.photoPath = newPhotoPath;
+    else if (prev && prev.photoPath) run.photoPath = prev.photoPath;
+
+    state.runs[key] = run;
+    const saved = await saveRunToDB(key, run);
+
+    if (newPhotoPath) {
+      if (saved) {
+        // Clean up the replaced photo (best-effort)
+        if (prev && prev.photoPath && prev.photoPath !== newPhotoPath) sbDeleteFile('race-photos', prev.photoPath);
+      } else {
+        // The run row didn't save, so the photo has nothing pointing to it — roll back
+        sbDeleteFile('race-photos', newPhotoPath);
+        if (prev && prev.photoPath) run.photoPath = prev.photoPath; else delete run.photoPath;
+        photoError = 'the run could not be saved to the server';
+      }
+    }
+    setRunSavingUI(false);
+    if (photoError) {
+      alert("Your run photo couldn't be saved — check your connection and try again.\n(" + photoError + ')');
+    }
+
     // Refresh all views that display run data
     renderWeek();
     renderCalendar();
@@ -416,7 +461,9 @@ function stopRunAndGoHome() {
 function resetRunTracker() {
   clearInterval(runState.timerInterval);
   stopGPS();
-  runState = { status:'idle', startTime:null, pausedMs:0, pauseStart:null, timerInterval:null, watchId:null, coords:[], totalDistMeters:0, lastPos:null };
+  if (runState.photoPreviewUrl) URL.revokeObjectURL(runState.photoPreviewUrl);
+  runState = { status:'idle', startTime:null, pausedMs:0, pauseStart:null, timerInterval:null, watchId:null, coords:[], totalDistMeters:0, lastPos:null, photoBlob:null, photoPreviewUrl:null };
+  renderRunPhotoUI();
   document.getElementById('runTimer').textContent = '00:00:00';
   document.getElementById('runDistance').textContent = '0.00';
   document.getElementById('runPace').textContent = '--:--';
@@ -425,6 +472,95 @@ function resetRunTracker() {
   document.getElementById('runMainBtn').style.background = '#fff';
   document.getElementById('runStopBtn').style.display = 'none';
   setGpsStatus('dot-grey', 'Waiting for GPS…');
+}
+
+// ── Run photo (one photo per run) ─────────────────────────────────────────
+// The photo is kept on the phone (compressed) until the run is finished, then
+// uploaded to the private 'race-photos' bucket under <userId>/runs/. If the run
+// is discarded, nothing is uploaded.
+
+function takeRunPhoto() {
+  if (runState.status === 'idle') return;
+  const input = document.getElementById('runPhotoInput');
+  if (!input) return;
+  input.value = '';
+  input.click();
+}
+
+async function handleRunPhoto(event) {
+  const file = event.target.files && event.target.files[0];
+  event.target.value = '';
+  if (!file || runState.status === 'idle') return;
+  const btn = document.getElementById('runPhotoBtn');
+  if (btn) { btn.textContent = 'Processing photo…'; btn.disabled = true; }
+  const blob = await compressRunPhoto(file);
+  if (runState.status === 'idle') return; // run was ended while processing
+  if (runState.photoPreviewUrl) URL.revokeObjectURL(runState.photoPreviewUrl);
+  runState.photoBlob = blob;
+  runState.photoPreviewUrl = URL.createObjectURL(blob);
+  if (btn) btn.disabled = false;
+  renderRunPhotoUI();
+}
+
+function clearRunPhoto() {
+  if (runState.photoPreviewUrl) URL.revokeObjectURL(runState.photoPreviewUrl);
+  runState.photoBlob = null;
+  runState.photoPreviewUrl = null;
+  renderRunPhotoUI();
+}
+
+// Shrinks a camera photo (often 3–8 MB) to max 1600px / JPEG so it uploads fast.
+// If the browser can't decode the image, the original file is used as-is.
+function compressRunPhoto(file, maxDim = 1600, quality = 0.82) {
+  return new Promise(resolve => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+        const w = Math.round(img.naturalWidth * scale);
+        const h = Math.round(img.naturalHeight * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        canvas.toBlob(b => resolve(b || file), 'image/jpeg', quality);
+      } catch (e) { URL.revokeObjectURL(url); resolve(file); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
+}
+
+// Shows/hides the photo button and preview depending on run status
+function renderRunPhotoUI() {
+  const area    = document.getElementById('runPhotoArea');
+  const btn     = document.getElementById('runPhotoBtn');
+  const preview = document.getElementById('runPhotoPreview');
+  const thumb   = document.getElementById('runPhotoThumb');
+  if (!area || !btn || !preview || !thumb) return;
+  area.style.display = runState.status === 'idle' ? 'none' : 'block';
+  if (runState.photoPreviewUrl) {
+    thumb.src = runState.photoPreviewUrl;
+    preview.style.display = 'flex';
+    btn.style.display = 'none';
+  } else {
+    thumb.removeAttribute('src');
+    preview.style.display = 'none';
+    btn.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = '📷 Take a photo from my run';
+  }
+}
+
+// Locks the tracker buttons while the photo uploads at the end of a run
+function setRunSavingUI(saving) {
+  const main = document.getElementById('runMainBtn');
+  const stop = document.getElementById('runStopBtn');
+  const area = document.getElementById('runPhotoArea');
+  if (main) { main.disabled = saving; if (saving) main.textContent = 'Saving your run…'; }
+  if (stop) stop.disabled = saving;
+  if (area) area.style.pointerEvents = saving ? 'none' : '';
 }
 
 // Update run page unit labels when navigating to it
