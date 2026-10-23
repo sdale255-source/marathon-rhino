@@ -1,0 +1,34 @@
+/* Shared styles for the public Privacy / Terms / Support pages. */
+:root {
+  --navy: #185FA5; --navy-deeper: #042C53; --orange: #E8720C;
+  --text: #1a2a3a; --text-muted: #5a6a7e; --bg: #f3f6fa; --card: #ffffff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  font-size: 15px; line-height: 1.7;
+}
+.legal-header {
+  background: var(--navy-deeper); border-bottom: 3px solid var(--orange);
+  padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+.legal-brand {
+  color: #fff; font-weight: 800; font-size: 18px; text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+}
+.legal-brand img { width: 40px; height: 40px; object-fit: contain; }
+.legal-header nav { display: flex; gap: 16px; }
+.legal-header nav a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; font-weight: 600; }
+.legal-header nav a[aria-current="page"] { color: #fff; border-bottom: 2px solid var(--orange); }
+.legal-card {
+  max-width: 760px; margin: 24px auto; background: var(--card); border-radius: 16px;
+  padding: 24px 20px 32px; box-shadow: 0 4px 20px rgba(4,44,83,0.08);
+}
+@media (max-width: 800px) { .legal-card { margin: 16px; } }
+h1 { font-size: 26px; color: var(--navy-deeper); margin: 0 0 4px; }
+h3 { font-size: 16px; color: var(--navy); margin: 1.4rem 0 0.4rem; }
+a { color: var(--navy); }
+ul { padding-left: 1.2rem; }
+.legal-footer { text-align: center; font-size: 12px; color: var(--text-muted); padding: 0 16px 32px; }

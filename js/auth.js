@@ -89,9 +89,6 @@ async function doSignup() {
     const name = lastName ? firstName+' '+lastName : firstName;
     const plan = getSelectedSignupPlan();
     const trialEnd = new Date(Date.now() + 30 * 86400000).toISOString();
-    // Get card last 4 if entered
-    const cardNum = (document.getElementById('signupCardNumber')?.value||'').replace(/\s/g,'');
-    const paymentLast4 = cardNum.length >= 4 ? cardNum.slice(-4) : null;
     const signupData = await sbSignUp(email, password);
     const userId = signupData.user?.id || signupData.id;
     if (!userId) { err.textContent='Signup failed. Try again.'; err.style.display='block'; return; }
@@ -104,18 +101,22 @@ async function doSignup() {
     await dbUpsert('profiles', {
       id: userId, name, email, country,
       join_date: new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'}),
-      subscription_tier: plan, trial_end: trialEnd, payment_last4: paymentLast4
+      subscription_tier: plan, trial_end: trialEnd
     });
     state.country = country; state.mapsInitialized = false;
-           // Send the new user to Stripe to put a card on file (30-day free trial).
-       try {
-         const { url } = await callFn('create-checkout-session', { tier: plan });
-         window.location.href = url;
-         return;
-       } catch (e) {
-         console.warn('Signup checkout redirect failed, entering app:', e);
-       }
-       await loadAndEnterApp(session.user);
+    // Website: send the new user to Stripe to put a card on file (30-day free trial).
+    // iPhone app: Stripe isn't allowed, so go straight in — the access gate in
+    // billing.js then shows the App Store paywall with this plan pre-selected.
+    if (!isNativeApp()) {
+      try {
+        const { url } = await callFn('create-checkout-session', { tier: plan });
+        window.location.href = url;
+        return;
+      } catch (e) {
+        console.warn('Signup checkout redirect failed, entering app:', e);
+      }
+    }
+    await loadAndEnterApp(session.user);
   } catch(e) {
     err.textContent = e.message || 'Signup failed. Please try again.';
     err.style.display='block';

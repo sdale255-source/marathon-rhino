@@ -176,6 +176,13 @@
   .stat-card-val { font-size: 18px; font-weight: 800; color: #E8720C; line-height: 1.1; }
   .stat-card-lbl { font-size: 13px; font-weight: 700; color: var(--navy-dark); margin-top: 2px; }
   .brick-preview { background: var(--navy-light); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 1rem; display: flex; align-items: flex-end; gap: 4px; min-height: 60px; }
+  /* PAYWALL (iPhone app) */
+  #paywallScreen { position: fixed; inset: 0; z-index: 400; background: linear-gradient(160deg, #042C53 0%, #0C447C 60%, #c45e08 100%); overflow-y: auto; -webkit-overflow-scrolling: touch; align-items: flex-start; justify-content: center; padding: calc(env(safe-area-inset-top, 0px) + 24px) 16px calc(env(safe-area-inset-bottom, 0px) + 24px); }
+  .paywall-inner { width: 100%; max-width: 420px; margin: auto; display: flex; flex-direction: column; gap: 12px; }
+  .paywall-opt { display: flex; align-items: flex-start; gap: 10px; background: #fff; border: 2px solid transparent; border-radius: 14px; padding: 14px; cursor: pointer; }
+  .paywall-opt.selected { border-color: #E8720C; box-shadow: 0 0 0 3px rgba(232,114,12,0.25); }
+  .paywall-opt input { accent-color: #E8720C; width: 18px; height: 18px; margin-top: 2px; }
+  .paywall-link { background: none; border: none; color: rgba(255,255,255,0.85); font-size: 12px; text-decoration: underline; cursor: pointer; padding: 4px 0; }
   }
 </style>
 </head>
@@ -258,7 +265,7 @@
           <img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Signupimage.png" alt="Rhino in the wild" style="width:100%;height:160px;object-fit:cover;object-position:center 85%;display:block;">
           <div style="padding:1rem;text-align:center;">
             <div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:6px;">Run with a purpose</div>
-            <div style="font-size:13px;color:rgba(255,255,255,0.85);line-height:1.6;text-align:center;">Marathon Rhino directly funds conservation charities. Every month, a portion of what you pay goes to<br><strong style="color:#E8720C;">Save the Rhino International</strong><br>and<br><strong style="color:#E8720C;">World Land Trust</strong><br>— protecting wildlife and wild places around the world.</div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.85);line-height:1.6;text-align:center;">The Marathon Rhino Company donates <span data-charity-standard>50%</span> of what it receives from subscriptions to conservation charities<br><strong style="color:#E8720C;">Save the Rhino International</strong><br>and<br><strong style="color:#E8720C;">World Land Trust</strong><br>— protecting wildlife and wild places around the world.</div>
           </div>
         </div>
         <!-- Plan options -->
@@ -270,7 +277,7 @@
             <div style="font-size:17px;font-weight:800;color:var(--text);">Standard</div>
             <div style="margin-left:auto;font-size:20px;font-weight:800;color:#E8720C;">$2.50<span style="font-size:13px;font-weight:600;color:var(--text-muted);">/mo</span></div>
           </div>
-          <div style="font-size:13px;color:var(--text-muted);line-height:1.6;padding-left:28px;">Full access to Marathon Rhino — training tracker, race maps, achievements and more. A portion of every subscription goes directly to our conservation partners.</div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.6;padding-left:28px;">Full access to Marathon Rhino — GPS run tracker, training calendar, race maps, achievements and more. We donate <span data-charity-standard>50%</span> of what we receive from every Standard subscription to our conservation partners.</div>
         </label>
         <!-- Awesome plan -->
         <label id="planPlatinumLabel" onclick="selectPlan('platinum')" style="display:block;border:2px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:10px;cursor:pointer;background:#fff;">
@@ -279,23 +286,11 @@
             <div style="font-size:17px;font-weight:800;color:var(--text);">Awesome</div>
             <div style="margin-left:auto;font-size:20px;font-weight:800;color:#E8720C;">$4.50<span style="font-size:13px;font-weight:600;color:var(--text-muted);">/mo</span></div>
           </div>
-          <div style="font-size:13px;color:var(--text-muted);line-height:1.6;padding-left:28px;">Everything in Standard, plus an <strong style="color:#185FA5;">extra $2/month donated entirely to conservation charities</strong> — that's <strong style="color:#185FA5;">$3.25 of your $4.50</strong> going to charity every month. The most impactful way to run for a cause.</div>
-          <div style="margin-top:8px;margin-left:28px;background:#e6f1fb;border-radius:8px;padding:8px 10px;font-size:12px;color:#185FA5;font-weight:600;">💙 $3.25/month to charity ($1.25 from the base plan + the extra $2), split equally between Save the Rhino International &amp; World Land Trust</div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.6;padding-left:28px;">Everything in Standard, plus the <strong style="color:#185FA5;">Awesome supporter badge</strong> on your profile — and we donate <strong style="color:#185FA5;"><span data-charity-awesome>75%</span> of what we receive</strong> from every Awesome subscription to our conservation partners.</div>
+          <div style="margin-top:8px;margin-left:28px;background:#e6f1fb;border-radius:8px;padding:8px 10px;font-size:12px;color:#185FA5;font-weight:600;">💙 Our donation is split equally between Save the Rhino International &amp; World Land Trust</div>
         </label>
         <p style="font-size:12px;color:var(--text-muted);text-align:center;font-style:italic;margin:0;"><img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Icedcoffee.png" alt="iced coffee" style="height:18px;vertical-align:middle;margin-right:4px;">Please note: both options cost less than a large iced coffee</p>
-        <!-- Payment info -->
-        <div style="border:1px solid var(--border);border-radius:12px;padding:1rem;">
-          <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">Payment details</div>
-          <div style="background:var(--navy-light);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--navy);margin-bottom:12px;line-height:1.5;">🔒 Your card will not be charged during your 30-day free trial. You can cancel anytime.</div>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <input type="text" id="signupCardName" placeholder="Cardholder name" style="width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:14px;box-sizing:border-box;">
-            <input type="text" id="signupCardNumber" placeholder="Card number (•••• •••• •••• ••••)" maxlength="19" style="width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:14px;box-sizing:border-box;">
-            <div style="display:flex;gap:10px;">
-              <input type="text" id="signupCardExpiry" placeholder="MM/YY" maxlength="5" style="flex:1;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:14px;box-sizing:border-box;">
-              <input type="text" id="signupCardCvv" placeholder="CVV" maxlength="4" style="flex:1;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:14px;box-sizing:border-box;">
-            </div>
-          </div>
-        </div>
+        <div style="background:var(--navy-light);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--navy);line-height:1.5;">🔒 You won't be charged during your 30-day free trial. Cancel anytime.</div>
         <div id="signupError" style="font-size:12px;color:#e24b4a;display:none;text-align:center;"></div>
         <button class="btn-primary" id="signupBtn" onclick="doSignup()">Start free trial</button>
         <p class="auth-note">30 days free · Cancel anytime · No commitment</p>
@@ -309,6 +304,7 @@
     <button onclick="showLegalPage('terms')" style="background:none;border:none;font-size:12px;color:rgba(255,255,255,0.5);cursor:pointer;text-decoration:underline;">Terms of Service</button>
     <span style="font-size:12px;color:rgba(255,255,255,0.3);">·</span>
     <button onclick="showLegalPage('cookies')" style="background:none;border:none;font-size:12px;color:rgba(255,255,255,0.5);cursor:pointer;text-decoration:underline;">Cookie Policy</button>
+    <span style="flex-basis:100%;font-size:11px;color:rgba(255,255,255,0.45);margin-top:4px;">© <span data-year>2026</span> <span data-company>The Marathon Rhino Company LLC</span></span>
   </div>
 </div>
 
@@ -628,15 +624,15 @@
       <img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Charityherophoto.png" alt="Rhino at sunset" style="width:100%;display:block;max-height:260px;object-fit:cover;object-position:center 60%;">
       <div style="padding:1.5rem;">
         <div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;">Running for a Better World</div>
-        <div style="font-size:14px;color:var(--navy-mid);line-height:1.6;">Your monthly subscription helps protect wildlife and preserve wild places.</div>
+        <div style="font-size:14px;color:var(--navy-mid);line-height:1.6;">Marathon Rhino helps protect wildlife and preserve wild places.</div>
       </div>
     </div>
 
     <!-- Overall commitment banner -->
     <div class="card" style="background:linear-gradient(135deg,#E8720C 0%,#c45e08 100%);text-align:center;padding:1.5rem;">
       <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.8);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;">Our commitment</div>
-      <div style="font-size:42px;font-weight:900;color:#fff;line-height:1;">50%</div>
-      <div style="font-size:14px;color:rgba(255,255,255,0.9);margin-top:6px;line-height:1.5;">of subscription proceeds are donated to conservation charities — split equally between our two partners.</div>
+      <div style="font-size:42px;font-weight:900;color:#fff;line-height:1;" data-charity-standard>50%</div>
+      <div style="font-size:14px;color:rgba(255,255,255,0.9);margin-top:6px;line-height:1.5;">of what we receive from subscriptions is donated to conservation charities — <span data-charity-awesome>75%</span> on the Awesome plan — split equally between our two partners.</div>
     </div>
 
     <!-- Save the Rhino card -->
@@ -649,12 +645,12 @@
           <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Wildlife conservation · Global</div>
         </div>
         <div style="margin-left:auto;background:var(--navy-light);border-radius:12px;padding:6px 14px;text-align:center;flex-shrink:0;">
-          <div style="font-size:22px;font-weight:900;color:var(--navy);line-height:1;">25%</div>
-          <div style="font-size:9px;color:var(--navy-dark);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">of proceeds</div>
+          <div style="font-size:22px;font-weight:900;color:var(--navy);line-height:1;">½</div>
+          <div style="font-size:9px;color:var(--navy-dark);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">of our giving</div>
         </div>
       </div>
       <p style="font-size:13px;color:var(--text);line-height:1.7;margin-bottom:12px;">Save the Rhino International works to protect all five rhino species — Black, White, Greater One-Horned, Sumatran, and Javan — through anti-poaching operations, community engagement, wildlife monitoring, and advocacy across Africa and Asia.</p>
-      <p style="font-size:13px;color:var(--text);line-height:1.7;margin-bottom:14px;">Today, fewer than <strong>27,000 rhinos</strong> remain in the wild. Your subscription directly supports efforts to protect them.</p>
+      <p style="font-size:13px;color:var(--text);line-height:1.7;margin-bottom:14px;">Today, fewer than <strong>27,000 rhinos</strong> remain in the wild. Marathon Rhino's donations support the work to protect them.</p>
       <a href="https://www.savetherhino.org" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;background:var(--navy);color:#fff;padding:11px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;text-decoration:none;">
         Visit Save the Rhino International →
       </a>
@@ -671,8 +667,8 @@
           <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Habitat conservation · Global</div>
         </div>
         <div style="margin-left:auto;background:#e8f5e8;border-radius:12px;padding:6px 14px;text-align:center;flex-shrink:0;">
-          <div style="font-size:22px;font-weight:900;color:#2d7a2d;line-height:1;">25%</div>
-          <div style="font-size:9px;color:#2d7a2d;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">of proceeds</div>
+          <div style="font-size:22px;font-weight:900;color:#2d7a2d;line-height:1;">½</div>
+          <div style="font-size:9px;color:#2d7a2d;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">of our giving</div>
         </div>
       </div>
       <p style="font-size:13px;color:var(--text);line-height:1.7;margin-bottom:12px;">The World Land Trust is an international conservation charity that protects the world's most biologically important and threatened habitats. Since 1989, WLT has funded partner organisations to create reserves and protect land from destruction.</p>
@@ -687,7 +683,7 @@
     <div class="card">
       <div class="card-title">Why these charities?</div>
       <p style="font-size:13px;color:var(--text);line-height:1.7;margin-bottom:10px;">Rhinos need two things to survive: protection from poaching, and wild habitat to live in. Together, Save the Rhino International and the World Land Trust tackle both sides of that equation.</p>
-      <p style="font-size:13px;color:var(--text);line-height:1.7;">At Marathon Rhino, we believe that the miles you run can do more than build fitness — they can help build a future where rhinos and thousands of other species still roam free.</p>
+      <p style="font-size:13px;color:var(--text);line-height:1.7;">At The Marathon Rhino Company, we believe that the miles you run can do more than build fitness — they can help build a future where rhinos and thousands of other species still roam free.</p>
     </div>
 
   </div>
@@ -698,6 +694,7 @@
       <div class="profile-avatar" id="profileAvatar">JD</div>
       <div class="profile-name" id="profileName">John Doe</div>
       <div class="profile-email" id="profileEmail">john@example.com</div>
+      <div style="text-align:center;"><span id="profileSupporterBadge" style="display:none;align-items:center;gap:5px;margin-top:8px;background:linear-gradient(135deg,#E8720C,#c45e08);color:#fff;font-size:11px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;padding:4px 12px 4px 6px;border-radius:20px;"><img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/subscription-platinum-icon.webp" alt="" style="height:18px;width:auto;">Awesome supporter</span></div>
       <div id="profileMemberSince" style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:4px;"></div>
     </div>
     <div class="card">
@@ -773,28 +770,36 @@
         </div>
         <span id="subStatusBadge" style="font-size:11px;font-weight:700;background:#e8f5e8;color:#2d7a2d;padding:3px 10px;border-radius:20px;">Active</span>
       </div>
-      <div style="padding:12px 0;border-bottom:1px solid var(--border);">
-        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;">Change plan</div>
+      <div id="subWebBilledNote" style="display:none;padding:12px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-muted);line-height:1.5;">Your subscription is billed through your Marathon Rhino web account.</div>
+      <div id="subChangePlanSection" style="padding:12px 0;border-bottom:1px solid var(--border);">
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;">Choose plan</div>
         <div style="display:flex;flex-direction:column;gap:8px;">
           <label id="subLabelStandard" style="display:flex;align-items:flex-start;gap:10px;padding:10px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;" onclick="selectSubPlan('standard')">
             <input type="radio" name="subPlan" value="standard" id="subRadioStandard" style="margin-top:2px;accent-color:#E8720C;">
-            <div><div style="font-size:13px;font-weight:700;">Standard — $2.50/month</div><div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Full app access · Portion goes to charity</div></div>
+            <div><div style="font-size:13px;font-weight:700;">Standard — $2.50/month</div><div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Full app access · We donate <span data-charity-standard>50%</span> of what we receive</div></div>
           </label>
           <label id="subLabelPlatinum" style="display:flex;align-items:flex-start;gap:10px;padding:10px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;" onclick="selectSubPlan('platinum')">
             <input type="radio" name="subPlan" value="platinum" id="subRadioPlatinum" style="margin-top:2px;accent-color:#E8720C;">
-            <div><div style="font-size:13px;font-weight:700;"><img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/subscription-platinum-icon.webp" style="height:18px;width:auto;vertical-align:middle;margin-right:4px;">Awesome — $4.50/month</div><div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Standard + an extra $2/month to charity ($3.25/month total)</div></div>
+            <div><div style="font-size:13px;font-weight:700;"><img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/subscription-platinum-icon.webp" style="height:18px;width:auto;vertical-align:middle;margin-right:4px;">Awesome — $4.50/month</div><div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Full app access + Awesome supporter badge · We donate <span data-charity-awesome>75%</span> of what we receive</div></div>
           </label>
         </div>
-        <button class="btn-primary" style="width:100%;margin-top:10px;padding:11px;" onclick="saveSubPlan()">Save plan</button>
+        <button class="btn-primary" id="subSaveBtn" style="width:100%;margin-top:10px;padding:11px;" onclick="saveSubPlan()">Save plan</button>
+        <!-- iPhone app only: restore + Apple's required subscription terms -->
+        <div id="subNativeExtras" style="display:none;margin-top:10px;">
+          <button onclick="restorePurchases().then(function(ok){ if(ok) renderSubSettings(); })" style="width:100%;background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;font-size:13px;font-weight:600;color:var(--navy);cursor:pointer;">Restore purchases</button>
+          <p style="font-size:11px;color:var(--text-muted);line-height:1.5;margin:10px 0 0;">30-day free trial for new subscribers, then the monthly price shown. Payment is charged to your Apple ID. Subscriptions renew automatically each month unless cancelled at least 24 hours before the end of the current period. Manage or cancel anytime in your iPhone's Settings → [your name] → Subscriptions.
+            <button onclick="showLegalPage('terms')" style="background:none;border:none;padding:0;font-size:11px;color:var(--navy);text-decoration:underline;cursor:pointer;">Terms of Service</button> ·
+            <button onclick="showLegalPage('privacy')" style="background:none;border:none;padding:0;font-size:11px;color:var(--navy);text-decoration:underline;cursor:pointer;">Privacy Policy</button></p>
+        </div>
       </div>
-      <div style="padding:12px 0;border-bottom:1px solid var(--border);">
+      <div id="subPaymentMethodSection" style="padding:12px 0;border-bottom:1px solid var(--border);">
         <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">Payment method</div>
         <div id="paymentMethodDisplay" style="display:flex;align-items:center;justify-content:space-between;">
           <div style="font-size:13px;color:var(--text-muted);" id="paymentMethodText">No payment method added</div>
-          <button onclick="openModal('paymentModal')" style="font-size:12px;font-weight:600;color:var(--navy);background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;cursor:pointer;">Update</button>
+          <button style="font-size:12px;font-weight:600;color:var(--navy);background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;cursor:pointer;">Update</button>
         </div>
       </div>
-      <div style="padding-top:12px;">
+      <div id="subPaymentHistorySection" style="padding-top:12px;">
         <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">Payment history</div>
         <div id="paymentHistoryList" style="font-size:13px;color:var(--text-muted);font-style:italic;">No payments yet — your free trial is active.</div>
       </div>
@@ -803,9 +808,13 @@
     <!-- ACCOUNT CARD -->
     <div class="card">
       <div class="settings-label">Account</div>
-      <div class="settings-row" style="border-bottom:none;">
+      <div class="settings-row">
         <div class="settings-row-label">Password</div>
         <button onclick="openChangePasswordModal()" style="background:var(--navy-light);color:var(--navy);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;">Change password</button>
+      </div>
+      <div class="settings-row" style="border-bottom:none;">
+        <div><div class="settings-row-label">Delete account</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Permanently delete your account and data</div></div>
+        <button onclick="openDeleteAccountModal()" style="background:#fff;color:#e24b4a;border:1px solid #e24b4a;border-radius:var(--radius-sm);padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">Delete account</button>
       </div>
     </div>
 
@@ -830,6 +839,7 @@
       <button onclick="showLegalPage('terms')" style="background:none;border:none;font-size:12px;color:var(--text-muted);cursor:pointer;text-decoration:underline;">Terms of Service</button>
       <span style="font-size:12px;color:var(--border);">·</span>
       <button onclick="showLegalPage('cookies')" style="background:none;border:none;font-size:12px;color:var(--text-muted);cursor:pointer;text-decoration:underline;">Cookie Policy</button>
+      <span style="flex-basis:100%;font-size:11px;color:var(--text-muted);margin-top:4px;">© <span data-year>2026</span> <span data-company>The Marathon Rhino Company LLC</span></span>
     </div>
   </div>
 
@@ -1137,7 +1147,7 @@
 </div>
 
 <!-- LEGAL PAGES MODAL -->
-<div class="modal-overlay" id="legalModal">
+<div class="modal-overlay" id="legalModal" style="z-index:500;">
   <div class="modal-sheet" style="max-height:90vh;overflow-y:auto;">
     <div class="modal-handle"></div>
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;">
@@ -1151,24 +1161,56 @@
   </div>
 </div>
 
-<!-- PAYMENT METHOD MODAL -->
-<div class="modal-overlay" id="paymentModal">
+<!-- DELETE ACCOUNT MODAL -->
+<div class="modal-overlay" id="deleteAccountModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title">Payment Method</div>
-    <div style="background:var(--navy-light);border-radius:var(--radius-sm);padding:12px;margin-bottom:1rem;font-size:13px;color:var(--navy);line-height:1.5;">
-      💳 Secure payment processing will be available when the app launches. Enter your card details below to be ready.
+    <div class="modal-title" style="color:#e24b4a;">Delete account</div>
+    <p style="font-size:13px;color:var(--text);line-height:1.6;margin:0 0 12px;">This permanently deletes your Marathon Rhino account, including all of your runs, races, photos and settings. <strong>This can't be undone.</strong></p>
+    <div id="daAppleNote" style="display:none;background:#fff3e0;border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:#8a4a06;line-height:1.5;margin-bottom:12px;">
+      If you subscribed through the App Store, deleting your account doesn't cancel the subscription. Cancel it in your iPhone's Settings → [your name] → Subscriptions so Apple stops billing you.
+      <button onclick="openAppleSubscriptions()" style="display:block;margin-top:6px;background:none;border:none;padding:0;font-size:12px;font-weight:700;color:#E8720C;text-decoration:underline;cursor:pointer;">Open App Store subscriptions</button>
     </div>
-    <div class="modal-field"><label>Cardholder name</label><input type="text" id="cardName" placeholder="Name on card"></div>
-    <div class="modal-field"><label>Card number</label><input type="text" id="cardNumber" placeholder="•••• •••• •••• ••••" maxlength="19"></div>
-    <div style="display:flex;gap:10px;">
-      <div class="modal-field" style="flex:1;"><label>Expiry</label><input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5"></div>
-      <div class="modal-field" style="flex:1;"><label>CVV</label><input type="text" id="cardCvv" placeholder="•••" maxlength="4"></div>
-    </div>
+    <div class="modal-field"><label>Password</label><input type="password" id="daPassword" autocomplete="current-password" placeholder="Enter your password"></div>
+    <div class="modal-field"><label>Type DELETE to confirm</label><input type="text" id="daConfirm" autocomplete="off" autocapitalize="characters" placeholder="DELETE"></div>
+    <div id="daMessage" style="display:none;font-size:13px;font-weight:600;margin-bottom:4px;"></div>
     <div class="modal-actions">
-      <button class="btn-primary" onclick="savePaymentMethod()">Save payment method</button>
-      <button class="btn-ghost" onclick="closeModal('paymentModal')">Cancel</button>
+      <button class="btn-primary" id="daSubmitBtn" style="background:#e24b4a;" onclick="submitDeleteAccount()">Permanently delete my account</button>
+      <button class="btn-ghost" onclick="closeModal('deleteAccountModal')">Cancel</button>
     </div>
+  </div>
+</div>
+
+<!-- PAYWALL (iPhone app only — shown by billing.js when there's no active subscription) -->
+<div id="paywallScreen" style="display:none;">
+  <div class="paywall-inner">
+    <img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Rhino-sunglasses.png" alt="Marathon Rhino" style="width:96px;height:96px;object-fit:contain;align-self:center;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));">
+    <div style="font-size:24px;font-weight:800;color:#fff;text-align:center;">Start your free month</div>
+    <div style="font-size:14px;color:rgba(255,255,255,0.85);text-align:center;line-height:1.5;margin-bottom:6px;">GPS run tracking, your training calendar, race maps and achievements — and we donate <span data-charity-standard>50%</span> of what we receive (<span data-charity-awesome>75%</span> on Awesome) to rhino and habitat conservation.</div>
+    <label class="paywall-opt" id="paywallOptStandard" onclick="paywallSelect('standard')">
+      <input type="radio" name="paywallPlan" id="paywallRadioStandard" checked>
+      <div style="flex:1;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;"><span style="font-size:16px;font-weight:800;color:var(--text);">Standard</span><span style="font-size:17px;font-weight:800;color:#E8720C;">$2.50<span style="font-size:12px;color:var(--text-muted);font-weight:600;">/month</span></span></div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Full access to every feature</div>
+      </div>
+    </label>
+    <label class="paywall-opt" id="paywallOptPlatinum" onclick="paywallSelect('platinum')">
+      <input type="radio" name="paywallPlan" id="paywallRadioPlatinum">
+      <div style="flex:1;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;"><span style="font-size:16px;font-weight:800;color:var(--text);">Awesome</span><span style="font-size:17px;font-weight:800;color:#E8720C;">$4.50<span style="font-size:12px;color:var(--text-muted);font-weight:600;">/month</span></span></div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Full access + Awesome supporter badge · we donate <span data-charity-awesome>75%</span> of what we receive</div>
+      </div>
+    </label>
+    <div id="paywallError" style="display:none;font-size:13px;color:#ffd2d2;text-align:center;"></div>
+    <button class="btn-primary" id="paywallSubscribeBtn" onclick="paywallSubscribe()" style="width:100%;font-size:16px;font-weight:700;">Start 30-day free trial</button>
+    <p style="font-size:11px;color:rgba(255,255,255,0.75);line-height:1.5;text-align:center;margin:0;">Free for 30 days, then the monthly price above. Payment is charged to your Apple ID. Subscriptions renew automatically each month unless cancelled at least 24 hours before the end of the current period. Manage or cancel anytime in your iPhone's Settings → [your name] → Subscriptions.</p>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;">
+      <button class="paywall-link" onclick="paywallRestore()">Restore purchases</button>
+      <button class="paywall-link" onclick="showLegalPage('terms')">Terms of Service</button>
+      <button class="paywall-link" onclick="showLegalPage('privacy')">Privacy Policy</button>
+      <button class="paywall-link" onclick="paywallLogout()">Log out</button>
+    </div>
+    <div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.55);">© <span data-year>2026</span> <span data-company>The Marathon Rhino Company LLC</span></div>
   </div>
 </div>
 
@@ -1200,6 +1242,7 @@
 <script src="js/maps.js" defer></script>
 <script src="js/tracker.js" defer></script>
 <script src="js/admin.js" defer></script>
+<script src="js/legal.js" defer></script>
 <script src="js/settings.js" defer></script>
 <script src="js/billing.js" defer></script>
 </body>
