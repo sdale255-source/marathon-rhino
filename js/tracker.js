@@ -170,6 +170,7 @@ function startGPS() {
 
   runState.watchId = navigator.geolocation.watchPosition(
     (pos) => {
+      _gpsLastFixAt = Date.now(); // watchdog: GPS is still alive
       const { latitude: lat, longitude: lng, accuracy } = pos.coords;
       const acc = accuracy || 0;
 
@@ -224,6 +225,63 @@ function stopGPS() {
     runState.watchId = null;
   }
 }
+
+// ── Keeping GPS alive during a run ───────────────────────────────────────
+// iPhones suspend a web page's GPS when the screen locks or the page goes to
+// the background (e.g. while the camera is open for a run photo), and often
+// never restart it. Three safeguards:
+//   1. Keep the screen awake during a run (Screen Wake Lock), so it doesn't lock.
+//   2. Restart the GPS watcher whenever the app comes back to the front.
+//   3. A watchdog that restarts GPS if no location update arrives for 20 s.
+let _gpsLastFixAt = 0;
+let _gpsWatchdog = null;
+let _wakeLock = null;
+
+async function requestWakeLock() {
+  try {
+    if ('wakeLock' in navigator && !_wakeLock && document.visibilityState === 'visible') {
+      _wakeLock = await navigator.wakeLock.request('screen');
+      _wakeLock.addEventListener('release', () => { _wakeLock = null; });
+    }
+  } catch (e) { console.warn('Screen wake lock not available:', e.message); }
+}
+
+function releaseWakeLock() {
+  if (_wakeLock) { _wakeLock.release().catch(() => {}); _wakeLock = null; }
+}
+
+// Only restarts a watcher that was already running (so we never skip the
+// permission prompt for someone who hasn't allowed GPS yet).
+function restartGPS(reason) {
+  if (runState.watchId === null || isGpsDisabledByUser()) return;
+  console.log('Restarting GPS:', reason);
+  stopGPS();
+  _gpsLastFixAt = Date.now();
+  startGPS();
+}
+
+function startGpsWatchdog() {
+  clearInterval(_gpsWatchdog);
+  _gpsLastFixAt = Date.now();
+  _gpsWatchdog = setInterval(() => {
+    if (runState.status !== 'running' || runState.watchId === null) return;
+    if (Date.now() - _gpsLastFixAt > 20000) {
+      setGpsStatus('dot-amber', 'Reconnecting GPS…');
+      restartGPS('no location update for 20s');
+    }
+  }, 5000);
+}
+
+function stopGpsWatchdog() {
+  clearInterval(_gpsWatchdog);
+  _gpsWatchdog = null;
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible' || runState.status === 'idle') return;
+  requestWakeLock(); // iOS drops the wake lock whenever the page is hidden
+  if (runState.status === 'running') restartGPS('app returned to the foreground');
+});
 
 // ── GPS Settings page helpers ─────────────────────────────────────────────
 const GPS_DISABLED_KEY = 'mrh_gps_disabled';
@@ -336,6 +394,8 @@ function handleRunBtn() {
     btn.style.background = 'rgba(255,255,255,0.9)';
     stopBtn.style.display = 'block';
     renderRunPhotoUI();
+    requestWakeLock();     // keep the screen on so iOS doesn't suspend GPS
+    startGpsWatchdog();
     // Permission-aware GPS start — skip if user disabled GPS in Settings
     if (!isGpsDisabledByUser()) {
       maybeShowGpsPrompt();
@@ -358,9 +418,14 @@ function handleRunBtn() {
     runState.status = 'running';
     runState.timerInterval = setInterval(updateRunDisplay, 1000);
     btn.textContent = 'Pause';
-    // Re-lock GPS if watcher dropped
-    if (runState.watchId === null) startGPS();
-    else setGpsStatus('dot-green', 'GPS locked ✓');
+    // Measure from the first fix after resuming — don't count ground covered while paused
+    runState.lastPos = null;
+    _gpsLastFixAt = Date.now();
+    requestWakeLock();
+    // Re-lock GPS (restart the watcher in case iOS silently dropped it)
+    if (isGpsDisabledByUser()) { /* GPS turned off in Settings */ }
+    else if (runState.watchId === null) startGPS();
+    else restartGPS('run resumed');
   }
 }
 
@@ -461,6 +526,8 @@ function stopRunAndGoHome() {
 function resetRunTracker() {
   clearInterval(runState.timerInterval);
   stopGPS();
+  stopGpsWatchdog();
+  releaseWakeLock();
   if (runState.photoPreviewUrl) URL.revokeObjectURL(runState.photoPreviewUrl);
   runState = { status:'idle', startTime:null, pausedMs:0, pauseStart:null, timerInterval:null, watchId:null, coords:[], totalDistMeters:0, lastPos:null, photoBlob:null, photoPreviewUrl:null };
   renderRunPhotoUI();
