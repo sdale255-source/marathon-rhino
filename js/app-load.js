@@ -321,7 +321,8 @@ function enterApp(){
   const initials=np.length>=2?(np[0][0]+np[np.length-1][0]).toUpperCase():np[0].slice(0,2).toUpperCase();
   document.getElementById('profileAvatar').textContent=initials;
   const firstName=state.user.name.trim().split(' ')[0];
-  document.getElementById('topbarWelcome').textContent='Welcome back, '+firstName+'!';
+  // First-timers (welcome popup not seen yet) get "Welcome", everyone else "Welcome back"
+  document.getElementById('topbarWelcome').textContent=(state.user.hasSeenWelcome===false?'Welcome, ':'Welcome back, ')+firstName+'!';
   document.getElementById('profileName').textContent=state.user.name;
   document.getElementById('profileEmail').textContent=state.user.email;
   const mEl=document.getElementById('profileMemberSince');if(mEl)mEl.textContent=state.user.joinDate?'Member since '+state.user.joinDate:'';
