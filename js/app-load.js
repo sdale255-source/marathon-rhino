@@ -8,6 +8,9 @@ async function loadAndEnterApp(supaUser) {
   } catch(e) { console.warn('Profile load error:', e); }
   if (profile) {
     state.user = { id: supaUser.id, name: profile.name || supaUser.email.split('@')[0], email: supaUser.email, joinDate: profile.join_date };
+    // First-login welcome popup: only show when the DB explicitly says "not seen yet".
+    // (If the has_seen_welcome column doesn't exist, this stays true and nothing shows.)
+    state.user.hasSeenWelcome = profile.has_seen_welcome !== false;
     state.unit = profile.unit || 'mi';
     state.showPace = profile.show_pace !== false;
     console.log('LOADING profile maps:', {globe:profile.show_globe, us:profile.show_us_map, oc:profile.show_oc_map, allNull: profile.show_globe==null && profile.show_us_map==null});
@@ -43,7 +46,7 @@ async function loadAndEnterApp(supaUser) {
       state.user.paymentHistory = profile.payment_history || [];
     }
   } else {
-    state.user = { id: supaUser.id, name: supaUser.email.split('@')[0], email: supaUser.email, joinDate: new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'}) };
+    state.user = { id: supaUser.id, name: supaUser.email.split('@')[0], email: supaUser.email, joinDate: new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'}), hasSeenWelcome: false };
   }
 
   // Load runs
@@ -328,6 +331,31 @@ function enterApp(){
   updateWeeklyTotal();renderStats();renderNews();renderAchievements();updateRaceDisplay();
   updateGlobe();updateUSMap();updateNAMap();updateSAMap();updateEUMap();updateAFMap();updateASMap();updateOCMap();
   initUnlockedAchievements();
+  showWelcomeIfNeeded();
+}
+
+// ===================== FIRST-LOGIN WELCOME =====================
+// Shows the "Welcome!" popup once per account. The flag is stored in
+// profiles.has_seen_welcome so it follows the user across devices.
+// It opens underneath the splash screen and appears as the splash clears.
+function showWelcomeIfNeeded(){
+  if (!state.user?.id || state.user.hasSeenWelcome) return;
+  state.user.hasSeenWelcome = true;
+  openModal('welcomeModal');
+  saveWelcomeSeen(); // save right away, so tapping outside the popup also counts as seen
+}
+async function saveWelcomeSeen(){
+  try {
+    const rows = await dbUpdate('profiles', { has_seen_welcome: true }, 'id=eq.'+state.user.id);
+    if (Array.isArray(rows) && rows.length === 0) {
+      // No profile row yet (brand-new account): create it, then set the flag.
+      await saveProfileToDB();
+      await dbUpdate('profiles', { has_seen_welcome: true }, 'id=eq.'+state.user.id);
+    }
+  } catch(e) {
+    // If this fails, the popup will simply show again on the next login.
+    console.warn('Welcome flag save error:', e);
+  }
 }
 
 
