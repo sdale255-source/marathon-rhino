@@ -994,6 +994,16 @@
   </div>
 </div>
 
+<!-- FIRST-LOGIN WELCOME MODAL (shown once per account, see showWelcomeIfNeeded in app-load.js) -->
+<div class="modal-overlay" id="welcomeModal" style="background:rgba(4,44,83,0.7);z-index:300;">
+  <div class="modal-sheet" style="text-align:center;max-width:340px;">
+    <img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/rhino-welcome.webp" onerror="this.onerror=null;this.src='https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Logo.png';" alt="Marathon Rhino" style="width:200px;max-width:70%;height:auto;display:block;margin:0 auto 10px;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.18));">
+    <div style="font-size:26px;font-weight:800;color:var(--navy-deeper);margin-bottom:6px;">Welcome!</div>
+    <p style="font-size:15px;color:var(--text-muted);line-height:1.55;margin:0 0 1.25rem;">Let's begin your marathon journey &amp; protect the Earth!</p>
+    <button class="btn-primary" style="width:100%;font-size:16px;" onclick="closeModal('welcomeModal')">Let's go</button>
+  </div>
+</div>
+
 <!-- ACHIEVEMENT UNLOCK MODAL -->
 <div class="modal-overlay" id="achievementModal" style="background:rgba(4,44,83,0.7);">
   <div class="modal-sheet" style="text-align:center;max-width:320px;">
