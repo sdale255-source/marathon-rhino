@@ -13,7 +13,7 @@ const LEGAL_CONTACT_EMAIL = 'hello@marathonrhino.run';
 // (after App Store / payment-processing fees, refunds and sales tax).
 const CHARITY_PCT_STANDARD = 50;
 const CHARITY_PCT_AWESOME = 75;
-const LEGAL_UPDATED = 'October 23, 2026';
+const LEGAL_UPDATED = 'October 24, 2026';
 
 const _LH = 'style="font-size:15px;font-weight:700;color:var(--navy);margin:1.2rem 0 0.5rem;"';
 const _LUL = 'style="padding-left:1.2rem;margin:0.5rem 0;"';
@@ -66,7 +66,7 @@ const LEGAL_CONTENT = {
       <p>Depending on where you live, you may have the right to access, correct, export, or delete your personal data, or to object to how it is processed. You can update most information directly in the app. For anything else, email ${_LMAIL} and we will respond within 30 days.</p>
 
       <h3 ${_LH}>7. Children's Privacy</h3>
-      <p>Marathon Rhino is not directed at children under 13, and we do not knowingly collect personal information from them. If you believe a child has given us personal data, contact us and we will delete it.</p>
+      <p>Marathon Rhino is not directed at anyone under 18, and we do not knowingly collect personal information from people under 18. If you believe someone under 18 has given us personal data, contact us and we will delete it.</p>
 
       <h3 ${_LH}>8. Changes to This Policy</h3>
       <p>If we make significant changes, we will update the date above and, where appropriate, notify you in the app.</p>
@@ -86,7 +86,7 @@ const LEGAL_CONTENT = {
       <p>Marathon Rhino is a marathon training app for logging runs, tracking races, recording runs with GPS, and viewing your running on maps. ${LEGAL_COMPANY} donates ${CHARITY_PCT_STANDARD}% of what it receives from Standard subscriptions and ${CHARITY_PCT_AWESOME}% of what it receives from Awesome subscriptions to conservation charities, split equally between Save the Rhino International and World Land Trust. "What it receives" means subscription revenue actually received by the company after App Store or payment-processing fees, refunds, and any sales taxes. These donations are made by the company from its own revenue; they are not donations by you and are not tax-deductible for subscribers.</p>
 
       <h3 ${_LH}>2. Your Account</h3>
-      <p>You must be at least 13 years old to create an account. You are responsible for keeping your password confidential and for activity under your account. Let us know right away if you suspect unauthorized use.</p>
+      <p>You must be at least 18 years old to create an account. You are responsible for keeping your password confidential and for activity under your account. Let us know right away if you suspect unauthorized use.</p>
 
       <h3 ${_LH}>3. Subscriptions</h3>
       <p><strong>Plans:</strong> Standard ($2.50/month) and Awesome ($4.50/month), or the equivalent price in your local currency as shown at purchase. Both plans include full access to the app. Awesome also includes the Awesome supporter badge, and we donate a larger share of what we receive from it (see section 1).</p>
