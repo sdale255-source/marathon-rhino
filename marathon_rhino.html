@@ -181,6 +181,15 @@
   .topbar { padding-top: env(safe-area-inset-top, 0px); height: calc(84px + env(safe-area-inset-top, 0px)); }
   .bottom-nav { padding-bottom: env(safe-area-inset-bottom, 0px); }
   .auth-wrap { padding-top: calc(2rem + env(safe-area-inset-top, 0px)); padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px)); }
+  /* Run page on shorter phones: shrink the big numbers so Start Run stays on screen */
+  @media (max-height: 900px) {
+    #runTimer { font-size: 60px !important; }
+  }
+  @media (max-height: 760px) {
+    #runTimer { font-size: 52px !important; }
+    #runDistance, #runPace { font-size: 30px !important; }
+    #runMarathon { font-size: 26px !important; }
+  }
   /* PAYWALL (iPhone app) */
   #paywallScreen { position: fixed; inset: 0; z-index: 400; background: linear-gradient(160deg, #042C53 0%, #0C447C 60%, #c45e08 100%); overflow-y: auto; -webkit-overflow-scrolling: touch; align-items: flex-start; justify-content: center; padding: calc(env(safe-area-inset-top, 0px) + 24px) 16px calc(env(safe-area-inset-bottom, 0px) + 24px); }
   .paywall-inner { width: 100%; max-width: 420px; margin: auto; display: flex; flex-direction: column; gap: 12px; }
@@ -466,7 +475,7 @@
   </div>
 
   <!-- RUN TRACKING PAGE -->
-  <div class="page" id="pageRun" style="background:#E8720C;padding:0;flex-direction:column;min-height:100%;">
+  <div class="page" id="pageRun" style="background:#E8720C;padding:0;flex-direction:column;">
 
     <!-- Top bar -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem 0.5rem;">
@@ -486,16 +495,16 @@
     </div>
 
     <!-- Main stats -->
-    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem 1.5rem 0;">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0.25rem 1.5rem 0.75rem;">
 
       <!-- Timer -->
-      <div style="text-align:center;margin-bottom:2rem;">
+      <div style="text-align:center;margin-bottom:1.25rem;">
         <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Time</div>
         <div id="runTimer" style="font-size:72px;font-weight:900;color:#fff;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-2px;">00:00:00</div>
       </div>
 
       <!-- Distance + Pace row -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;width:100%;margin-bottom:1.5rem;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;width:100%;margin-bottom:1rem;">
         <div style="background:rgba(255,255,255,0.18);border-radius:16px;padding:1.2rem;text-align:center;">
           <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">Distance</div>
           <div id="runDistance" style="font-size:36px;font-weight:900;color:#fff;line-height:1;">0.00</div>
@@ -509,7 +518,7 @@
       </div>
 
       <!-- Marathon projection -->
-      <div style="background:rgba(0,0,0,0.2);border-radius:16px;padding:1.2rem 1.5rem;width:100%;text-align:center;margin-bottom:1.5rem;">
+      <div style="background:rgba(0,0,0,0.2);border-radius:16px;padding:1rem 1.5rem;width:100%;text-align:center;margin-bottom:1rem;">
         <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">🏅 Marathon finish at this pace</div>
         <div id="runMarathon" style="font-size:32px;font-weight:900;color:#fff;line-height:1;">--:--:--</div>
       </div>
