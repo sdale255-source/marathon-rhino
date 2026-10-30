@@ -28,8 +28,10 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Marathon Rhino uses the camera so you can take a photo during or after a run.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Marathon Rhino uses your location during a run to measure your distance and pace, including while your screen is locked. It is never used when you are not running.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Marathon Rhino uses your location during a run to measure your distance and pace.</string>
+	<string>Marathon Rhino uses your location during a run to measure your distance and pace, including while your screen is locked.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Marathon Rhino lets you choose photos to add to your runs and races.</string>
 	<key>UIApplicationSceneManifest</key>
@@ -51,6 +53,10 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

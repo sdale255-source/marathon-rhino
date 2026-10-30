@@ -72,6 +72,50 @@ function updateRunDisplay() {
   }
 }
 
+// ── Where GPS comes from ──────────────────────────────────────────────────
+// Website: the browser's GPS (navigator.geolocation), which iPhones pause when
+// the screen locks.
+// iPhone app: the native BackgroundGeolocation plugin, which keeps measuring
+// the run with the screen locked or the app in the background (iOS shows a
+// blue location pill while it does).
+function nativeGps() {
+  try {
+    if (typeof isNativeApp !== 'function' || !isNativeApp()) return null;
+    const P = window.Capacitor && window.Capacitor.Plugins;
+    return (P && P.BackgroundGeolocation) || null;
+  } catch (e) { return null; }
+}
+function gpsAvailable() { return !!(nativeGps() || navigator.geolocation); }
+
+// iPhone app: ask for "While Using the App" location permission. (We never
+// ask for "Always" — background tracking during a run works without it.)
+// Resolves 'granted', 'denied', or 'timeout' (no answer / no fix yet).
+function _nativeRequestPermission(timeoutMs) {
+  const BG = nativeGps();
+  return new Promise(resolve => {
+    let done = false, id = null;
+    const finish = (result) => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      Promise.resolve(id).then(x => { if (x) BG.removeWatcher({ id: x }).catch(() => {}); });
+      resolve(result);
+    };
+    const timer = setTimeout(() => finish('timeout'), timeoutMs || 15000);
+    try {
+      id = BG.addWatcher({ requestPermissions: true, stale: true }, (loc, err) => {
+        if (err) { if (err.code === 'NOT_AUTHORIZED') finish('denied'); return; }
+        if (loc) finish('granted');
+      });
+    } catch (e) { finish('timeout'); }
+  });
+}
+
+function openAppLocationSettings() {
+  const BG = nativeGps();
+  if (BG && typeof BG.openSettings === 'function') BG.openSettings().catch(() => {});
+}
+
 // ── GPS permission helpers ────────────────────────────────────────────────
 const GPS_PERM_KEY = 'mrh_gps_perm'; // localStorage key
 
@@ -107,7 +151,7 @@ function gpsPermDeny() {
 
 // Show our custom prompt only on first visit; afterwards go straight to GPS
 function maybeShowGpsPrompt(onGranted) {
-  if (!navigator.geolocation) {
+  if (!gpsAvailable()) {
     setGpsStatus('dot-red', 'GPS not supported on this device');
     return;
   }
@@ -126,6 +170,27 @@ function maybeShowGpsPrompt(onGranted) {
 // then hand off to watchPosition
 function _requestAndStartGPS(onGranted) {
   setGpsStatus('dot-grey', 'Acquiring GPS…');
+  if (nativeGps()) {
+    _nativeRequestPermission().then(result => {
+      if (result === 'denied') {
+        markGpsPromptSeen(false);
+        setGpsStatus('dot-red', 'Location is off — allow it in Settings → Marathon Rhino → Location');
+        renderGpsSettings();
+        return;
+      }
+      // 'granted', or 'timeout' (no fix yet indoors, or the iOS prompt is
+      // still open) — start tracking; it reports a denial if there is one.
+      if (result === 'granted') markGpsPromptSeen(true);
+      startGPS();
+      if (typeof onGranted === 'function') onGranted();
+      if (typeof runState._onGpsGranted === 'function' && typeof onGranted !== 'function') {
+        runState._onGpsGranted();
+        runState._onGpsGranted = null;
+      }
+      renderGpsSettings();
+    });
+    return;
+  }
   navigator.geolocation.getCurrentPosition(
     () => {
       // Browser has granted permission — now start the watcher
@@ -164,50 +229,79 @@ function setGpsStatus(dotClass, text) {
   label.textContent = text;
 }
 
+// Handles one location fix (from either GPS source) and adds to the distance.
+function handleGpsFix(lat, lng, accuracy, timestamp) {
+  _gpsLastFixAt = Date.now(); // watchdog: GPS is still alive
+  const acc = accuracy || 0;
+  const pos = { timestamp: timestamp || Date.now() };
+
+  // Show the real accuracy so it's obvious what the GPS is doing.
+  const accTxt = acc ? ` (±${Math.round(acc)}m)` : '';
+  if (acc && acc > GPS_ACCURACY_LIMIT) {
+    setGpsStatus('dot-amber', `GPS warming up…${accTxt}`);
+  } else {
+    setGpsStatus('dot-green', `GPS locked ✓${accTxt}`);
+  }
+
+  if (runState.status !== 'running') return;
+
+  // Always seed / update lastPos, even for weak fixes, so that once
+  // accuracy improves we already have a reference point to measure from.
+  if (!runState.lastPos) {
+    runState.lastPos = { lat, lng, ts: pos.timestamp, acc };
+    return;
+  }
+
+  // Only ACCUMULATE distance from reasonably accurate fixes.
+  if (acc && acc > GPS_ACCURACY_LIMIT) {
+    runState.lastPos = { lat, lng, ts: pos.timestamp, acc };
+    return;
+  }
+
+  const d = haversineMeters(runState.lastPos.lat, runState.lastPos.lng, lat, lng);
+  const dt = (pos.timestamp - runState.lastPos.ts) / 1000;
+
+  // Ignore sub-2 m GPS jitter while essentially stationary, and reject
+  // impossible teleports (> 50 m in under 3 s).
+  if (d >= 2 && (d < 50 || dt > 3)) {
+    runState.totalDistMeters += d;
+  }
+
+  runState.lastPos = { lat, lng, ts: pos.timestamp, acc };
+}
+
 function startGPS() {
-  if (!navigator.geolocation) { setGpsStatus('dot-red', 'GPS not supported'); return; }
+  if (!gpsAvailable()) { setGpsStatus('dot-red', 'GPS not supported'); return; }
   setGpsStatus('dot-grey', 'Acquiring GPS…');
 
+  const BG = nativeGps();
+  if (BG) {
+    runState.gpsNative = true;
+    // "backgroundMessage" is what keeps updates coming with the screen locked.
+    runState.watchId = BG.addWatcher({
+      backgroundMessage: 'Marathon Rhino is tracking your run.',
+      backgroundTitle: 'Run in progress',
+      requestPermissions: false,   // asked for separately, "While Using" only
+      stale: false,
+      distanceFilter: 0
+    }, (loc, err) => {
+      if (err) {
+        if (err.code === 'NOT_AUTHORIZED') {
+          markGpsPromptSeen(false);
+          setGpsStatus('dot-red', 'Location is off — allow it in Settings → Marathon Rhino → Location');
+        } else {
+          setGpsStatus('dot-amber', 'GPS signal weak…');
+        }
+        return;
+      }
+      if (loc) handleGpsFix(loc.latitude, loc.longitude, loc.accuracy, loc.time);
+    });
+    return;
+  }
+
+  runState.gpsNative = false;
   runState.watchId = navigator.geolocation.watchPosition(
-    (pos) => {
-      _gpsLastFixAt = Date.now(); // watchdog: GPS is still alive
-      const { latitude: lat, longitude: lng, accuracy } = pos.coords;
-      const acc = accuracy || 0;
-
-      // Show the real accuracy so it's obvious what the GPS is doing.
-      const accTxt = acc ? ` (±${Math.round(acc)}m)` : '';
-      if (acc && acc > GPS_ACCURACY_LIMIT) {
-        setGpsStatus('dot-amber', `GPS warming up…${accTxt}`);
-      } else {
-        setGpsStatus('dot-green', `GPS locked ✓${accTxt}`);
-      }
-
-      if (runState.status !== 'running') return;
-
-      // Always seed / update lastPos, even for weak fixes, so that once
-      // accuracy improves we already have a reference point to measure from.
-      if (!runState.lastPos) {
-        runState.lastPos = { lat, lng, ts: pos.timestamp, acc };
-        return;
-      }
-
-      // Only ACCUMULATE distance from reasonably accurate fixes.
-      if (acc && acc > GPS_ACCURACY_LIMIT) {
-        runState.lastPos = { lat, lng, ts: pos.timestamp, acc };
-        return;
-      }
-
-      const d = haversineMeters(runState.lastPos.lat, runState.lastPos.lng, lat, lng);
-      const dt = (pos.timestamp - runState.lastPos.ts) / 1000;
-
-      // Ignore sub-2 m GPS jitter while essentially stationary, and reject
-      // impossible teleports (> 50 m in under 3 s).
-      if (d >= 2 && (d < 50 || dt > 3)) {
-        runState.totalDistMeters += d;
-      }
-
-      runState.lastPos = { lat, lng, ts: pos.timestamp, acc };
-    },
+    (pos) => handleGpsFix(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy, pos.timestamp),
     (err) => {
       if (err.code === 1) {
         setGpsStatus('dot-red', 'Location denied — check device Settings');
@@ -221,7 +315,15 @@ function startGPS() {
 
 function stopGPS() {
   if (runState.watchId !== null) {
-    navigator.geolocation.clearWatch(runState.watchId);
+    const BG = nativeGps();
+    if (runState.gpsNative && BG) {
+      // In the app, addWatcher hands back the watcher id (or a promise of it).
+      Promise.resolve(runState.watchId)
+        .then(id => BG.removeWatcher({ id }))
+        .catch(e => console.warn('removeWatcher failed', e));
+    } else {
+      navigator.geolocation.clearWatch(runState.watchId);
+    }
     runState.watchId = null;
   }
 }
@@ -254,6 +356,9 @@ function releaseWakeLock() {
 // permission prompt for someone who hasn't allowed GPS yet).
 function restartGPS(reason) {
   if (runState.watchId === null || isGpsDisabledByUser()) return;
+  // In the app, iOS only lets location tracking START while the app is on
+  // screen, so never stop/restart it while the phone is locked.
+  if (nativeGps() && document.visibilityState !== 'visible') return;
   console.log('Restarting GPS:', reason);
   stopGPS();
   _gpsLastFixAt = Date.now();
@@ -280,7 +385,11 @@ function stopGpsWatchdog() {
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState !== 'visible' || runState.status === 'idle') return;
   requestWakeLock(); // iOS drops the wake lock whenever the page is hidden
-  if (runState.status === 'running') restartGPS('app returned to the foreground');
+  // The website's GPS often dies in the background, so always restart it.
+  // The app's GPS keeps running, so only restart it if it has actually gone quiet.
+  if (runState.status === 'running' && (!nativeGps() || Date.now() - _gpsLastFixAt > 20000)) {
+    restartGPS('app returned to the foreground');
+  }
 });
 
 // ── GPS Settings page helpers ─────────────────────────────────────────────
@@ -303,7 +412,16 @@ function renderGpsSettings() {
   toggle.checked = !disabled && permValue === 'granted';
 
   // Badge + description
-  if (!navigator.geolocation) {
+  const native = !!nativeGps();
+  const help = document.getElementById('gpsPermHelpText');
+  if (help && native) {
+    help.innerHTML = 'If you turned location off, tap below to open Settings, then choose <strong>Location → While Using the App</strong>.';
+  }
+  const permBtn = document.getElementById('gpsPermBtn');
+  if (permBtn && native && permValue === 'denied') permBtn.textContent = '📍 Open Settings to allow location';
+  else if (permBtn && native) permBtn.textContent = '📍 Request location permission';
+
+  if (!gpsAvailable()) {
     badge.textContent = 'Not supported';
     badge.style.cssText = 'font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:#f0f0f0;color:#888;';
     statusText.textContent = 'GPS is not available on this device or browser.';
@@ -318,15 +436,18 @@ function renderGpsSettings() {
   } else if (permValue === 'denied') {
     badge.textContent = 'Denied';
     badge.style.cssText = 'font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:#fde8e8;color:#c0392b;';
-    statusText.textContent = 'Location access was denied. Tap the button below to request again, or enable it in your device Settings.';
+    statusText.textContent = native
+      ? 'Location is turned off for Marathon Rhino. Tap the button below to fix it in Settings.'
+      : 'Location access was denied. Tap the button below to request again, or enable it in your device Settings.';
   } else {
     badge.textContent = 'Not yet set';
     badge.style.cssText = 'font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--navy-light);color:var(--navy);';
     statusText.textContent = 'You haven\'t been asked yet — go to the Run page to set up GPS.';
   }
 
-  // Use the Permissions API if available for live state (Chrome/Android)
-  if (navigator.permissions) {
+  // Use the Permissions API if available for live state (Chrome/Android).
+  // Not in the iPhone app — there it reports the web view, not the app.
+  if (navigator.permissions && !native) {
     navigator.permissions.query({ name: 'geolocation' }).then(result => {
       if (result.state === 'granted') {
         markGpsPromptSeen(true);
@@ -362,6 +483,17 @@ function onGpsToggleChange(enabled) {
 }
 
 function resetGpsPermission() {
+  if (nativeGps()) {
+    // iOS only shows its permission prompt once; after that, Settings is the
+    // only place to change it.
+    localStorage.removeItem(GPS_DISABLED_KEY);
+    _nativeRequestPermission(8000).then(result => {
+      if (result === 'denied') { markGpsPromptSeen(false); openAppLocationSettings(); }
+      else if (result === 'granted') markGpsPromptSeen(true);
+      renderGpsSettings();
+    });
+    return;
+  }
   // Clear our stored answer so the prompt shows again on next Run page visit
   localStorage.removeItem(GPS_PERM_KEY);
   localStorage.removeItem(GPS_DISABLED_KEY);

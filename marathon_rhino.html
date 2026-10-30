@@ -743,12 +743,12 @@
       <div class="settings-row" style="border-bottom:none;flex-direction:column;align-items:flex-start;gap:10px;">
         <div>
           <div class="settings-row-label">Device location permission</div>
-          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;line-height:1.5;">
+          <div id="gpsPermHelpText" style="font-size:11px;color:var(--text-muted);margin-top:2px;line-height:1.5;">
             If you previously denied access, tap below to request again — or go to your device's
             <strong>Settings → Privacy → Location</strong> and enable it for your browser manually.
           </div>
         </div>
-        <button onclick="resetGpsPermission()" style="background:var(--navy-light);color:var(--navy);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;width:100%;">
+        <button id="gpsPermBtn" onclick="resetGpsPermission()" style="background:var(--navy-light);color:var(--navy);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;width:100%;">
           📍 Request location permission again
         </button>
       </div>
