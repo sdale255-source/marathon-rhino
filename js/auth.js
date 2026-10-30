@@ -97,11 +97,16 @@ async function doSignup() {
     _sbToken = session.access_token;
     const toSave = { ...session, expires_at: Math.floor(Date.now()/1000) + session.expires_in };
     localStorage.setItem('sb_session', JSON.stringify(toSave));
-    // Save profile
+    // Save profile — with starting map toggles for the user's region
+    // (US map + globe for the US, the home region's map + globe elsewhere; see COUNTRY_MAP_DEFAULTS in app-load.js)
+    const md = COUNTRY_MAP_DEFAULTS[country] || COUNTRY_MAP_DEFAULTS['other'];
     await dbUpsert('profiles', {
       id: userId, name, email, country,
       join_date: new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'}),
-      subscription_tier: plan, trial_end: trialEnd
+      subscription_tier: plan, trial_end: trialEnd,
+      show_globe: md.showGlobe, show_us_map: md.showUSMap, show_na_map: md.showNAMap,
+      show_sa_map: md.showSAMap, show_eu_map: md.showEUMap, show_af_map: md.showAFMap,
+      show_as_map: md.showASMap, show_oc_map: md.showOCMap
     });
     state.country = country; state.mapsInitialized = false;
     // Website: send the new user to Stripe to put a card on file (30-day free trial).
