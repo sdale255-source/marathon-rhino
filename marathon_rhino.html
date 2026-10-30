@@ -789,13 +789,13 @@
           </label>
         </div>
         <button class="btn-primary" id="subSaveBtn" style="width:100%;margin-top:10px;padding:11px;" onclick="saveSubPlan()">Save plan</button>
-        <!-- iPhone app only: restore + Apple's required subscription terms -->
-        <div id="subNativeExtras" style="display:none;margin-top:10px;">
-          <button onclick="restorePurchases().then(function(ok){ if(ok) renderSubSettings(); })" style="width:100%;background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;font-size:13px;font-weight:600;color:var(--navy);cursor:pointer;">Restore purchases</button>
-          <p style="font-size:11px;color:var(--text-muted);line-height:1.5;margin:10px 0 0;">30-day free trial for new subscribers, then the monthly price shown. Payment is charged to your Apple ID. Subscriptions renew automatically each month unless cancelled at least 24 hours before the end of the current period. Manage or cancel anytime in your iPhone's Settings → [your name] → Subscriptions.
-            <button onclick="showLegalPage('terms')" style="background:none;border:none;padding:0;font-size:11px;color:var(--navy);text-decoration:underline;cursor:pointer;">Terms of Service</button> ·
-            <button onclick="showLegalPage('privacy')" style="background:none;border:none;padding:0;font-size:11px;color:var(--navy);text-decoration:underline;cursor:pointer;">Privacy Policy</button></p>
-        </div>
+      </div>
+      <!-- iPhone app only: restore + Apple's required subscription terms (shown for every subscriber) -->
+      <div id="subNativeExtras" style="display:none;padding:12px 0;border-bottom:1px solid var(--border);">
+        <button onclick="restorePurchases().then(function(ok){ if(ok) renderSubSettings(); })" style="width:100%;background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;font-size:13px;font-weight:600;color:var(--navy);cursor:pointer;">Restore purchases</button>
+        <p style="font-size:11px;color:var(--text-muted);line-height:1.5;margin:10px 0 0;">30-day free trial for new subscribers, then the monthly price shown. Payment is charged to your Apple ID. Subscriptions renew automatically each month unless cancelled at least 24 hours before the end of the current period. Manage or cancel anytime in your iPhone's Settings → [your name] → Subscriptions.
+          <button onclick="showLegalPage('terms')" style="background:none;border:none;padding:0;font-size:11px;color:var(--navy);text-decoration:underline;cursor:pointer;">Terms of Service</button> ·
+          <button onclick="showLegalPage('privacy')" style="background:none;border:none;padding:0;font-size:11px;color:var(--navy);text-decoration:underline;cursor:pointer;">Privacy Policy</button></p>
       </div>
       <div id="subPaymentMethodSection" style="padding:12px 0;border-bottom:1px solid var(--border);">
         <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">Payment method</div>
