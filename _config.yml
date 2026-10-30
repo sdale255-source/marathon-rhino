@@ -1,0 +1,5 @@
+# GitHub Pages settings: keep the iPhone app project and the server code out
+# of the published website.
+exclude:
+  - mobile
+  - supabase

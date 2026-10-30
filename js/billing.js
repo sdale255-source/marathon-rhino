@@ -29,15 +29,10 @@ function isCompAccount() {
   return COMP_EMAILS.indexOf(email) !== -1;
 }
 
-// Opens a link outside the app (Safari) when running natively.
+// Opens a link outside the app. In the iPhone app, window.open hands the link
+// to iOS, which opens it in Safari (or, for App Store links, the App Store).
 function openExternal(url) {
-  try {
-    const P = window.Capacitor && window.Capacitor.Plugins;
-    if (isNativeApp() && P && P.Browser && typeof P.Browser.open === 'function') {
-      P.Browser.open({ url: url });
-      return;
-    }
-  } catch (e) {}
+  if (isNativeApp()) { window.open(url, '_blank'); return; }
   const w = window.open(url, '_blank');
   if (!w) window.location.href = url;
 }

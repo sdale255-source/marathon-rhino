@@ -134,7 +134,12 @@ async function doForgotPassword() {
   const email = document.getElementById('loginEmail').value.trim();
   if (!email) { alert('Please enter your email address first.'); return; }
   try {
-    await sbResetPassword(email, window.location.origin + window.location.pathname);
+    // Inside the iPhone app the page address isn't a real website, so the reset
+    // link in the email always opens the website version to set the new password.
+    const redirect = (typeof isNativeApp === 'function' && isNativeApp())
+      ? 'https://marathonrhino.run/'
+      : window.location.origin + window.location.pathname;
+    await sbResetPassword(email, redirect);
     alert('Password reset email sent! Check your inbox.');
   } catch(e) { alert(e.message || 'Something went wrong sending the reset email. Please try again in a minute.'); }
 }

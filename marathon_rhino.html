@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Marathon Rhino</title>
 <link rel="icon" type="image/png" sizes="32x32" href="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/apple-touch-icon-180.png">
@@ -176,6 +176,11 @@
   .stat-card-val { font-size: 18px; font-weight: 800; color: #E8720C; line-height: 1.1; }
   .stat-card-lbl { font-size: 13px; font-weight: 700; color: var(--navy-dark); margin-top: 2px; }
   .brick-preview { background: var(--navy-light); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 1rem; display: flex; align-items: flex-end; gap: 4px; min-height: 60px; }
+  /* iPhone notch and home bar: keep the top bar, bottom nav and login screen clear
+     of them. These are 0 on normal web browsers, so the website is unaffected. */
+  .topbar { padding-top: env(safe-area-inset-top, 0px); height: calc(84px + env(safe-area-inset-top, 0px)); }
+  .bottom-nav { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .auth-wrap { padding-top: calc(2rem + env(safe-area-inset-top, 0px)); padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px)); }
   /* PAYWALL (iPhone app) */
   #paywallScreen { position: fixed; inset: 0; z-index: 400; background: linear-gradient(160deg, #042C53 0%, #0C447C 60%, #c45e08 100%); overflow-y: auto; -webkit-overflow-scrolling: touch; align-items: flex-start; justify-content: center; padding: calc(env(safe-area-inset-top, 0px) + 24px) 16px calc(env(safe-area-inset-bottom, 0px) + 24px); }
   .paywall-inner { width: 100%; max-width: 420px; margin: auto; display: flex; flex-direction: column; gap: 12px; }

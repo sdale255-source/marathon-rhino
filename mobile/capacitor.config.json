@@ -1,0 +1,9 @@
+{
+  "appId": "run.marathonrhino.app",
+  "appName": "Marathon Rhino",
+  "webDir": "www",
+  "backgroundColor": "#042C53",
+  "ios": {
+    "backgroundColor": "#042C53"
+  }
+}
