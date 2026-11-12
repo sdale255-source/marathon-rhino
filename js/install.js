@@ -64,6 +64,7 @@
     dots: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>',
     vdots: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>',
     plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg>',
+    page: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M6 12h12M8 17h8"/></svg>',
     menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
   };
   function chip(icon, label) {
@@ -72,7 +73,6 @@
 
   // ---- What to tell each visitor --------------------------------------------
   function guideFor(d) {
-    var openAndLogIn = 'Open <b>Marathon Rhino</b> from your Home Screen and log in.';
     if (d.platform === 'ios') {
       if (d.browser === 'inapp') {
         return {
@@ -90,7 +90,6 @@
           'Tap the ' + chip('share') + ' button at the top right, next to the address bar.',
           'Scroll down and tap ' + chip('plus', 'Add to Home Screen') + '. You may need to tap <b>View More</b> first.',
           'Tap <b>Add</b>.',
-          openAndLogIn,
         ] };
       }
       if (d.browser === 'firefox' || d.browser === 'edge') {
@@ -98,24 +97,22 @@
           'Tap the ' + chip(d.browser === 'firefox' ? 'menu' : 'dots') + ' menu button.',
           'Tap ' + chip('share', 'Share') + '.',
           'Tap ' + chip('plus', 'Add to Home Screen') + ', then <b>Add</b>.',
-          openAndLogIn,
         ] };
       }
       // Safari
       if (d.safariVersion >= 26) {
-        return { arrow: d.iPad ? null : 'bottom-right', steps: [
-          'Tap the ' + chip('dots') + ' button next to the address bar. (If you see a ' + chip('share') + ' button instead, tap that and skip to step 3.)',
+        return { arrow: d.iPad ? null : 'bottom-left', steps: [
+          'Tap the ' + chip('page') + ' button on the left side of the address bar.' +
+            '<span class="mri-hint">On some iPhones it looks like ' + chip('dots') + ' instead.</span>',
           'Tap ' + chip('share', 'Share') + '.',
           'Scroll down and tap ' + chip('plus', 'Add to Home Screen') + '. You may need to tap <b>View More</b> first.',
           'Leave <b>Open as Web App</b> switched on and tap <b>Add</b>.',
-          openAndLogIn,
         ] };
       }
       return { arrow: d.iPad ? null : 'bottom-center', steps: [
         'Tap the ' + chip('share') + ' button ' + (d.iPad ? 'at the top of the screen.' : 'at the bottom of the screen.'),
         'Scroll down and tap ' + chip('plus', 'Add to Home Screen') + '.',
         'Tap <b>Add</b>.',
-        openAndLogIn,
       ] };
     }
 
@@ -137,7 +134,6 @@
           'Tap the ' + chip('vdots') + ' menu at the top right' + (d.browser === 'samsung' ? ' (bottom right in Samsung Internet)' : '') + '.',
           'Tap <b>Add to Home screen</b> or <b>Install app</b>.',
           'Tap <b>Install</b>.',
-          openAndLogIn,
         ],
         stepsLabel: 'Or do it from the browser menu:',
       };
@@ -279,6 +275,7 @@
       '.mri-title{margin:0;font-size:20px;line-height:1.2;color:#042C53;font-weight:800}' +
       '.mri-sub{margin:2px 0 0;font-size:14px;color:#5a6a7e}' +
       '.mri-intro{margin:0 0 12px;font-size:15px;color:#1a2a3a;line-height:1.5}' +
+      '.mri-hint{display:block;margin-top:3px;font-size:13px;color:#5a6a7e}' +
       '.mri-small{margin:8px 0 0;font-size:13px;color:#5a6a7e;line-height:1.5}' +
       '.mri-or{margin:16px 0 4px}' +
       '.mri-steps{list-style:none;margin:4px 0 0;padding:0}' +
@@ -297,7 +294,7 @@
       '.mri-close{position:absolute;top:8px;right:10px;width:36px;height:36px;border:0;background:none;font-size:28px;line-height:1;color:#5a6a7e;cursor:pointer}' +
       '.mri-arrow{position:fixed;z-index:100001;width:44px;height:44px;color:#E8720C;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));pointer-events:none;animation:mri-bob 1s ease-in-out infinite}' +
       '.mri-arrow svg{width:100%;height:100%}' +
-      '.mri-arrow-bottom-right{right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px)}' +
+      '.mri-arrow-bottom-left{left:92px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px)}' +
       '.mri-arrow-bottom-center{left:calc(50% - 22px);bottom:calc(env(safe-area-inset-bottom,0px) + 10px)}' +
       '.mri-arrow-top-right{right:14px;top:calc(env(safe-area-inset-top,0px) + 6px);animation-name:mri-bob-up}' +
       '@keyframes mri-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}' +
