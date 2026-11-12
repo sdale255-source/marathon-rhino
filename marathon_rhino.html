@@ -1260,5 +1260,13 @@
 <script src="js/legal.js" defer></script>
 <script src="js/settings.js" defer></script>
 <script src="js/billing.js" defer></script>
+<script src="js/install.js" defer></script>
+<script>
+  // Phone-browser users: after the app has loaded, offer "Add to Home Screen".
+  // (Does nothing in the iPhone app or when already opened from the Home Screen.)
+  window.addEventListener('load', function () {
+    setTimeout(function () { if (window.MRInstall) MRInstall.maybeShowBanner(); }, 4000);
+  });
+</script>
 </body>
 </html>
