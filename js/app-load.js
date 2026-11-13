@@ -303,17 +303,20 @@ function syncUnitUI(){
 function syncMapDefaults(){if(state.country&&!state.mapsInitialized){applyMapDefaults(state.country);state.mapsInitialized=true;}}
 
 function enterApp(){
-  // Splash: show the animated rhino (transparent APNG) briefly, then dismiss.
-  // APNG is an image, so there's no 'ended' event — we cap the display time.
+  // Splash: the flapping macaw (a looping animated image) glides across the
+  // screen for 3 seconds, then the splash is dismissed.
   var splash = document.getElementById('splash');
+  splash.classList.remove('flying');
   splash.style.display = 'flex';
+  void splash.offsetWidth;          // restart the glide animation every time
+  splash.classList.add('flying');
   var splashDismissed = false;
   function dismissSplash(){
     if (splashDismissed) return;
     splashDismissed = true;
     splash.style.display = 'none';
   }
-  setTimeout(dismissSplash, 2000); // how long the splash stays up, in ms
+  setTimeout(dismissSplash, 3000); // how long the splash stays up, in ms
 
   document.getElementById('authPage').style.display='none';
   document.getElementById('appShell').classList.add('visible');
