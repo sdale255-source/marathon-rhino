@@ -1,6 +1,6 @@
 /* Shared styles for the public Privacy / Terms / Support pages. */
 :root {
-  --navy: #185FA5; --navy-deeper: #042C53; --orange: #E8720C;
+  --navy: #185FA5; --navy-deeper: #042C53; --orange: #F5B800;
   --text: #1a2a3a; --text-muted: #5a6a7e; --bg: #f3f6fa; --card: #ffffff;
 }
 * { box-sizing: border-box; }

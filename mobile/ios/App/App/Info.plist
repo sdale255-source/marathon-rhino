@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Marathon Rhino</string>
+	<string>Marathon Macaw</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -27,13 +27,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Marathon Rhino uses the camera so you can take a photo during or after a run.</string>
+	<string>Marathon Macaw uses the camera so you can take a photo during or after a run.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Marathon Rhino uses your location during a run to measure your distance and pace, including while your screen is locked. It is never used when you are not running.</string>
+	<string>Marathon Macaw uses your location during a run to measure your distance and pace, including while your screen is locked. It is never used when you are not running.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Marathon Rhino uses your location during a run to measure your distance and pace, including while your screen is locked.</string>
+	<string>Marathon Macaw uses your location during a run to measure your distance and pace, including while your screen is locked.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Marathon Rhino lets you choose photos to add to your runs and races.</string>
+	<string>Marathon Macaw lets you choose photos to add to your runs and races.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

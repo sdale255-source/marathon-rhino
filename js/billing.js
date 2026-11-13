@@ -1,5 +1,5 @@
 // ===================== BILLING =====================
-// Subscriptions for Marathon Rhino on two platforms:
+// Subscriptions for Marathon Macaw on two platforms:
 //   • Website (marathonrhino.run): Stripe Checkout + Stripe billing portal.
 //   • iPhone app (Capacitor):      Apple In-App Purchase. Apple does not allow
 //     Stripe inside the iPhone app, so every Stripe path is switched off there
@@ -171,7 +171,7 @@ async function restorePurchases() {
       alert('Your subscription has been restored.');
       return true;
     }
-    alert('No active Marathon Rhino subscription was found for this Apple ID.');
+    alert('No active Marathon Macaw subscription was found for this Apple ID.');
     return false;
   } catch (e) {
     alert('Could not restore purchases: ' + ((e && e.message) || e));

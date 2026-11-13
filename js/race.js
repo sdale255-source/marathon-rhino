@@ -133,7 +133,7 @@ function renderNextRaceMap() {
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(_nextRaceMap);
       // Custom coloured pin marker
       const icon = L.divIcon({
-        html: '<div style="width:20px;height:28px;position:relative;"><div style="width:20px;height:20px;background:#E8720C;border:2.5px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 2px 6px rgba(0,0,0,0.4);"></div><div style="width:6px;height:6px;background:#fff;border-radius:50%;position:absolute;top:5px;left:5px;transform:rotate(0deg);"></div></div>',
+        html: '<div style="width:20px;height:28px;position:relative;"><div style="width:20px;height:20px;background:#F5B800;border:2.5px solid #042C53;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 2px 6px rgba(0,0,0,0.4);"></div><div style="width:6px;height:6px;background:#fff;border-radius:50%;position:absolute;top:5px;left:5px;transform:rotate(0deg);"></div></div>',
         iconSize: [20,28], iconAnchor: [10,28], className: ''
       });
       L.marker([race.lat, race.lng], {icon}).addTo(_nextRaceMap).bindPopup(race.name);
@@ -231,7 +231,7 @@ function renderCalendar(){
     const isCurr=mo===nowMo&&yr===nowYr;
     document.getElementById('calLabel'+idx).textContent=mN[mo]+' '+yr;
     const badge=document.getElementById('calCurrentBadge'+idx);if(badge)badge.style.display=isCurr?'inline-block':'none';
-    const card=document.getElementById('calCard'+idx);card.style.border=isCurr?'2px solid #E8720C':'none';
+    const card=document.getElementById('calCard'+idx);card.style.border=isCurr?'2px solid #F5B800':'none';
     document.getElementById('calDow'+idx).innerHTML=dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
     const fl=new Date(yr,mo,1);const ll=new Date(yr,mo+1,0);const sd=(fl.getDay()+6)%7;
     let cells='';
@@ -257,7 +257,7 @@ function renderHomeMonthly(){
   const fl=new Date(yr,mo,1);const ll=new Date(yr,mo+1,0);let tm=0,rd=0,rsd=0;
   for(let i=1;i<=ll.getDate();i++){const key=dateKey(new Date(yr,mo,i));const run=state.runs[key];if(run&&run.type==='run'&&run.miles>0){tm+=run.miles;rd++;}else if(run&&run.type==='rest'){rsd++;}}
   const ds=state.unit==='km'?(tm*1.60934).toFixed(1)+'<span style="font-size:13px;font-weight:700;margin-left:2px;">km</span>':tm.toFixed(1)+'<span style="font-size:13px;font-weight:700;margin-left:2px;">mi</span>';
-  document.getElementById('homeMonthStats').innerHTML=`<div class="stat-card"><div class="stat-card-val" style="color:#E8720C">${ds}</div><div class="stat-card-lbl">Total distance</div></div><div class="stat-card"><div class="stat-card-val">${rd}</div><div class="stat-card-lbl">Run days</div></div><div class="stat-card"><div class="stat-card-val">${rsd}</div><div class="stat-card-lbl">Rest days</div></div>`;
+  document.getElementById('homeMonthStats').innerHTML=`<div class="stat-card"><div class="stat-card-val" style="color:var(--brand-text)">${ds}</div><div class="stat-card-lbl">Total distance</div></div><div class="stat-card"><div class="stat-card-val">${rd}</div><div class="stat-card-lbl">Run days</div></div><div class="stat-card"><div class="stat-card-val">${rsd}</div><div class="stat-card-lbl">Rest days</div></div>`;
   const dows=['M','T','W','T','F','S','S'];
   document.getElementById('homeCalDowRow').innerHTML=dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
   const sd=(fl.getDay()+6)%7;let cells='';

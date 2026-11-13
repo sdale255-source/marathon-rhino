@@ -10,7 +10,7 @@ function renderCalendar(){
     const isCurr=mo===nowMo&&yr===nowYr;
     document.getElementById('calLabel'+idx).textContent=mN[mo]+' '+yr;
     const badge=document.getElementById('calCurrentBadge'+idx);if(badge)badge.style.display=isCurr?'inline-block':'none';
-    const card=document.getElementById('calCard'+idx);card.style.border=isCurr?'2px solid #E8720C':'none';
+    const card=document.getElementById('calCard'+idx);card.style.border=isCurr?'2px solid #F5B800':'none';
     document.getElementById('calDow'+idx).innerHTML=dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
     const fl=new Date(yr,mo,1);const ll=new Date(yr,mo+1,0);const sd=(fl.getDay()+6)%7;
     let cells='';let monthMiles=0;
@@ -50,7 +50,7 @@ function renderHomeMonthly(){
   const fl=new Date(yr,mo,1);const ll=new Date(yr,mo+1,0);let tm=0,rd=0,rsd=0;
   for(let i=1;i<=ll.getDate();i++){const key=dateKey(new Date(yr,mo,i));const run=state.runs[key];if(run&&run.type==='run'&&run.miles>0){tm+=run.miles;rd++;}else if(run&&run.type==='rest'){rsd++;}}
   const ds=state.unit==='km'?(tm*1.60934).toFixed(1)+'<span style="font-size:13px;font-weight:700;margin-left:2px;">km</span>':tm.toFixed(1)+'<span style="font-size:13px;font-weight:700;margin-left:2px;">mi</span>';
-  document.getElementById('homeMonthStats').innerHTML=`<div class="stat-card"><div class="stat-card-val" style="color:#E8720C">${ds}</div><div class="stat-card-lbl">Total distance</div></div><div class="stat-card"><div class="stat-card-val">${rd}</div><div class="stat-card-lbl">Run days</div></div><div class="stat-card"><div class="stat-card-val">${rsd}</div><div class="stat-card-lbl">Rest days</div></div>`;
+  document.getElementById('homeMonthStats').innerHTML=`<div class="stat-card"><div class="stat-card-val" style="color:var(--brand-text)">${ds}</div><div class="stat-card-lbl">Total distance</div></div><div class="stat-card"><div class="stat-card-val">${rd}</div><div class="stat-card-lbl">Run days</div></div><div class="stat-card"><div class="stat-card-val">${rsd}</div><div class="stat-card-lbl">Rest days</div></div>`;
   const dows=['M','T','W','T','F','S','S'];
   document.getElementById('homeCalDowRow').innerHTML=dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
   const sd=(fl.getDay()+6)%7;let cells='';
@@ -86,7 +86,7 @@ function openAddRaceHistory(){
 }
 function selectRaceType(type) {
   const types = ['half','marathon','ultra'];
-  const colors = { half: '#f5c400', marathon: '#E8720C', ultra: 'var(--navy)' };
+  const colors = { half: '#f5c400', marathon: '#ff3333', ultra: 'var(--navy)' };
   types.forEach(t => {
     const el = document.getElementById('rt' + t.charAt(0).toUpperCase() + t.slice(1));
     if (el) el.style.borderColor = t === type ? colors[t] : 'var(--border)';

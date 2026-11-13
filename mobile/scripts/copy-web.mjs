@@ -12,7 +12,7 @@ const files = [
   'index.html', 'marathon_rhino.html',
   'privacy.html', 'terms.html', 'support.html', 'legal.css',
 ];
-const folders = ['js'];
+const folders = ['js', 'icons', 'branding'];
 
 rmSync(www, { recursive: true, force: true });
 mkdirSync(www, { recursive: true });
@@ -21,4 +21,4 @@ for (const f of files) {
   cpSync(join(site, f), join(www, f));
 }
 for (const d of folders) cpSync(join(site, d), join(www, d), { recursive: true });
-console.log('Copied the website into mobile/www (' + (files.length) + ' files + js/)');
+console.log('Copied the website into mobile/www (' + (files.length) + ' files + ' + folders.join(', ') + ')');

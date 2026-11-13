@@ -1,17 +1,37 @@
 {
-  "name": "Marathon Rhino",
-  "short_name": "Marathon Rhino",
+  "name": "Marathon Macaw",
+  "short_name": "Marathon Macaw",
   "description": "Marathon training that saves animals — track runs, plan your training, map your races.",
   "id": "/marathon_rhino.html",
   "start_url": "/marathon_rhino.html",
   "scope": "/",
   "display": "standalone",
   "background_color": "#042C53",
-  "theme_color": "#E8720C",
+  "theme_color": "#F5B800",
   "icons": [
-    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
