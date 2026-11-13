@@ -1270,6 +1270,13 @@
   window.addEventListener('load', function () {
     setTimeout(function () { if (window.MRInstall) MRInstall.maybeShowBanner(); }, 4000);
   });
+  // Service worker (sw.js): lets the installed web app open with a weak or no
+  // signal. Only on the real website — not in the iPhone app or a local file.
+  if ('serviceWorker' in navigator && location.protocol === 'https:' && !window.Capacitor) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function (e) { console.warn('Service worker not registered:', e); });
+    });
+  }
 </script>
 </body>
 </html>

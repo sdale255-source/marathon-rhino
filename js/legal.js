@@ -164,7 +164,7 @@ function renderLegalStandalone(page, targetId) {
   const content = LEGAL_CONTENT[page];
   const el = document.getElementById(targetId);
   if (!content || !el) return;
-  document.title = content.title + ' — Marathon Rhino';
+  document.title = content.title + ' — Marathon Macaw';
   el.innerHTML = '<h1>' + content.title + '</h1>' + content.content;
 }
 
