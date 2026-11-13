@@ -166,7 +166,7 @@
     if (g.qr) {
       html += '<div class="mri-qr-row"><div class="mri-qr" data-mri-qr></div>' +
         '<div><p class="mri-intro"><b>Scan with your phone\'s camera</b>, then follow the steps that appear.</p>' +
-        '<p class="mri-small">Or visit <b>marathonrhino.run/install</b> on your phone.</p></div></div>';
+        '<p class="mri-small">Or visit <b>marathonmacaw.run/install</b> on your phone.</p></div></div>';
     }
     if (g.intro) html += '<p class="mri-intro">' + g.intro + '</p>';
     if (g.installButton && deferredPrompt) {
@@ -195,7 +195,7 @@
     });
     var copyBtn = container.querySelector('[data-mri-copy]');
     if (copyBtn) copyBtn.addEventListener('click', function () {
-      var url = 'https://marathonrhino.run/install/';
+      var url = 'https://marathonmacaw.run/install/';
       var done = function () { copyBtn.textContent = 'Link copied — paste it into Safari'; };
       if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, function () { prompt('Copy this link:', url); });
       else prompt('Copy this link:', url);

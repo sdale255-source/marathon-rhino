@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Marathon Rhino — Marathon training that saves animals</title>
-<meta name="description" content="Marathon Rhino is a marathon training app from The Marathon Rhino Company LLC. Track runs with GPS, plan your training, map your races, earn achievements — and help fund rhino and habitat conservation.">
-<link rel="icon" type="image/png" sizes="32x32" href="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/favicon-32.png">
-<link rel="apple-touch-icon" href="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/apple-touch-icon-180.png">
+<title>Marathon Macaw — Marathon training that saves animals</title>
+<meta name="description" content="Marathon Macaw is a marathon training app from The Marathon Rhino Company LLC. Track runs with GPS, plan your training, map your races, earn achievements — and help fund rhino and habitat conservation.">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png">
 <script>
   // Sign-in links (password reset, email confirmation, checkout returns) arrive
   // at this address with a token after "#" or in the query string. Send those
@@ -26,7 +26,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy: #185FA5; --navy-deep: #042C53; --orange: #E8720C; --orange-dark: #c45e08;
+    --navy: #185FA5; --navy-deep: #042C53; --orange: #F5B800; --orange-dark: #D99A00; --gold-text: #9A6B00;
     --text: #1a2a3a; --muted: #5a6a7e; --bg: #f3f6fa; --card: #ffffff; --line: #e1e8f0;
   }
   * { box-sizing: border-box; }
@@ -44,13 +44,13 @@
   .site-header { background: var(--navy-deep); border-bottom: 3px solid var(--orange); position: sticky; top: 0; z-index: 10; }
   .site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; }
   .brand { display: flex; align-items: center; gap: 10px; color: #fff; font-weight: 800; font-size: 19px; text-decoration: none; letter-spacing: -0.01em; }
-  .brand img { width: 42px; height: 42px; object-fit: contain; }
+  .brand img { width: 64px; height: 42px; object-fit: contain; }
   .site-nav { display: flex; align-items: center; gap: 22px; }
   .site-nav a { color: rgba(255,255,255,0.78); text-decoration: none; font-size: 14px; font-weight: 600; }
   .site-nav a:hover { color: #fff; }
   .btn { display: inline-block; text-decoration: none; font-weight: 700; border-radius: 999px; padding: 12px 24px; font-size: 15px; transition: transform .15s, background .15s; }
   .btn:hover { transform: translateY(-1px); }
-  .btn-orange { background: var(--orange); color: #fff; }
+  .btn-orange { background: var(--orange); color: var(--navy-deep); }
   .btn-orange:hover { background: var(--orange-dark); }
   .btn-ghost { color: #fff; border: 2px solid rgba(255,255,255,0.4); }
   .btn-ghost:hover { border-color: #fff; }
@@ -90,7 +90,7 @@
   /* Features */
   .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
   .feature { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
-  .feature .icon { width: 44px; height: 44px; border-radius: 12px; background: #fdeee0; color: var(--orange); display: grid; place-items: center; margin-bottom: 14px; }
+  .feature .icon { width: 44px; height: 44px; border-radius: 12px; background: #FFF6D6; color: var(--gold-text); display: grid; place-items: center; margin-bottom: 14px; }
   .feature .icon svg { width: 22px; height: 22px; }
   .feature h3 { margin: 0 0 6px; font-size: 17px; color: var(--navy-deep); }
   .feature p { margin: 0; color: var(--muted); font-size: 15px; }
@@ -118,13 +118,13 @@
   .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 820px; }
   .plan { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 28px; position: relative; }
   .plan.featured { border: 2px solid var(--orange); }
-  .plan .tag { position: absolute; top: -12px; left: 24px; background: var(--orange); color: #fff; font-size: 12px; font-weight: 800; padding: 3px 12px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .plan .tag { position: absolute; top: -12px; left: 24px; background: var(--orange); color: var(--navy-deep); font-size: 12px; font-weight: 800; padding: 3px 12px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em; }
   .plan h3 { margin: 0; font-size: 20px; color: var(--navy-deep); }
   .price { font-size: 40px; font-weight: 900; color: var(--navy-deep); margin: 8px 0 2px; letter-spacing: -0.02em; }
   .price small { font-size: 15px; color: var(--muted); font-weight: 600; }
   .plan ul { list-style: none; padding: 0; margin: 18px 0 0; }
   .plan li { padding: 7px 0 7px 28px; position: relative; font-size: 15px; border-top: 1px solid var(--line); }
-  .plan li::before { content: ""; position: absolute; left: 2px; top: 13px; width: 14px; height: 8px; border-left: 3px solid var(--orange); border-bottom: 3px solid var(--orange); transform: rotate(-45deg); }
+  .plan li::before { content: ""; position: absolute; left: 2px; top: 13px; width: 14px; height: 8px; border-left: 3px solid var(--gold-text); border-bottom: 3px solid var(--gold-text); transform: rotate(-45deg); }
   .pricing-note { margin-top: 20px; color: var(--muted); font-size: 14px; max-width: 820px; }
   @media (max-width: 640px) { .plans { grid-template-columns: 1fr; } }
 
@@ -145,7 +145,7 @@
   .getapp .section-head { margin-bottom: 18px; }
   .getapp-points { list-style: none; padding: 0; margin: 0 0 8px; }
   .getapp-points li { padding: 6px 0 6px 28px; position: relative; color: var(--muted); }
-  .getapp-points li::before { content: ""; position: absolute; left: 2px; top: 13px; width: 14px; height: 8px; border-left: 3px solid var(--orange); border-bottom: 3px solid var(--orange); transform: rotate(-45deg); }
+  .getapp-points li::before { content: ""; position: absolute; left: 2px; top: 13px; width: 14px; height: 8px; border-left: 3px solid var(--gold-text); border-bottom: 3px solid var(--gold-text); transform: rotate(-45deg); }
   .qr-card { justify-self: center; text-align: center; background: var(--bg); border: 1px solid var(--line); border-radius: 20px; padding: 22px 22px 16px; }
   .qr-card .qr { width: 200px; height: 200px; background: #fff; border-radius: 14px; padding: 10px; margin: 0 auto; }
   .qr-card .qr svg { width: 100%; height: 100%; display: block; }
@@ -174,7 +174,7 @@
 
 <header class="site-header">
   <div class="wrap">
-    <a href="/" class="brand"><img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Rhino-sunglasses.png" alt="">Marathon Rhino</a>
+    <a href="/" class="brand"><img src="/branding/macaw-flying.webp" alt="">Marathon Macaw</a>
     <nav class="site-nav">
       <a href="#features" class="hide-sm">Features</a>
       <a href="#charity" class="hide-sm">Charity</a>
@@ -191,15 +191,15 @@
     <div class="wrap">
       <div>
         <p class="eyebrow">Train Awesome. Save Animals.</p>
-        <h1>Marathon training that helps <span>save rhinos.</span></h1>
-        <p class="lead">Marathon Rhino is for anyone who runs marathons. Plan your training, record your race history, and earn achievements along the way. A share of every subscription supports wildlife conservation and protects endangered rhinos.</p>
+        <h1>Marathon training that helps <span>save wildlife.</span></h1>
+        <p class="lead">Marathon Macaw is for anyone who runs marathons. Plan your training, record your race history, and earn achievements along the way. A share of every subscription supports wildlife conservation and protects endangered rhinos.</p>
         <div class="hero-ctas">
           <a href="marathon_rhino.html" class="btn btn-orange">Start your 30-day free trial</a>
           <a href="#features" class="btn btn-ghost">See what's inside</a>
         </div>
       </div>
       <div class="hero-art">
-        <img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/rhino-welcome.webp" onerror="this.onerror=null;this.src='https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Logo.png';" alt="The Marathon Rhino mascot">
+        <img src="/branding/macaw-flying.webp" alt="The Marathon Macaw mascot">
       </div>
     </div>
   </div>
@@ -219,7 +219,7 @@
         <div class="feature">
           <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
           <h3>Race-day countdown</h3>
-          <p>Set your next race and goal time. Marathon Rhino counts down the days and shows the pace you need to hit your goal.</p>
+          <p>Set your next race and goal time. Marathon Macaw counts down the days and shows the pace you need to hit your goal.</p>
         </div>
         <div class="feature">
           <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
@@ -312,7 +312,7 @@
         <div class="section-head" style="margin-bottom:18px;">
           <h2>About us</h2>
         </div>
-        <p>Marathon Rhino is made by The Marathon Rhino Company LLC, a small, independent company based in Pennsylvania. Our goal is simple: make marathon training a little more fun, and make every mile count for something bigger than a finish time.</p>
+        <p>Marathon Macaw is made by The Marathon Rhino Company LLC, a small, independent company based in Pennsylvania. Our goal is simple: make marathon training a little more fun, and make every mile count for something bigger than a finish time.</p>
         <p>We don't show ads, we don't sell your data, and we don't track you across other apps or websites. Read our <a href="privacy.html">Privacy Policy</a> for the details.</p>
         <p>Questions, feedback or a partnership idea? We'd love to hear from you at <a href="mailto:hello@marathonrhino.run">hello@marathonrhino.run</a>.</p>
       </div>
@@ -320,7 +320,7 @@
         <dl>
           <dt>Company</dt><dd>The Marathon Rhino Company LLC</dd>
           <dt>Registered in</dt><dd>Pennsylvania, USA</dd>
-          <dt>Product</dt><dd>Marathon Rhino — marathon training app</dd>
+          <dt>Product</dt><dd>Marathon Macaw — marathon training app</dd>
           <dt>Contact</dt><dd><a href="mailto:hello@marathonrhino.run">hello@marathonrhino.run</a></dd>
           <dt>Help</dt><dd><a href="support.html">Support &amp; FAQ</a></dd>
         </dl>
@@ -333,7 +333,7 @@
       <div>
         <div class="section-head">
           <h2>Get the app on your phone</h2>
-          <p>Marathon Rhino installs straight from our website onto your Home Screen — no App Store needed.</p>
+          <p>Marathon Macaw installs straight from our website onto your Home Screen — no App Store needed.</p>
         </div>
         <ul class="getapp-points">
           <li>Opens full screen, just like any other app</li>
@@ -345,8 +345,8 @@
         </div>
       </div>
       <div class="qr-card">
-        <div class="qr"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 37" shape-rendering="crispEdges" role="img" aria-label="QR code: scan to install Marathon Rhino"><rect width="37" height="37" fill="#fff"/><path fill="#042C53" d="M2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1zM8 2h1v1h-1zM11 2h1v1h-1zM13 2h1v1h-1zM15 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM20 2h1v1h-1zM24 2h1v1h-1zM26 2h1v1h-1zM28 2h1v1h-1zM29 2h1v1h-1zM30 2h1v1h-1zM31 2h1v1h-1zM32 2h1v1h-1zM33 2h1v1h-1zM34 2h1v1h-1zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM11 3h1v1h-1zM13 3h1v1h-1zM14 3h1v1h-1zM16 3h1v1h-1zM17 3h1v1h-1zM18 3h1v1h-1zM23 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM10 4h1v1h-1zM11 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM19 4h1v1h-1zM21 4h1v1h-1zM22 4h1v1h-1zM23 4h1v1h-1zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM31 4h1v1h-1zM32 4h1v1h-1zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM10 5h1v1h-1zM11 5h1v1h-1zM12 5h1v1h-1zM15 5h1v1h-1zM16 5h1v1h-1zM17 5h1v1h-1zM18 5h1v1h-1zM23 5h1v1h-1zM24 5h1v1h-1zM25 5h1v1h-1zM28 5h1v1h-1zM30 5h1v1h-1zM31 5h1v1h-1zM32 5h1v1h-1zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM17 6h1v1h-1zM19 6h1v1h-1zM21 6h1v1h-1zM22 6h1v1h-1zM23 6h1v1h-1zM24 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM31 6h1v1h-1zM32 6h1v1h-1zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM11 7h1v1h-1zM13 7h1v1h-1zM16 7h1v1h-1zM17 7h1v1h-1zM18 7h1v1h-1zM20 7h1v1h-1zM21 7h1v1h-1zM24 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM29 8h1v1h-1zM30 8h1v1h-1zM31 8h1v1h-1zM32 8h1v1h-1zM33 8h1v1h-1zM34 8h1v1h-1zM11 9h1v1h-1zM14 9h1v1h-1zM15 9h1v1h-1zM16 9h1v1h-1zM17 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM24 9h1v1h-1zM26 9h1v1h-1zM4 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM17 10h1v1h-1zM18 10h1v1h-1zM27 10h1v1h-1zM29 10h1v1h-1zM30 10h1v1h-1zM31 10h1v1h-1zM32 10h1v1h-1zM33 10h1v1h-1zM2 11h1v1h-1zM3 11h1v1h-1zM4 11h1v1h-1zM6 11h1v1h-1zM9 11h1v1h-1zM10 11h1v1h-1zM12 11h1v1h-1zM13 11h1v1h-1zM17 11h1v1h-1zM23 11h1v1h-1zM25 11h1v1h-1zM26 11h1v1h-1zM27 11h1v1h-1zM28 11h1v1h-1zM29 11h1v1h-1zM32 11h1v1h-1zM34 11h1v1h-1zM3 12h1v1h-1zM4 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM8 12h1v1h-1zM10 12h1v1h-1zM13 12h1v1h-1zM16 12h1v1h-1zM17 12h1v1h-1zM19 12h1v1h-1zM20 12h1v1h-1zM22 12h1v1h-1zM23 12h1v1h-1zM25 12h1v1h-1zM26 12h1v1h-1zM27 12h1v1h-1zM28 12h1v1h-1zM29 12h1v1h-1zM30 12h1v1h-1zM31 12h1v1h-1zM32 12h1v1h-1zM34 12h1v1h-1zM3 13h1v1h-1zM4 13h1v1h-1zM5 13h1v1h-1zM6 13h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM10 13h1v1h-1zM11 13h1v1h-1zM13 13h1v1h-1zM16 13h1v1h-1zM19 13h1v1h-1zM21 13h1v1h-1zM25 13h1v1h-1zM27 13h1v1h-1zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h1v1h-1zM2 14h1v1h-1zM3 14h1v1h-1zM7 14h1v1h-1zM8 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM12 14h1v1h-1zM14 14h1v1h-1zM15 14h1v1h-1zM18 14h1v1h-1zM20 14h1v1h-1zM24 14h1v1h-1zM25 14h1v1h-1zM26 14h1v1h-1zM28 14h1v1h-1zM31 14h1v1h-1zM3 15h1v1h-1zM4 15h1v1h-1zM5 15h1v1h-1zM6 15h1v1h-1zM9 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM14 15h1v1h-1zM17 15h1v1h-1zM21 15h1v1h-1zM22 15h1v1h-1zM23 15h1v1h-1zM25 15h1v1h-1zM26 15h1v1h-1zM27 15h1v1h-1zM28 15h1v1h-1zM29 15h1v1h-1zM32 15h1v1h-1zM34 15h1v1h-1zM3 16h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM10 16h1v1h-1zM15 16h1v1h-1zM16 16h1v1h-1zM18 16h1v1h-1zM19 16h1v1h-1zM25 16h1v1h-1zM26 16h1v1h-1zM32 16h1v1h-1zM34 16h1v1h-1zM3 17h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM11 17h1v1h-1zM12 17h1v1h-1zM13 17h1v1h-1zM14 17h1v1h-1zM15 17h1v1h-1zM17 17h1v1h-1zM21 17h1v1h-1zM24 17h1v1h-1zM27 17h1v1h-1zM28 17h1v1h-1zM31 17h1v1h-1zM34 17h1v1h-1zM5 18h1v1h-1zM8 18h1v1h-1zM9 18h1v1h-1zM10 18h1v1h-1zM11 18h1v1h-1zM14 18h1v1h-1zM16 18h1v1h-1zM17 18h1v1h-1zM20 18h1v1h-1zM22 18h1v1h-1zM24 18h1v1h-1zM27 18h1v1h-1zM28 18h1v1h-1zM29 18h1v1h-1zM31 18h1v1h-1zM33 18h1v1h-1zM34 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM5 19h1v1h-1zM6 19h1v1h-1zM9 19h1v1h-1zM11 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM17 19h1v1h-1zM19 19h1v1h-1zM21 19h1v1h-1zM23 19h1v1h-1zM25 19h1v1h-1zM28 19h1v1h-1zM29 19h1v1h-1zM32 19h1v1h-1zM34 19h1v1h-1zM2 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM11 20h1v1h-1zM12 20h1v1h-1zM15 20h1v1h-1zM16 20h1v1h-1zM19 20h1v1h-1zM20 20h1v1h-1zM25 20h1v1h-1zM28 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM32 20h1v1h-1zM34 20h1v1h-1zM2 21h1v1h-1zM7 21h1v1h-1zM9 21h1v1h-1zM16 21h1v1h-1zM19 21h1v1h-1zM20 21h1v1h-1zM25 21h1v1h-1zM29 21h1v1h-1zM30 21h1v1h-1zM31 21h1v1h-1zM33 21h1v1h-1zM34 21h1v1h-1zM3 22h1v1h-1zM5 22h1v1h-1zM8 22h1v1h-1zM13 22h1v1h-1zM15 22h1v1h-1zM16 22h1v1h-1zM18 22h1v1h-1zM20 22h1v1h-1zM22 22h1v1h-1zM25 22h1v1h-1zM26 22h1v1h-1zM28 22h1v1h-1zM29 22h1v1h-1zM3 23h1v1h-1zM4 23h1v1h-1zM6 23h1v1h-1zM12 23h1v1h-1zM13 23h1v1h-1zM16 23h1v1h-1zM17 23h1v1h-1zM18 23h1v1h-1zM20 23h1v1h-1zM22 23h1v1h-1zM23 23h1v1h-1zM24 23h1v1h-1zM25 23h1v1h-1zM26 23h1v1h-1zM28 23h1v1h-1zM29 23h1v1h-1zM34 23h1v1h-1zM2 24h1v1h-1zM3 24h1v1h-1zM4 24h1v1h-1zM6 24h1v1h-1zM7 24h1v1h-1zM8 24h1v1h-1zM10 24h1v1h-1zM11 24h1v1h-1zM12 24h1v1h-1zM14 24h1v1h-1zM16 24h1v1h-1zM17 24h1v1h-1zM18 24h1v1h-1zM20 24h1v1h-1zM21 24h1v1h-1zM25 24h1v1h-1zM27 24h1v1h-1zM28 24h1v1h-1zM29 24h1v1h-1zM32 24h1v1h-1zM34 24h1v1h-1zM7 25h1v1h-1zM9 25h1v1h-1zM12 25h1v1h-1zM16 25h1v1h-1zM17 25h1v1h-1zM18 25h1v1h-1zM19 25h1v1h-1zM21 25h1v1h-1zM31 25h1v1h-1zM34 25h1v1h-1zM2 26h1v1h-1zM3 26h1v1h-1zM4 26h1v1h-1zM6 26h1v1h-1zM7 26h1v1h-1zM8 26h1v1h-1zM9 26h1v1h-1zM11 26h1v1h-1zM12 26h1v1h-1zM18 26h1v1h-1zM19 26h1v1h-1zM20 26h1v1h-1zM21 26h1v1h-1zM22 26h1v1h-1zM24 26h1v1h-1zM25 26h1v1h-1zM26 26h1v1h-1zM27 26h1v1h-1zM28 26h1v1h-1zM29 26h1v1h-1zM30 26h1v1h-1zM33 26h1v1h-1zM34 26h1v1h-1zM10 27h1v1h-1zM12 27h1v1h-1zM13 27h1v1h-1zM14 27h1v1h-1zM16 27h1v1h-1zM19 27h1v1h-1zM20 27h1v1h-1zM23 27h1v1h-1zM25 27h1v1h-1zM26 27h1v1h-1zM30 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM2 28h1v1h-1zM3 28h1v1h-1zM4 28h1v1h-1zM5 28h1v1h-1zM6 28h1v1h-1zM7 28h1v1h-1zM8 28h1v1h-1zM10 28h1v1h-1zM11 28h1v1h-1zM12 28h1v1h-1zM13 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM20 28h1v1h-1zM21 28h1v1h-1zM22 28h1v1h-1zM26 28h1v1h-1zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM34 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM10 29h1v1h-1zM11 29h1v1h-1zM14 29h1v1h-1zM15 29h1v1h-1zM17 29h1v1h-1zM22 29h1v1h-1zM24 29h1v1h-1zM25 29h1v1h-1zM26 29h1v1h-1zM30 29h1v1h-1zM31 29h1v1h-1zM33 29h1v1h-1zM34 29h1v1h-1zM2 30h1v1h-1zM4 30h1v1h-1zM5 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM11 30h1v1h-1zM13 30h1v1h-1zM17 30h1v1h-1zM18 30h1v1h-1zM21 30h1v1h-1zM22 30h1v1h-1zM23 30h1v1h-1zM24 30h1v1h-1zM25 30h1v1h-1zM26 30h1v1h-1zM27 30h1v1h-1zM28 30h1v1h-1zM29 30h1v1h-1zM30 30h1v1h-1zM31 30h1v1h-1zM2 31h1v1h-1zM4 31h1v1h-1zM5 31h1v1h-1zM6 31h1v1h-1zM8 31h1v1h-1zM11 31h1v1h-1zM16 31h1v1h-1zM17 31h1v1h-1zM18 31h1v1h-1zM22 31h1v1h-1zM26 31h1v1h-1zM27 31h1v1h-1zM29 31h1v1h-1zM30 31h1v1h-1zM31 31h1v1h-1zM32 31h1v1h-1zM34 31h1v1h-1zM2 32h1v1h-1zM4 32h1v1h-1zM5 32h1v1h-1zM6 32h1v1h-1zM8 32h1v1h-1zM10 32h1v1h-1zM13 32h1v1h-1zM15 32h1v1h-1zM16 32h1v1h-1zM17 32h1v1h-1zM22 32h1v1h-1zM30 32h1v1h-1zM31 32h1v1h-1zM33 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM15 33h1v1h-1zM16 33h1v1h-1zM17 33h1v1h-1zM18 33h1v1h-1zM21 33h1v1h-1zM26 33h1v1h-1zM27 33h1v1h-1zM31 33h1v1h-1zM2 34h1v1h-1zM3 34h1v1h-1zM4 34h1v1h-1zM5 34h1v1h-1zM6 34h1v1h-1zM7 34h1v1h-1zM8 34h1v1h-1zM12 34h1v1h-1zM13 34h1v1h-1zM17 34h1v1h-1zM18 34h1v1h-1zM19 34h1v1h-1zM20 34h1v1h-1zM21 34h1v1h-1zM22 34h1v1h-1zM26 34h1v1h-1zM27 34h1v1h-1zM28 34h1v1h-1zM30 34h1v1h-1zM34 34h1v1h-1z"/><rect x="13.46" y="13.46" width="10.08" height="10.08" rx="2.22" fill="#fff"/><image href="/icons/icon-192.png" x="14.06" y="14.06" width="8.88" height="8.88" clip-path="inset(0 round 1.95px)" preserveAspectRatio="xMidYMid meet"/></svg></div>
-        <p><b>Scan with your phone's camera</b><br>or visit marathonrhino.run/install</p>
+        <div class="qr"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 37" shape-rendering="crispEdges" role="img" aria-label="QR code: scan to install Marathon Macaw"><rect width="37" height="37" fill="#fff"/><path fill="#042C53" d="M2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1zM8 2h1v1h-1zM10 2h1v1h-1zM11 2h1v1h-1zM12 2h1v1h-1zM16 2h1v1h-1zM17 2h1v1h-1zM19 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM25 2h1v1h-1zM26 2h1v1h-1zM28 2h1v1h-1zM29 2h1v1h-1zM30 2h1v1h-1zM31 2h1v1h-1zM32 2h1v1h-1zM33 2h1v1h-1zM34 2h1v1h-1zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM11 3h1v1h-1zM13 3h1v1h-1zM16 3h1v1h-1zM18 3h1v1h-1zM19 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM13 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM19 4h1v1h-1zM23 4h1v1h-1zM24 4h1v1h-1zM25 4h1v1h-1zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM31 4h1v1h-1zM32 4h1v1h-1zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM18 5h1v1h-1zM20 5h1v1h-1zM24 5h1v1h-1zM25 5h1v1h-1zM26 5h1v1h-1zM28 5h1v1h-1zM30 5h1v1h-1zM31 5h1v1h-1zM32 5h1v1h-1zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM11 6h1v1h-1zM14 6h1v1h-1zM15 6h1v1h-1zM17 6h1v1h-1zM18 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM31 6h1v1h-1zM32 6h1v1h-1zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM11 7h1v1h-1zM13 7h1v1h-1zM14 7h1v1h-1zM18 7h1v1h-1zM20 7h1v1h-1zM21 7h1v1h-1zM23 7h1v1h-1zM24 7h1v1h-1zM26 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM29 8h1v1h-1zM30 8h1v1h-1zM31 8h1v1h-1zM32 8h1v1h-1zM33 8h1v1h-1zM34 8h1v1h-1zM10 9h1v1h-1zM11 9h1v1h-1zM12 9h1v1h-1zM15 9h1v1h-1zM16 9h1v1h-1zM19 9h1v1h-1zM20 9h1v1h-1zM21 9h1v1h-1zM23 9h1v1h-1zM24 9h1v1h-1zM4 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM10 10h1v1h-1zM13 10h1v1h-1zM16 10h1v1h-1zM17 10h1v1h-1zM18 10h1v1h-1zM19 10h1v1h-1zM20 10h1v1h-1zM21 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM25 10h1v1h-1zM27 10h1v1h-1zM28 10h1v1h-1zM29 10h1v1h-1zM32 10h1v1h-1zM33 10h1v1h-1zM34 10h1v1h-1zM3 11h1v1h-1zM4 11h1v1h-1zM5 11h1v1h-1zM6 11h1v1h-1zM9 11h1v1h-1zM10 11h1v1h-1zM11 11h1v1h-1zM12 11h1v1h-1zM17 11h1v1h-1zM22 11h1v1h-1zM25 11h1v1h-1zM27 11h1v1h-1zM28 11h1v1h-1zM32 11h1v1h-1zM34 11h1v1h-1zM2 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM8 12h1v1h-1zM9 12h1v1h-1zM12 12h1v1h-1zM14 12h1v1h-1zM15 12h1v1h-1zM20 12h1v1h-1zM22 12h1v1h-1zM23 12h1v1h-1zM24 12h1v1h-1zM26 12h1v1h-1zM29 12h1v1h-1zM31 12h1v1h-1zM32 12h1v1h-1zM33 12h1v1h-1zM4 13h1v1h-1zM6 13h1v1h-1zM9 13h1v1h-1zM10 13h1v1h-1zM14 13h1v1h-1zM16 13h1v1h-1zM18 13h1v1h-1zM19 13h1v1h-1zM20 13h1v1h-1zM21 13h1v1h-1zM23 13h1v1h-1zM25 13h1v1h-1zM26 13h1v1h-1zM27 13h1v1h-1zM31 13h1v1h-1zM32 13h1v1h-1zM33 13h1v1h-1zM4 14h1v1h-1zM8 14h1v1h-1zM16 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM20 14h1v1h-1zM21 14h1v1h-1zM26 14h1v1h-1zM27 14h1v1h-1zM30 14h1v1h-1zM33 14h1v1h-1zM34 14h1v1h-1zM2 15h1v1h-1zM4 15h1v1h-1zM6 15h1v1h-1zM9 15h1v1h-1zM12 15h1v1h-1zM20 15h1v1h-1zM21 15h1v1h-1zM25 15h1v1h-1zM27 15h1v1h-1zM28 15h1v1h-1zM34 15h1v1h-1zM2 16h1v1h-1zM7 16h1v1h-1zM8 16h1v1h-1zM9 16h1v1h-1zM12 16h1v1h-1zM13 16h1v1h-1zM18 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM26 16h1v1h-1zM27 16h1v1h-1zM30 16h1v1h-1zM31 16h1v1h-1zM32 16h1v1h-1zM33 16h1v1h-1zM2 17h1v1h-1zM6 17h1v1h-1zM12 17h1v1h-1zM13 17h1v1h-1zM14 17h1v1h-1zM15 17h1v1h-1zM18 17h1v1h-1zM20 17h1v1h-1zM21 17h1v1h-1zM23 17h1v1h-1zM24 17h1v1h-1zM26 17h1v1h-1zM27 17h1v1h-1zM28 17h1v1h-1zM29 17h1v1h-1zM31 17h1v1h-1zM32 17h1v1h-1zM34 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM7 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM11 18h1v1h-1zM12 18h1v1h-1zM13 18h1v1h-1zM14 18h1v1h-1zM15 18h1v1h-1zM18 18h1v1h-1zM19 18h1v1h-1zM20 18h1v1h-1zM21 18h1v1h-1zM25 18h1v1h-1zM30 18h1v1h-1zM3 19h1v1h-1zM5 19h1v1h-1zM6 19h1v1h-1zM7 19h1v1h-1zM11 19h1v1h-1zM13 19h1v1h-1zM20 19h1v1h-1zM21 19h1v1h-1zM25 19h1v1h-1zM26 19h1v1h-1zM28 19h1v1h-1zM34 19h1v1h-1zM2 20h1v1h-1zM3 20h1v1h-1zM7 20h1v1h-1zM8 20h1v1h-1zM9 20h1v1h-1zM12 20h1v1h-1zM13 20h1v1h-1zM18 20h1v1h-1zM19 20h1v1h-1zM20 20h1v1h-1zM21 20h1v1h-1zM22 20h1v1h-1zM24 20h1v1h-1zM27 20h1v1h-1zM32 20h1v1h-1zM33 20h1v1h-1zM4 21h1v1h-1zM5 21h1v1h-1zM7 21h1v1h-1zM11 21h1v1h-1zM14 21h1v1h-1zM15 21h1v1h-1zM16 21h1v1h-1zM17 21h1v1h-1zM20 21h1v1h-1zM23 21h1v1h-1zM25 21h1v1h-1zM26 21h1v1h-1zM29 21h1v1h-1zM31 21h1v1h-1zM32 21h1v1h-1zM33 21h1v1h-1zM34 21h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM7 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h1v1h-1zM27 22h1v1h-1zM29 22h1v1h-1zM30 22h1v1h-1zM31 22h1v1h-1zM33 22h1v1h-1zM34 22h1v1h-1zM2 23h1v1h-1zM3 23h1v1h-1zM4 23h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM13 23h1v1h-1zM14 23h1v1h-1zM16 23h1v1h-1zM18 23h1v1h-1zM19 23h1v1h-1zM20 23h1v1h-1zM22 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM32 23h1v1h-1zM34 23h1v1h-1zM2 24h1v1h-1zM8 24h1v1h-1zM9 24h1v1h-1zM13 24h1v1h-1zM14 24h1v1h-1zM15 24h1v1h-1zM16 24h1v1h-1zM17 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM29 24h1v1h-1zM30 24h1v1h-1zM31 24h1v1h-1zM32 24h1v1h-1zM33 24h1v1h-1zM2 25h1v1h-1zM4 25h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM10 25h1v1h-1zM11 25h1v1h-1zM12 25h1v1h-1zM14 25h1v1h-1zM15 25h1v1h-1zM16 25h1v1h-1zM18 25h1v1h-1zM20 25h1v1h-1zM21 25h1v1h-1zM23 25h1v1h-1zM26 25h1v1h-1zM29 25h1v1h-1zM31 25h1v1h-1zM32 25h1v1h-1zM33 25h1v1h-1zM2 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM13 26h1v1h-1zM14 26h1v1h-1zM15 26h1v1h-1zM18 26h1v1h-1zM20 26h1v1h-1zM26 26h1v1h-1zM27 26h1v1h-1zM28 26h1v1h-1zM29 26h1v1h-1zM30 26h1v1h-1zM31 26h1v1h-1zM33 26h1v1h-1zM34 26h1v1h-1zM10 27h1v1h-1zM11 27h1v1h-1zM12 27h1v1h-1zM17 27h1v1h-1zM19 27h1v1h-1zM20 27h1v1h-1zM21 27h1v1h-1zM25 27h1v1h-1zM26 27h1v1h-1zM30 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM2 28h1v1h-1zM3 28h1v1h-1zM4 28h1v1h-1zM5 28h1v1h-1zM6 28h1v1h-1zM7 28h1v1h-1zM8 28h1v1h-1zM11 28h1v1h-1zM13 28h1v1h-1zM14 28h1v1h-1zM15 28h1v1h-1zM18 28h1v1h-1zM19 28h1v1h-1zM20 28h1v1h-1zM22 28h1v1h-1zM24 28h1v1h-1zM25 28h1v1h-1zM26 28h1v1h-1zM28 28h1v1h-1zM30 28h1v1h-1zM31 28h1v1h-1zM33 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM13 29h1v1h-1zM15 29h1v1h-1zM17 29h1v1h-1zM20 29h1v1h-1zM21 29h1v1h-1zM23 29h1v1h-1zM24 29h1v1h-1zM25 29h1v1h-1zM26 29h1v1h-1zM30 29h1v1h-1zM31 29h1v1h-1zM32 29h1v1h-1zM33 29h1v1h-1zM34 29h1v1h-1zM2 30h1v1h-1zM4 30h1v1h-1zM5 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM10 30h1v1h-1zM11 30h1v1h-1zM12 30h1v1h-1zM14 30h1v1h-1zM15 30h1v1h-1zM16 30h1v1h-1zM17 30h1v1h-1zM19 30h1v1h-1zM22 30h1v1h-1zM23 30h1v1h-1zM26 30h1v1h-1zM27 30h1v1h-1zM28 30h1v1h-1zM29 30h1v1h-1zM30 30h1v1h-1zM33 30h1v1h-1zM34 30h1v1h-1zM2 31h1v1h-1zM4 31h1v1h-1zM5 31h1v1h-1zM6 31h1v1h-1zM8 31h1v1h-1zM10 31h1v1h-1zM13 31h1v1h-1zM14 31h1v1h-1zM16 31h1v1h-1zM20 31h1v1h-1zM21 31h1v1h-1zM22 31h1v1h-1zM23 31h1v1h-1zM27 31h1v1h-1zM30 31h1v1h-1zM31 31h1v1h-1zM34 31h1v1h-1zM2 32h1v1h-1zM4 32h1v1h-1zM5 32h1v1h-1zM6 32h1v1h-1zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h1v1h-1zM17 32h1v1h-1zM18 32h1v1h-1zM19 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM25 32h1v1h-1zM27 32h1v1h-1zM28 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM13 33h1v1h-1zM14 33h1v1h-1zM15 33h1v1h-1zM16 33h1v1h-1zM20 33h1v1h-1zM23 33h1v1h-1zM27 33h1v1h-1zM29 33h1v1h-1zM31 33h1v1h-1zM32 33h1v1h-1zM2 34h1v1h-1zM3 34h1v1h-1zM4 34h1v1h-1zM5 34h1v1h-1zM6 34h1v1h-1zM7 34h1v1h-1zM8 34h1v1h-1zM13 34h1v1h-1zM15 34h1v1h-1zM16 34h1v1h-1zM17 34h1v1h-1zM20 34h1v1h-1zM24 34h1v1h-1zM25 34h1v1h-1zM26 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1z"/><rect x="13.46" y="13.46" width="10.08" height="10.08" rx="2.22" fill="#fff"/><image href="/icons/icon-192.png" x="14.06" y="14.06" width="8.88" height="8.88" clip-path="inset(0 round 1.95px)" preserveAspectRatio="xMidYMid meet"/></svg></div>
+        <p><b>Scan with your phone's camera</b><br>or visit marathonmacaw.run/install</p>
       </div>
     </div>
   </section>
@@ -354,7 +354,7 @@
   <section class="cta">
     <div class="wrap">
       <h2>Ready for race day?</h2>
-      <p>Try Marathon Rhino free for 30 days.</p>
+      <p>Try Marathon Macaw free for 30 days.</p>
       <a href="marathon_rhino.html" class="btn btn-orange">Get started</a>
     </div>
   </section>

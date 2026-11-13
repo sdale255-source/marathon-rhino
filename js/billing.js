@@ -1,6 +1,6 @@
 // ===================== BILLING =====================
 // Subscriptions for Marathon Macaw on two platforms:
-//   • Website (marathonrhino.run): Stripe Checkout + Stripe billing portal.
+//   • Website (marathonmacaw.run): Stripe Checkout + Stripe billing portal.
 //   • iPhone app (Capacitor):      Apple In-App Purchase. Apple does not allow
 //     Stripe inside the iPhone app, so every Stripe path is switched off there
 //     and a native paywall screen is shown instead.
