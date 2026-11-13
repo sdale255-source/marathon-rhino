@@ -66,6 +66,9 @@
   .app { display: none; flex-direction: column; min-height: 100vh; }
   .app.visible { display: flex; }
   .topbar { background: linear-gradient(135deg, var(--navy-deeper) 0%, #0C447C 100%); border-bottom: 3px solid var(--brand); color: #fff; padding: 0 0.6rem 0 0.5rem; display: flex; align-items: center; justify-content: space-between; height: 84px; position: sticky; top: 0; z-index: 100; isolation: isolate; }
+  /* Header macaw: big enough that its tail hangs below the header's yellow line */
+  .topbar-macaw { width: 142px; height: auto; flex-shrink: 0; position: relative; top: 17px; z-index: 2; margin: 0 0 0 -4px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35)); pointer-events: none; }
+  @media (max-width: 389px) { .topbar-macaw { width: 128px; top: 16px; } .topbar-logo { font-size: 18px !important; } }
   .topbar-logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
   .topbar-tagline { font-size: 10px; color: rgba(255,255,255,0.6); letter-spacing: 0.03em; margin-top: 2px; }
   .topbar-welcome { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); margin-top: 4px; }
@@ -219,7 +222,7 @@
 
 <div class="auth-wrap" id="authPage" style="display:none;">
   <div class="auth-logo" style="flex-direction:column;align-items:center;gap:6px;margin-bottom:1.5rem;">
-    <img src="branding/macaw-flying.webp" alt="Marathon Macaw" style="width:220px;height:auto;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));">
+    <img src="branding/macaw-flying.webp" alt="Marathon Macaw" style="width:270px;max-width:80vw;height:auto;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));">
     <span style="font-size:28px;font-weight:800;">Marathon Macaw</span>
     <div style="font-size:16px;color:var(--brand);font-weight:700;letter-spacing:0.03em;margin-top:-4px;">Train Awesome. Save Animals.</div>
   </div>
@@ -329,7 +332,7 @@
 <!-- RESET PASSWORD (opened from the email reset link) -->
 <div class="auth-wrap" id="resetPasswordPage" style="display:none;">
   <div class="auth-logo" style="flex-direction:column;align-items:center;gap:6px;margin-bottom:1.5rem;">
-    <img src="branding/macaw-flying.webp" alt="Marathon Macaw" style="width:220px;height:auto;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));">
+    <img src="branding/macaw-flying.webp" alt="Marathon Macaw" style="width:270px;max-width:80vw;height:auto;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));">
     <span style="font-size:28px;font-weight:800;">Marathon Macaw</span>
   </div>
   <div class="auth-card">
@@ -350,7 +353,7 @@
   <div class="topbar">
     <div style="display:flex;flex-direction:column;gap:1px;">
       <div style="display:flex;align-items:center;gap:6px;">
-        <img src="branding/macaw-flying.webp" alt="Marathon Macaw" style="width:104px;height:auto;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));margin:6px 2px 0 0;">
+        <img class="topbar-macaw" src="branding/macaw-flying.webp" alt="Marathon Macaw">
         <div>
           <div class="topbar-logo">Marathon Macaw</div>
           <div class="topbar-tagline" style="margin-left:0;color:var(--brand);">Train Awesome. Save Animals.</div>
