@@ -331,7 +331,7 @@ function renderRaceWebsiteBubble(){
   el.style.display = 'block';
   el.innerHTML =
     '<a href="'+_escHtml(info.url)+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;display:block;">'+
-      '<img src="'+_escHtml(info.image)+'" alt="Running photo" '+
+      '<img id="raceWebsiteImg" src="'+_escHtml(info.image)+'" alt="Running photo" '+
         'style="width:100%;height:150px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:10px;" '+
         'onerror="this.style.display=\'none\'">'+
       '<div style="font-size:11px;color:#E8720C;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">Race website</div>'+
@@ -341,6 +341,66 @@ function renderRaceWebsiteBubble(){
     '</a>'+
     // Non-affiliation notice — kept outside the <a> so it isn't part of the link
     '<div style="font-size:10px;color:var(--text-muted);line-height:1.5;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">'+
-      'Official race website &middot; Marathon Rhino is not affiliated with this event. Photo is illustrative.'+
+      'Official race website &middot; Marathon Rhino is not affiliated with this event. '+
+      '<span id="raceWebsitePhotoNote">Photo is illustrative.</span>'+
     '</div>';
+  _loadRaceSiteImage(info.url, info.host);
+}
+
+// ---------------------------------------------------------------------------
+// Race's own photo: ask our "race-preview-image" edge function for the image the
+// race website itself uses for link previews (og:image). Shows the generic photo
+// first, then swaps in the race's photo once it has actually loaded. Results are
+// cached on the device so each site is looked up at most once a week.
+// ---------------------------------------------------------------------------
+const _RACE_IMG_CACHE_KEY = 'mr_race_site_images_v1';
+const _RACE_IMG_OK_MS   = 7 * 24 * 60 * 60 * 1000;   // found an image: keep a week
+const _RACE_IMG_NONE_MS = 24 * 60 * 60 * 1000;       // no image: try again tomorrow
+
+function _raceImgCacheRead(){
+  try { return JSON.parse(localStorage.getItem(_RACE_IMG_CACHE_KEY) || '{}') || {}; }
+  catch(e){ return {}; }
+}
+function _raceImgCacheWrite(url, image){
+  try {
+    const c = _raceImgCacheRead();
+    c[url] = { image: image || null, at: Date.now() };
+    localStorage.setItem(_RACE_IMG_CACHE_KEY, JSON.stringify(c));
+  } catch(e){}
+}
+
+async function _lookupRaceSiteImage(url){
+  const c = _raceImgCacheRead()[url];
+  if(c && (Date.now() - c.at) < (c.image ? _RACE_IMG_OK_MS : _RACE_IMG_NONE_MS)) return c.image;
+  if(typeof _sbToken === 'undefined' || !_sbToken) return null;   // not signed in
+  if(typeof ensureFreshToken === 'function'){ try { await ensureFreshToken(); } catch(e){} }
+  const res = await fetch(SB_URL + '/functions/v1/race-preview-image', {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json', 'apikey': SB_KEY, 'Authorization': 'Bearer ' + _sbToken },
+    body: JSON.stringify({ url })
+  });
+  if(!res.ok) return null;                 // don't cache server errors
+  const data = await res.json().catch(() => ({}));
+  const image = (data && typeof data.image === 'string' && /^https:\/\//i.test(data.image)) ? data.image : null;
+  _raceImgCacheWrite(url, image);
+  return image;
+}
+
+async function _loadRaceSiteImage(url, host){
+  let image = null;
+  try { image = await _lookupRaceSiteImage(url); }
+  catch(e){ console.warn('Race photo lookup skipped:', e.message); }
+  if(!image) return;
+  const probe = new Image();
+  probe.onload = function(){
+    const img = document.getElementById('raceWebsiteImg');
+    const info = (function(){ try { return resolveRaceWebsite(state.nextRace); } catch(e){ return null; } })();
+    if(!img || !info || info.url !== url) return;   // race changed while we were loading
+    img.src = image;
+    img.alt = 'Photo from ' + host;
+    img.style.display = '';
+    const note = document.getElementById('raceWebsitePhotoNote');
+    if(note) note.textContent = 'Photo from ' + host + '.';
+  };
+  probe.src = image;
 }
