@@ -128,44 +128,139 @@ function lookupRaceCoords(race){
   return null;
 }
 
-let globe={rotX:0.3,rotY:0,pins:[],ready:false};
+// ===================== GLOBE =====================
+// Rotation is in degrees. rotY = longitude spin, rotX = tilt (clamped to ±90).
+// The SVG is built once; each frame only updates the land/graticule path data
+// and moves the pins, and redraws are batched to at most one per screen frame.
+let globe={rotX:20,rotY:0,pins:[],ready:false,loading:false,listening:false,dragging:false,raf:0,inertiaRaf:0,el:null,pinsDirty:true};
 
 function updateGlobe(){
   const card=document.getElementById('globeCard');const pinList=document.getElementById('globePinList');
   const pins=[];  state.raceHistory.forEach(r=>{const c=lookupRaceCoords(r);if(c)pins.push({...c,name:r.name,location:r.location,raceType:r.raceType||'marathon'});});
-  globe.pins=pins;card.style.display=state.showGlobe?'block':'none';if(!state.showGlobe)return;
-  if(pins.length>0){globe.rotY=-pins[0].lng*Math.PI/180;globe.rotX=pins[0].lat*Math.PI/180*0.5;}
+  globe.pins=pins;globe.pinsDirty=true;card.style.display=state.showGlobe?'block':'none';if(!state.showGlobe)return;
+  // Start centred on the first race (degrees; tilt halfway toward its latitude)
+  if(pins.length>0&&!globe.dragging){stopGlobeInertia();globe.rotY=-pins[0].lng;globe.rotX=pins[0].lat*0.5;}
   if(pinList)pinList.innerHTML=pins.map(p=>`<span style="font-size:11px;background:var(--navy-light);color:var(--navy-dark);padding:3px 8px;border-radius:20px;display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:${p.raceType==='half'?'#f5c400':p.raceType==='ultra'?'#185FA5':'#ff3333'};display:inline-block;flex-shrink:0;"></span>${p.name||p.location}</span>`).join('');
-  if(globe.ready){setTimeout(drawGlobeSVG,50);}else{setTimeout(initGlobe,50);}
+  if(globe.ready){scheduleGlobeDraw();}else{setTimeout(initGlobe,50);}
 }
+
 function initGlobe(){
   const svg=document.getElementById('globeSVG');if(!svg)return;
+  if(globe.ready){scheduleGlobeDraw();return;}
+  if(globe.loading)return; // a load is already under way — don't start a second one
   if(!window.d3||!window.topojson){setTimeout(initGlobe,500);return;}
+  globe.loading=true;
   const initData=world=>{
-    globe.countries=topojson.feature(world,world.objects.countries);globe.graticule=d3.geoGraticule()();globe.ready=true;
-    let isDragging=false,lastX=0,lastY=0;
-    svg.addEventListener('mousedown',e=>{isDragging=true;lastX=e.clientX;lastY=e.clientY;svg.style.cursor='grabbing';e.preventDefault();});
-    svg.addEventListener('touchstart',e=>{isDragging=true;lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;},{passive:true});
-    window.addEventListener('mouseup',()=>{isDragging=false;svg.style.cursor='grab';});
-    window.addEventListener('touchend',()=>{isDragging=false;});
-    window.addEventListener('mousemove',e=>{if(!isDragging)return;globe.rotY+=(e.clientX-lastX)*0.5;globe.rotX=Math.max(-90,Math.min(90,globe.rotX+(e.clientY-lastY)*0.5));lastX=e.clientX;lastY=e.clientY;drawGlobeSVG();});
-    window.addEventListener('touchmove',e=>{if(!isDragging)return;globe.rotY+=(e.touches[0].clientX-lastX)*0.5;globe.rotX=Math.max(-90,Math.min(90,globe.rotX+(e.touches[0].clientY-lastY)*0.5));lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;drawGlobeSVG();},{passive:true});
+    globe.countries=topojson.feature(world,world.objects.countries);globe.graticule=d3.geoGraticule()();
+    // Bounding circle for each country, so ones on the far side can be skipped each frame
+    globe.cull=globe.countries.features.map(f=>{
+      const c=d3.geoCentroid(f);let r=0;
+      const walk=a=>{if(typeof a[0]==='number'){const d=d3.geoDistance(c,a);if(d>r)r=d;}else a.forEach(walk);};
+      walk(f.geometry.coordinates);return {f,c,r};
+    });
+    globe.ready=true;globe.loading=false;
+    attachGlobeControls(svg);
     drawGlobeSVG();
   };
   if(window.globeAtlas){initData(window.globeAtlas);}
-  else{fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r=>r.json()).then(world=>{window.globeAtlas=world;initData(world);}).catch(()=>{});}
+  else{fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r=>r.json()).then(world=>{window.globeAtlas=world;initData(world);}).catch(()=>{globe.loading=false;});}
 }
+
+function attachGlobeControls(svg){
+  if(globe.listening)return;globe.listening=true;
+  // Let the globe own touches on it, so iPhone doesn't scroll the page mid-spin
+  svg.style.touchAction='none';svg.style.webkitUserSelect='none';svg.style.userSelect='none';svg.style.webkitTouchCallout='none';
+  const box=document.getElementById('globeContainer');if(box)box.style.touchAction='none';
+  let activeId=null,lastX=0,lastY=0,lastT=0,velX=0,velY=0,degPerPx=0.5;
+  svg.addEventListener('pointerdown',e=>{
+    if(activeId!==null)return;
+    activeId=e.pointerId;try{svg.setPointerCapture(e.pointerId);}catch(_){}
+    stopGlobeInertia();globe.dragging=true;
+    // Dragging across the globe's full width turns it about 180°, whatever size it's shown at
+    const w=svg.getBoundingClientRect().width||320;degPerPx=180/(w*310/320);
+    lastX=e.clientX;lastY=e.clientY;lastT=performance.now();velX=velY=0;
+    svg.style.cursor='grabbing';e.preventDefault();
+  });
+  svg.addEventListener('pointermove',e=>{
+    if(e.pointerId!==activeId)return;
+    const now=performance.now(),dt=Math.max(4,now-lastT);
+    const dY=(e.clientX-lastX)*degPerPx,dX=(e.clientY-lastY)*degPerPx;
+    globe.rotY+=dY;globe.rotX=Math.max(-90,Math.min(90,globe.rotX+dX));
+    velX=0.8*(dX/dt)+0.2*velX;velY=0.8*(dY/dt)+0.2*velY;
+    lastX=e.clientX;lastY=e.clientY;lastT=now;
+    scheduleGlobeDraw();
+  });
+  const end=e=>{
+    if(e.pointerId!==activeId)return;
+    activeId=null;globe.dragging=false;svg.style.cursor='grab';
+    if(performance.now()-lastT>80)velX=velY=0; // finger paused before lifting: no fling
+    startGlobeInertia(velX,velY);
+  };
+  svg.addEventListener('pointerup',end);svg.addEventListener('pointercancel',end);
+  // Belt and braces for older iOS: stop the page scrolling while a spin is in progress
+  svg.addEventListener('touchmove',e=>{if(globe.dragging)e.preventDefault();},{passive:false});
+  svg.addEventListener('dragstart',e=>e.preventDefault());
+}
+
+// Gentle coast after a flick
+function startGlobeInertia(vx,vy){
+  stopGlobeInertia();
+  const cap=1.2;vx=Math.max(-cap,Math.min(cap,vx));vy=Math.max(-cap,Math.min(cap,vy));
+  if(Math.abs(vx)<0.01&&Math.abs(vy)<0.01)return;
+  let last=performance.now();
+  const step=now=>{
+    const dt=Math.min(50,now-last);last=now;
+    globe.rotY+=vy*dt;globe.rotX=Math.max(-90,Math.min(90,globe.rotX+vx*dt));
+    const decay=Math.pow(0.94,dt/16);vx*=decay;vy*=decay;
+    drawGlobeSVG();
+    if(Math.abs(vx)<0.005&&Math.abs(vy)<0.005){globe.inertiaRaf=0;return;}
+    globe.inertiaRaf=requestAnimationFrame(step);
+  };
+  globe.inertiaRaf=requestAnimationFrame(step);
+}
+function stopGlobeInertia(){if(globe.inertiaRaf){cancelAnimationFrame(globe.inertiaRaf);globe.inertiaRaf=0;}}
+
+function scheduleGlobeDraw(){if(globe.raf)return;globe.raf=requestAnimationFrame(()=>{globe.raf=0;drawGlobeSVG();});}
+
+function buildGlobeSVG(svg){
+  const NS='http://www.w3.org/2000/svg';
+  svg.innerHTML=`<defs><radialGradient id="og" cx="35%" cy="35%"><stop offset="0%" stop-color="#5aadee"/><stop offset="100%" stop-color="#042C53"/></radialGradient><radialGradient id="sg" cx="35%" cy="35%"><stop offset="0%" stop-color="rgba(255,255,255,0.25)"/><stop offset="70%" stop-color="rgba(255,255,255,0)"/></radialGradient></defs>`
+    +`<circle cx="160" cy="160" r="155" fill="url(#og)"/>`
+    +`<path data-g="grat" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>`
+    +`<path data-g="land" fill="rgba(74,155,74,0.82)" stroke="rgba(255,255,255,0.25)" stroke-width="0.4" stroke-linejoin="round"/>`
+    +`<circle cx="160" cy="160" r="155" fill="url(#sg)" pointer-events="none"/><circle cx="160" cy="160" r="155" fill="none" stroke="rgba(181,212,244,0.4)" stroke-width="1.5"/>`
+    +`<g data-g="pins" pointer-events="none"></g>`;
+  const proj=d3.geoOrthographic().scale(155).translate([160,160]).clipAngle(90);
+  const path=d3.geoPath(proj);if(path.digits)path.digits(1); // shorter path strings = faster on phones
+  globe.el={svg,NS,grat:svg.querySelector('[data-g="grat"]'),land:svg.querySelector('[data-g="land"]'),pins:svg.querySelector('[data-g="pins"]'),pinEls:[]};
+  globe.proj=proj;globe.path=path;globe.pinsDirty=true;
+}
+
+function buildGlobePins(){
+  const el=globe.el;el.pins.innerHTML='';el.pinEls=globe.pins.map(pin=>{
+    const color=pin.raceType==='half'?'#f5c400':pin.raceType==='ultra'?'#185FA5':'#ff3333';
+    const g=document.createElementNS(el.NS,'g');
+    g.innerHTML=`<circle cx="1.5" cy="1.5" r="6" fill="rgba(0,0,0,0.25)"/><circle r="6" fill="${color}" stroke="white" stroke-width="1.5"/><circle r="2.5" fill="white"/>`;
+    el.pins.appendChild(g);return g;
+  });
+  globe.pinsDirty=false;
+}
+
 function drawGlobeSVG(){
   const svg=document.getElementById('globeSVG');if(!svg||!globe.ready)return;
-  const proj=d3.geoOrthographic().scale(155).translate([160,160]).rotate([globe.rotY,-globe.rotX,0]).clipAngle(90);
-  const path=d3.geoPath(proj);
-  let html=`<defs><radialGradient id="og" cx="35%" cy="35%"><stop offset="0%" stop-color="#5aadee"/><stop offset="100%" stop-color="#042C53"/></radialGradient><radialGradient id="sg" cx="35%" cy="35%"><stop offset="0%" stop-color="rgba(255,255,255,0.25)"/><stop offset="70%" stop-color="rgba(255,255,255,0)"/></radialGradient></defs>`;
-  html+=`<circle cx="160" cy="160" r="155" fill="url(#og)"/>`;
-  const gp=path(globe.graticule);if(gp)html+=`<path d="${gp}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>`;
-  globe.countries.features.forEach(f=>{const p=path(f);if(p)html+=`<path d="${p}" fill="rgba(74,155,74,0.82)" stroke="rgba(255,255,255,0.25)" stroke-width="0.4"/>`;});
-  html+=`<circle cx="160" cy="160" r="155" fill="url(#sg)"/><circle cx="160" cy="160" r="155" fill="none" stroke="rgba(181,212,244,0.4)" stroke-width="1.5"/>`;
-  globe.pins.forEach(pin=>{const c=proj([pin.lng,pin.lat]);if(!c)return;const vis=d3.geoDistance([pin.lng,pin.lat],proj.invert([160,160]))<Math.PI/2;if(!vis)return;const[x,y]=c;const pinColor = pin.raceType==='half' ? '#f5c400' : pin.raceType==='ultra' ? '#185FA5' : '#ff3333';html+=`<circle cx="${x+1.5}" cy="${y+1.5}" r="6" fill="rgba(0,0,0,0.25)"/><circle cx="${x}" cy="${y}" r="6" fill="${pinColor}" stroke="white" stroke-width="1.5"/><circle cx="${x}" cy="${y}" r="2.5" fill="white"/>`;});
-  svg.innerHTML=html;
+  if(!globe.el||globe.el.svg!==svg||!svg.contains(globe.el.land))buildGlobeSVG(svg);
+  if(globe.pinsDirty)buildGlobePins();
+  const proj=globe.proj.rotate([globe.rotY,-globe.rotX,0]),path=globe.path;
+  globe.el.grat.setAttribute('d',path(globe.graticule)||'');
+  const center=proj.invert([160,160]);let land='';
+  for(const k of globe.cull){if(d3.geoDistance(k.c,center)<Math.PI/2+k.r+0.02){const d=path(k.f);if(d)land+=d;}}
+  globe.el.land.setAttribute('d',land);
+  globe.pins.forEach((pin,i)=>{
+    const g=globe.el.pinEls[i];if(!g)return;
+    const vis=d3.geoDistance([pin.lng,pin.lat],center)<Math.PI/2;const c=vis&&proj([pin.lng,pin.lat]);
+    if(!c){g.setAttribute('display','none');return;}
+    g.removeAttribute('display');g.setAttribute('transform',`translate(${c[0].toFixed(1)},${c[1].toFixed(1)})`);
+  });
 }
 function makeMap(canvasId,center,scale,hRatio,pinFilter){
   const canvas=document.getElementById(canvasId);if(!canvas)return;
