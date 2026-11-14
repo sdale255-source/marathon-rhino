@@ -303,26 +303,17 @@ function syncUnitUI(){
 function syncMapDefaults(){if(state.country&&!state.mapsInitialized){applyMapDefaults(state.country);state.mapsInitialized=true;}}
 
 function enterApp(){
-  // Splash: a short video of the macaw flying (navy background baked in)
-  // plays in the centre of the screen for 3 seconds, then the splash closes.
+  // Splash: show the animated rhino (transparent APNG) briefly, then dismiss.
+  // APNG is an image, so there's no 'ended' event — we cap the display time.
   var splash = document.getElementById('splash');
-  var splashVid = document.getElementById('splashVid');
-  if (splashVid) {
-    try { splashVid.currentTime = 0; } catch (e) {}
-    var p = splashVid.play(); if (p && p.catch) p.catch(function(){});   // falls back to the still poster
-  }
-  splash.classList.remove('flying');
   splash.style.display = 'flex';
-  void splash.offsetWidth;          // restart the fade-in every time
-  splash.classList.add('flying');
   var splashDismissed = false;
   function dismissSplash(){
     if (splashDismissed) return;
     splashDismissed = true;
     splash.style.display = 'none';
-    if (splashVid) { try { splashVid.pause(); } catch (e) {} }
   }
-  setTimeout(dismissSplash, 3000); // how long the splash stays up, in ms
+  setTimeout(dismissSplash, 2000); // how long the splash stays up, in ms
 
   document.getElementById('authPage').style.display='none';
   document.getElementById('appShell').classList.add('visible');

@@ -174,7 +174,7 @@ function _requestAndStartGPS(onGranted) {
     _nativeRequestPermission().then(result => {
       if (result === 'denied') {
         markGpsPromptSeen(false);
-        setGpsStatus('dot-red', 'Location is off — allow it in Settings → Marathon Macaw → Location');
+        setGpsStatus('dot-red', 'Location is off — allow it in Settings → Marathon Rhino → Location');
         renderGpsSettings();
         return;
       }
@@ -279,7 +279,7 @@ function startGPS() {
     runState.gpsNative = true;
     // "backgroundMessage" is what keeps updates coming with the screen locked.
     runState.watchId = BG.addWatcher({
-      backgroundMessage: 'Marathon Macaw is tracking your run.',
+      backgroundMessage: 'Marathon Rhino is tracking your run.',
       backgroundTitle: 'Run in progress',
       requestPermissions: false,   // asked for separately, "While Using" only
       stale: false,
@@ -288,7 +288,7 @@ function startGPS() {
       if (err) {
         if (err.code === 'NOT_AUTHORIZED') {
           markGpsPromptSeen(false);
-          setGpsStatus('dot-red', 'Location is off — allow it in Settings → Marathon Macaw → Location');
+          setGpsStatus('dot-red', 'Location is off — allow it in Settings → Marathon Rhino → Location');
         } else {
           setGpsStatus('dot-amber', 'GPS signal weak…');
         }
@@ -437,7 +437,7 @@ function renderGpsSettings() {
     badge.textContent = 'Denied';
     badge.style.cssText = 'font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:#fde8e8;color:#c0392b;';
     statusText.textContent = native
-      ? 'Location is turned off for Marathon Macaw. Tap the button below to fix it in Settings.'
+      ? 'Location is turned off for Marathon Rhino. Tap the button below to fix it in Settings.'
       : 'Location access was denied. Tap the button below to request again, or enable it in your device Settings.';
   } else {
     badge.textContent = 'Not yet set';
@@ -523,7 +523,7 @@ function handleRunBtn() {
     runState.lastPos = null;
     runState.timerInterval = setInterval(updateRunDisplay, 1000);
     btn.textContent = 'Pause';
-    btn.style.background = '#FFD24D';
+    btn.style.background = 'rgba(255,255,255,0.9)';
     stopBtn.style.display = 'block';
     renderRunPhotoUI();
     requestWakeLock();     // keep the screen on so iOS doesn't suspend GPS
@@ -541,7 +541,7 @@ function handleRunBtn() {
     runState.pauseStart = Date.now();
     clearInterval(runState.timerInterval);
     btn.textContent = 'Resume';
-    btn.style.background = '#F5B800';
+    btn.style.background = '#fff';
     setGpsStatus('dot-amber', 'Paused');
 
   } else if (runState.status === 'paused') {
@@ -668,7 +668,7 @@ function resetRunTracker() {
   document.getElementById('runPace').textContent = '--:--';
   document.getElementById('runMarathon').textContent = '--:--:--';
   document.getElementById('runMainBtn').textContent = 'Start Run';
-  document.getElementById('runMainBtn').style.background = '#F5B800';
+  document.getElementById('runMainBtn').style.background = '#fff';
   document.getElementById('runStopBtn').style.display = 'none';
   setGpsStatus('dot-grey', 'Waiting for GPS…');
 }

@@ -1,4 +1,4 @@
-// Marathon Macaw service worker.
+// Marathon Rhino service worker.
 //
 // What it does:
 //   • Pages, scripts, styles and images from this site: always try the network
@@ -113,10 +113,10 @@ async function cacheFirst(req) {
 function offlinePage() {
   const html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
     '<meta name="viewport" content="width=device-width, initial-scale=1">' +
-    '<title>Offline — Marathon Macaw</title>' +
+    '<title>Offline — Marathon Rhino</title>' +
     '<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#042C53;color:#fff;' +
     'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;text-align:center;padding:24px}' +
-    'b{color:#F5B800}button{margin-top:16px;border:0;border-radius:999px;background:#F5B800;color:#042C53;' +
+    'b{color:#E8720C}button{margin-top:16px;border:0;border-radius:999px;background:#E8720C;color:#fff;' +
     'font:inherit;font-weight:800;padding:12px 24px}</style></head><body><div>' +
     '<p><b>You\'re offline.</b><br>Connect to the internet and try again.</p>' +
     '<button onclick="location.reload()">Try again</button></div></body></html>';

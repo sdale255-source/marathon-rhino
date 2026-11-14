@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Marathon Macaw</title>
-<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon-180.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
-<meta name="theme-color" content="#F5B800">
+<title>Marathon Rhino</title>
+<link rel="icon" type="image/png" sizes="32x32" href="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/apple-touch-icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/icon-512.png">
+<meta name="theme-color" content="#E8720C">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Marathon Macaw">
+<meta name="apple-mobile-web-app-title" content="Marathon Rhino">
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js" defer></script>
@@ -28,9 +28,6 @@
     --bg: #042C53; --white: #ffffff; --text: #1a1a2e;
     --text-muted: #5a6a7e; --border: rgba(24,95,165,0.15);
     --radius: 12px; --radius-sm: 8px;
-    /* Brand: blue-and-yellow macaw */
-    --brand: #F5B800; --brand-dark: #D99A00; --brand-text: #9A6B00;
-    --brand-tint: #FFF6D6; --on-brand: #042C53;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; justify-content: center; }
@@ -41,7 +38,7 @@
     top: 0; left: 50%;
     transform: translateX(-50%);
     width: 430px; height: 100%;
-    background-image: linear-gradient(rgba(245, 184, 0, 0.86), rgba(245, 184, 0, 0.86)), url('https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/background-texture.webp');
+    background-image: linear-gradient(rgba(232, 114, 12, 0.8), rgba(232, 114, 12, 0.8)), url('https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/background-texture.webp');
     background-repeat: repeat;
     background-size: 430px 430px;
     pointer-events: none;
@@ -49,50 +46,30 @@
     max-width: 430px;
   }
   @media (min-width: 500px) { body { background: #1a1a2e; } .app-container { box-shadow: 0 0 40px rgba(0,0,0,0.4); } }
-  .auth-wrap { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1rem; background: linear-gradient(160deg, var(--navy-deeper) 0%, #0C447C 60%, #185FA5 100%); }
+  .auth-wrap { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1rem; background: linear-gradient(160deg, var(--navy-deeper) 0%, #0C447C 60%, #c45e08 100%); }
   .auth-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 2rem; }
   .auth-logo svg { width: 44px; height: 44px; }
   .auth-logo span { font-size: 26px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
   .auth-card { background: var(--white); border-radius: var(--radius); padding: 2rem; width: 100%; max-width: 380px; }
   .auth-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
   .auth-tab { flex: 1; padding: 10px; text-align: center; font-size: 14px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
-  .auth-tab.active { color: var(--navy-deeper); border-bottom-color: var(--brand); }
+  .auth-tab.active { color: #E8720C; border-bottom-color: #E8720C; }
   .auth-form { display: flex; flex-direction: column; gap: 12px; }
   .auth-form input, .auth-form select { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 16px; outline: none; transition: border-color 0.2s; background: #fff; color: var(--text); }
   .auth-form input:focus { border-color: var(--navy); }
-  .btn-primary { background: var(--brand); color: var(--on-brand); border: none; border-radius: var(--radius-sm); padding: 14px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; min-height: 44px; }
-  .btn-primary:hover { background: var(--brand-dark); }
+  .btn-primary { background: #E8720C; color: #fff; border: none; border-radius: var(--radius-sm); padding: 14px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; min-height: 44px; }
+  .btn-primary:hover { background: #c45e08; }
   .auth-note { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 8px; }
   .app { display: none; flex-direction: column; min-height: 100vh; }
   .app.visible { display: flex; }
-  .topbar { background: linear-gradient(135deg, var(--navy-deeper) 0%, #0C447C 100%); border-bottom: 3px solid var(--brand); color: #fff; padding: 0 0.6rem 0 0.5rem; display: flex; align-items: center; justify-content: space-between; height: 84px; position: sticky; top: 0; z-index: 100; isolation: isolate; }
-  /* Header macaw: big enough that its tail hangs below the header's yellow line */
-  .topbar-macaw { width: 142px; height: auto; flex-shrink: 0; position: relative; top: 17px; z-index: 2; margin: 0 0 0 -4px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35)); pointer-events: none; }
-  @media (max-width: 389px) { .topbar-macaw { width: 128px; top: 16px; } .topbar-logo { font-size: 18px !important; } }
-  /* Login splash: the flapping macaw (animated image) stays centred for 3 seconds */
-  /* The video is phone-shaped with the navy background baked in and fills
-     the whole splash, so there is no edge where two navies could differ */
-  #splashVid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: #042C53; }
-  /* Wide screens (tablet sideways, desktop): show the whole video, fade its sides */
-  @media (min-aspect-ratio: 3/4) {
-    #splashVid { object-fit: contain;
-      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
-      mask-image: linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%); }
-  }
-  #splash.flying #splashVid { animation: macawFly 3s ease-in-out both; }
-  @keyframes macawFly {
-    0%   { opacity: 0; }
-    10%  { opacity: 1; }
-    90%  { opacity: 1; }
-    100% { opacity: 0; }
-  }
+  .topbar { background: linear-gradient(135deg, var(--navy-deeper) 0%, #0C447C 100%); border-bottom: 3px solid #E8720C; color: #fff; padding: 0 0.6rem 0 0.5rem; display: flex; align-items: center; justify-content: space-between; height: 84px; position: sticky; top: 0; z-index: 100; isolation: isolate; }
   .topbar-logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
   .topbar-tagline { font-size: 10px; color: rgba(255,255,255,0.6); letter-spacing: 0.03em; margin-top: 2px; }
   .topbar-welcome { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); margin-top: 4px; }
   .topbar-btn { background: none; border: none; color: rgba(255,255,255,0.8); cursor: pointer; padding: 8px; border-radius: var(--radius-sm); font-size: 13px; }
-  .bottom-nav { background: #ffffff; border-top: 3px solid var(--brand); display: flex; position: sticky; bottom: 0; z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); }
+  .bottom-nav { background: #ffffff; border-top: 3px solid #E8720C; display: flex; position: sticky; bottom: 0; z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); }
   .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 4px; font-size: 11px; color: var(--text-muted); cursor: pointer; border: none; background: none; transition: color 0.2s; }
-  .nav-btn.active { color: var(--navy-deeper); }
+  .nav-btn.active { color: #E8720C; }
   .nav-btn svg { width: 22px; height: 22px; }
   .page { display: none; flex: 1; padding: 1rem; overflow-y: auto; -webkit-overflow-scrolling: touch; position: relative; z-index: 1; }
   .page.active { display: block; }
@@ -105,29 +82,29 @@
   .race-name { font-size: 20px; font-weight: 700; color: var(--navy-deeper); }
   .race-location { font-size: 14px; color: var(--text-muted); margin-top: 2px; }
   .race-countdown { margin-top: 1rem; background: var(--navy-light); border-radius: var(--radius-sm); padding: 1rem; text-align: center; }
-  .countdown-num { font-size: 42px; font-weight: 800; color: var(--brand-text); line-height: 1; }
+  .countdown-num { font-size: 42px; font-weight: 800; color: #E8720C; line-height: 1; }
   .countdown-label { font-size: 13px; color: var(--navy-dark); margin-top: 2px; }
   .race-actions { display: flex; gap: 8px; margin-top: 1rem; }
   .btn-secondary { background: none; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 14px; font-size: 13px; color: var(--text-muted); cursor: pointer; }
   .btn-secondary:hover { border-color: var(--navy); color: var(--navy); }
-  .btn-outline-navy { background: var(--brand); border: none; border-radius: var(--radius-sm); padding: 10px 20px; font-size: 14px; font-weight: 600; color: var(--on-brand); cursor: pointer; }
-  .btn-outline-navy:hover { background: var(--brand-dark); }
+  .btn-outline-navy { background: #E8720C; border: none; border-radius: var(--radius-sm); padding: 10px 20px; font-size: 14px; font-weight: 600; color: #fff; cursor: pointer; }
+  .btn-outline-navy:hover { background: #c45e08; }
   .week-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
-  .day-box { background: var(--white); border: 1px solid rgba(245,184,0,0.45); border-radius: var(--radius-sm); padding: 6px 5px; min-height: 140px; display: flex; flex-direction: column; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .day-box:hover { border-color: var(--brand); }
-  .day-box.today { border: 3px solid var(--brand); }
+  .day-box { background: var(--white); border: 1px solid rgba(232,114,12,0.2); border-radius: var(--radius-sm); padding: 6px 5px; min-height: 140px; display: flex; flex-direction: column; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .day-box:hover { border-color: #E8720C; }
+  .day-box.today { border: 3px solid #E8720C; }
   .day-name { font-size: 9px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
   .day-date { font-size: 9px; color: var(--text-muted); margin-bottom: 4px; }
   .miles-label { font-size: 9px; font-weight: 600; color: var(--navy-deeper); margin-bottom: 3px; }
   .rest-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-muted); font-size: 9px; }
   .empty-area { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--border); font-size: 20px; }
-  .week-link { font-size: 13px; color: var(--navy); cursor: pointer; font-weight: 600; }
+  .week-link { font-size: 13px; color: #E8720C; cursor: pointer; font-weight: 600; }
   .back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--navy); background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 7px 14px; cursor: pointer; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
   .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
   .cal-dow { font-size: 10px; font-weight: 600; color: var(--text-muted); text-align: center; padding: 4px 0; }
   .cal-day { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px; min-height: 52px; cursor: pointer; display: flex; flex-direction: column; }
   .cal-day:hover { border-color: var(--navy); }
-  .cal-day.today { border: 2px solid var(--brand); }
+  .cal-day.today { border: 2px solid #E8720C; }
   .cal-day.other-month { opacity: 0.35; }
   .cal-day-num { font-size: 10px; font-weight: 600; color: var(--text-muted); }
   .cal-day-miles { font-size: 10px; font-weight: 700; color: var(--navy); margin-top: auto; }
@@ -155,7 +132,7 @@
   /* PHOTO MODAL */
   .photo-modal-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 14px; }
   .photo-modal-slot { aspect-ratio: 1; border-radius: 8px; overflow: hidden; position: relative; background: var(--navy-light); border: 2px dashed rgba(24,95,165,0.25); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color 0.2s; }
-  .photo-modal-slot:hover { border-color: var(--brand); }
+  .photo-modal-slot:hover { border-color: #E8720C; }
   .photo-modal-slot.medal-slot { background: linear-gradient(135deg,#fff8e1,#fff3cd); border-color: rgba(218,165,32,0.45); }
   .photo-modal-slot.has-photo { border: none; cursor: default; }
   .photo-modal-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -174,12 +151,12 @@
   .toggle input { opacity: 0; width: 0; height: 0; }
   .toggle-slider { position: absolute; inset: 0; background: #ccc; border-radius: 24px; cursor: pointer; transition: background 0.2s; }
   .toggle-slider:before { content:''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: transform 0.2s; }
-  .toggle input:checked + .toggle-slider { background: var(--brand); }
+  .toggle input:checked + .toggle-slider { background: #E8720C; }
   .toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
   .unit-toggle { display: flex; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
   .unit-btn { flex: 1; padding: 8px; font-size: 13px; font-weight: 500; border: none; background: none; cursor: pointer; color: var(--text-muted); }
-  .unit-btn.active { background: var(--brand); color: var(--on-brand); }
-  .profile-avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--brand); display: flex; align-items: center; justify-content: center; color: var(--on-brand); font-size: 22px; font-weight: 700; margin: 0 auto 8px; }
+  .unit-btn.active { background: #E8720C; color: #fff; }
+  .profile-avatar { width: 64px; height: 64px; border-radius: 50%; background: #E8720C; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; font-weight: 700; margin: 0 auto 8px; }
   .profile-name { text-align: center; font-size: 17px; font-weight: 700; }
   .profile-email { text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 2px; }
   .btn-danger { background: none; border: 1px solid #e24b4a; border-radius: var(--radius-sm); padding: 10px; font-size: 14px; color: #e24b4a; cursor: pointer; width: 100%; margin-top: 1rem; }
@@ -197,7 +174,7 @@
   .btn-ghost { background: none; border: none; color: var(--text-muted); font-size: 14px; padding: 10px; cursor: pointer; border-radius: var(--radius-sm); }
   .btn-rest-day { background: none; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; font-size: 14px; color: var(--text-muted); cursor: pointer; }
   .stat-card { background: var(--navy-light); border-radius: var(--radius-sm); padding: 10px 8px; text-align: center; }
-  .stat-card-val { font-size: 18px; font-weight: 800; color: var(--brand-text); line-height: 1.1; }
+  .stat-card-val { font-size: 18px; font-weight: 800; color: #E8720C; line-height: 1.1; }
   .stat-card-lbl { font-size: 13px; font-weight: 700; color: var(--navy-dark); margin-top: 2px; }
   .brick-preview { background: var(--navy-light); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 1rem; display: flex; align-items: flex-end; gap: 4px; min-height: 60px; }
   /* iPhone notch and home bar: keep the top bar, bottom nav and login screen clear
@@ -215,33 +192,33 @@
     #runMarathon { font-size: 26px !important; }
   }
   /* PAYWALL (iPhone app) */
-  #paywallScreen { position: fixed; inset: 0; z-index: 400; background: linear-gradient(160deg, #042C53 0%, #0C447C 60%, #185FA5 100%); overflow-y: auto; -webkit-overflow-scrolling: touch; align-items: flex-start; justify-content: center; padding: calc(env(safe-area-inset-top, 0px) + 24px) 16px calc(env(safe-area-inset-bottom, 0px) + 24px); }
+  #paywallScreen { position: fixed; inset: 0; z-index: 400; background: linear-gradient(160deg, #042C53 0%, #0C447C 60%, #c45e08 100%); overflow-y: auto; -webkit-overflow-scrolling: touch; align-items: flex-start; justify-content: center; padding: calc(env(safe-area-inset-top, 0px) + 24px) 16px calc(env(safe-area-inset-bottom, 0px) + 24px); }
   .paywall-inner { width: 100%; max-width: 420px; margin: auto; display: flex; flex-direction: column; gap: 12px; }
   .paywall-opt { display: flex; align-items: flex-start; gap: 10px; background: #fff; border: 2px solid transparent; border-radius: 14px; padding: 14px; cursor: pointer; }
-  .paywall-opt.selected { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(245,184,0,0.35); }
-  .paywall-opt input { accent-color: var(--brand); width: 18px; height: 18px; margin-top: 2px; }
+  .paywall-opt.selected { border-color: #E8720C; box-shadow: 0 0 0 3px rgba(232,114,12,0.25); }
+  .paywall-opt input { accent-color: #E8720C; width: 18px; height: 18px; margin-top: 2px; }
   .paywall-link { background: none; border: none; color: rgba(255,255,255,0.85); font-size: 12px; text-decoration: underline; cursor: pointer; padding: 4px 0; }
   }
 </style>
 </head>
 <body>
 <div id="splash" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#042C53;z-index:99999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;">
-  <video id="splashVid" src="branding/macaw-flying.mp4" poster="branding/macaw-flying-poster.jpg" muted playsinline loop preload="auto" aria-label="Marathon Macaw flying"></video>
+  <img id="splashImg" src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/rhino-transparent2.png" style="width:320px;height:auto;object-fit:contain;">
 </div>
 <div class="app-container">
 <!-- AUTH PAGE -->
 <!-- LOADING SCREEN -->
 <div id="loadingScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(160deg,#042C53 0%,#0C447C 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;">
-  <div style="font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;">Marathon Macaw</div>
-  <div style="margin-top:16px;width:40px;height:40px;border:3px solid rgba(255,255,255,0.3);border-top-color:#F5B800;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+  <div style="font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;">Marathon Rhino</div>
+  <div style="margin-top:16px;width:40px;height:40px;border:3px solid rgba(255,255,255,0.3);border-top-color:#E8720C;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
   <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 </div>
 
 <div class="auth-wrap" id="authPage" style="display:none;">
   <div class="auth-logo" style="flex-direction:column;align-items:center;gap:6px;margin-bottom:1.5rem;">
-    <img src="branding/macaw-flying.webp" alt="Marathon Macaw" style="width:270px;max-width:80vw;height:auto;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));">
-    <span style="font-size:28px;font-weight:800;">Marathon Macaw</span>
-    <div style="font-size:16px;color:var(--brand);font-weight:700;letter-spacing:0.03em;margin-top:-4px;">Train Awesome. Save Animals.</div>
+    <img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Rhino-sunglasses.png" alt="Marathon Rhino" style="width:130px;height:130px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));">
+    <span style="font-size:28px;font-weight:800;">Marathon Rhino</span>
+    <div style="font-size:16px;color:#E8720C;font-weight:700;letter-spacing:0.03em;margin-top:-4px;">Train Awesome. Save Animals.</div>
   </div>
   <div class="auth-card">
     <div class="auth-tabs">
@@ -253,7 +230,7 @@
       <input type="password" placeholder="Password" id="loginPassword">
       <div id="loginError" style="font-size:12px;color:#e24b4a;display:none;text-align:center;"></div>
       <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:2px 0;">
-        <input type="checkbox" id="keepSignedIn" style="width:18px;height:18px;accent-color:var(--brand);cursor:pointer;" checked>
+        <input type="checkbox" id="keepSignedIn" style="width:18px;height:18px;accent-color:#E8720C;cursor:pointer;" checked>
         <span style="font-size:14px;color:var(--text-muted);">Keep me signed in</span>
       </label>
       <button class="btn-primary" id="loginBtn" onclick="doLogin()">Log in</button>
@@ -303,29 +280,29 @@
           <img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Signupimage.png" alt="Rhino in the wild" style="width:100%;height:160px;object-fit:cover;object-position:center 85%;display:block;">
           <div style="padding:1rem;text-align:center;">
             <div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:6px;">Run with a purpose</div>
-            <div style="font-size:13px;color:rgba(255,255,255,0.85);line-height:1.6;text-align:center;">The Marathon Rhino Company donates <span data-charity-standard>50%</span> of what it receives from subscriptions to conservation charities<br><strong style="color:var(--brand);">Ara Manzanillo</strong><br>and<br><strong style="color:var(--brand);">World Land Trust</strong><br>— protecting wildlife and wild places around the world.</div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.85);line-height:1.6;text-align:center;">The Marathon Rhino Company donates <span data-charity-standard>50%</span> of what it receives from subscriptions to conservation charities<br><strong style="color:#E8720C;">Save the Rhino International</strong><br>and<br><strong style="color:#E8720C;">World Land Trust</strong><br>— protecting wildlife and wild places around the world.</div>
           </div>
         </div>
         <!-- Plan options -->
         <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.05em;">Choose your plan — first 30 days free</div>
         <!-- Standard plan -->
-        <label id="planStandardLabel" onclick="selectPlan('standard')" style="display:block;border:2px solid var(--brand);border-radius:12px;padding:1rem;margin-bottom:10px;cursor:pointer;background:#fff;">
+        <label id="planStandardLabel" onclick="selectPlan('standard')" style="display:block;border:2px solid #E8720C;border-radius:12px;padding:1rem;margin-bottom:10px;cursor:pointer;background:#fff;">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-            <input type="radio" name="subscriptionPlan" value="standard" id="planStandard" checked style="accent-color:var(--brand);width:18px;height:18px;">
+            <input type="radio" name="subscriptionPlan" value="standard" id="planStandard" checked style="accent-color:#E8720C;width:18px;height:18px;">
             <div style="font-size:17px;font-weight:800;color:var(--text);">Standard</div>
-            <div style="margin-left:auto;font-size:20px;font-weight:800;color:var(--brand-text);">$2.50<span style="font-size:13px;font-weight:600;color:var(--text-muted);">/mo</span></div>
+            <div style="margin-left:auto;font-size:20px;font-weight:800;color:#E8720C;">$2.50<span style="font-size:13px;font-weight:600;color:var(--text-muted);">/mo</span></div>
           </div>
-          <div style="font-size:13px;color:var(--text-muted);line-height:1.6;padding-left:28px;">Full access to Marathon Macaw — GPS run tracker, training calendar, race maps, achievements and more. We donate <span data-charity-standard>50%</span> of what we receive from every Standard subscription to our conservation partners.</div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.6;padding-left:28px;">Full access to Marathon Rhino — GPS run tracker, training calendar, race maps, achievements and more. We donate <span data-charity-standard>50%</span> of what we receive from every Standard subscription to our conservation partners.</div>
         </label>
         <!-- Awesome plan -->
         <label id="planPlatinumLabel" onclick="selectPlan('platinum')" style="display:block;border:2px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:10px;cursor:pointer;background:#fff;">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-            <input type="radio" name="subscriptionPlan" value="platinum" id="planPlatinum" style="accent-color:var(--brand);width:18px;height:18px;">
+            <input type="radio" name="subscriptionPlan" value="platinum" id="planPlatinum" style="accent-color:#E8720C;width:18px;height:18px;">
             <div style="font-size:17px;font-weight:800;color:var(--text);">Awesome</div>
-            <div style="margin-left:auto;font-size:20px;font-weight:800;color:var(--brand-text);">$4.50<span style="font-size:13px;font-weight:600;color:var(--text-muted);">/mo</span></div>
+            <div style="margin-left:auto;font-size:20px;font-weight:800;color:#E8720C;">$4.50<span style="font-size:13px;font-weight:600;color:var(--text-muted);">/mo</span></div>
           </div>
           <div style="font-size:13px;color:var(--text-muted);line-height:1.6;padding-left:28px;">Everything in Standard, plus the <strong style="color:#185FA5;">Awesome supporter badge</strong> on your profile — and we donate <strong style="color:#185FA5;"><span data-charity-awesome>75%</span> of what we receive</strong> from every Awesome subscription to our conservation partners.</div>
-          <div style="margin-top:8px;margin-left:28px;background:#e6f1fb;border-radius:8px;padding:8px 10px;font-size:12px;color:#185FA5;font-weight:600;">💙 Our donation is split equally between Ara Manzanillo &amp; World Land Trust</div>
+          <div style="margin-top:8px;margin-left:28px;background:#e6f1fb;border-radius:8px;padding:8px 10px;font-size:12px;color:#185FA5;font-weight:600;">💙 Our donation is split equally between Save the Rhino International &amp; World Land Trust</div>
         </label>
         <p style="font-size:12px;color:var(--text-muted);text-align:center;font-style:italic;margin:0;"><img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Icedcoffee.png" alt="iced coffee" style="height:18px;vertical-align:middle;margin-right:4px;">Please note: both options cost less than a large iced coffee</p>
         <div style="background:var(--navy-light);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--navy);line-height:1.5;">🔒 You won't be charged during your 30-day free trial. Cancel anytime.</div>
@@ -349,12 +326,12 @@
 <!-- RESET PASSWORD (opened from the email reset link) -->
 <div class="auth-wrap" id="resetPasswordPage" style="display:none;">
   <div class="auth-logo" style="flex-direction:column;align-items:center;gap:6px;margin-bottom:1.5rem;">
-    <img src="branding/macaw-flying.webp" alt="Marathon Macaw" style="width:270px;max-width:80vw;height:auto;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));">
-    <span style="font-size:28px;font-weight:800;">Marathon Macaw</span>
+    <img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Rhino-sunglasses.png" alt="Marathon Rhino" style="width:130px;height:130px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));">
+    <span style="font-size:28px;font-weight:800;">Marathon Rhino</span>
   </div>
   <div class="auth-card">
     <div style="font-size:20px;font-weight:800;color:var(--navy-deeper);text-align:center;margin-bottom:6px;">Set a new password</div>
-    <div style="font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:1.25rem;">Choose a new password for your Marathon Macaw account.</div>
+    <div style="font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:1.25rem;">Choose a new password for your Marathon Rhino account.</div>
     <div class="auth-form">
       <input type="password" placeholder="New password (at least 6 characters)" id="rpNew" autocomplete="new-password">
       <input type="password" placeholder="Confirm new password" id="rpConfirm" autocomplete="new-password">
@@ -370,10 +347,10 @@
   <div class="topbar">
     <div style="display:flex;flex-direction:column;gap:1px;">
       <div style="display:flex;align-items:center;gap:6px;">
-        <img class="topbar-macaw" src="branding/macaw-flying.webp" alt="Marathon Macaw">
+        <img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Rhino-sunglasses.png" alt="Marathon Rhino" style="height:90px;width:90px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));margin-top:12px;margin-bottom:-12px;">
         <div>
-          <div class="topbar-logo">Marathon Macaw</div>
-          <div class="topbar-tagline" style="margin-left:0;color:var(--brand);">Train Awesome. Save Animals.</div>
+          <div class="topbar-logo">Marathon Rhino</div>
+          <div class="topbar-tagline" style="margin-left:0;color:#E8720C;">Train Awesome. Save Animals.</div>
           <div class="topbar-welcome" id="topbarWelcome" style="margin-left:0;"></div>
         </div>
       </div>
@@ -403,7 +380,7 @@
         <div id="dispGoalTime" style="display:none;background:var(--navy-light);border-radius:var(--radius-sm);padding:10px 14px;margin-top:10px;">
           <div style="font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">Goal time</div>
           <div style="display:flex;align-items:baseline;gap:16px;">
-            <span id="dispGoalTimeVal" style="font-size:20px;font-weight:800;color:var(--brand-text);"></span>
+            <span id="dispGoalTimeVal" style="font-size:20px;font-weight:800;color:#E8720C;"></span>
             <span id="dispGoalPace" style="font-size:13px;font-weight:600;color:var(--navy-dark);"></span>
           </div>
         </div>
@@ -418,14 +395,14 @@
     <div class="card" id="raceWebsiteBubble" style="display:none;"></div>
 
     <!-- START A RUN CARD -->
-    <div class="card" style="background:linear-gradient(135deg,var(--navy-deeper) 0%,#0C447C 100%);cursor:pointer;" onclick="showPage('pageRun')">
+    <div class="card" style="background:linear-gradient(135deg,#E8720C 0%,#c45e08 100%);cursor:pointer;" onclick="showPage('pageRun')">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div>
           <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:4px;">Start a run</div>
           <div style="font-size:13px;color:rgba(255,255,255,0.8);">GPS tracking · Pace · Distance</div>
         </div>
-        <div style="width:56px;height:56px;background:var(--brand);border-radius:50%;display:flex;align-items:center;justify-content:center;">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#042C53" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <div style="width:56px;height:56px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         </div>
       </div>
     </div>
@@ -438,7 +415,7 @@
       <div class="week-grid" id="weekGrid"></div>
       <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
         <span style="font-size:13px;color:var(--text-muted);">Weekly total</span>
-        <span id="weeklyTotalVal" style="font-size:18px;font-weight:800;color:var(--brand-text);">0.0 mi</span>
+        <span id="weeklyTotalVal" style="font-size:18px;font-weight:800;color:#E8720C;">0.0 mi</span>
       </div>
     </div>
 
@@ -499,7 +476,7 @@
   </div>
 
   <!-- RUN TRACKING PAGE -->
-  <div class="page" id="pageRun" style="background:linear-gradient(160deg,#042C53 0%,#0C447C 100%);padding:0;flex-direction:column;">
+  <div class="page" id="pageRun" style="background:#E8720C;padding:0;flex-direction:column;">
 
     <!-- Top bar -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem 0.5rem;">
@@ -548,7 +525,7 @@
       </div>
 
       <!-- Start / Pause / Resume button -->
-      <button id="runMainBtn" onclick="handleRunBtn()" style="width:100%;padding:18px;border:none;border-radius:16px;font-size:18px;font-weight:800;cursor:pointer;background:var(--brand);color:var(--on-brand);letter-spacing:-0.3px;margin-bottom:12px;">
+      <button id="runMainBtn" onclick="handleRunBtn()" style="width:100%;padding:18px;border:none;border-radius:16px;font-size:18px;font-weight:800;cursor:pointer;background:#fff;color:#E8720C;letter-spacing:-0.3px;margin-bottom:12px;">
         Start Run
       </button>
       <!-- Run photo (hidden until a run starts; one photo per run) -->
@@ -563,7 +540,7 @@
             <div style="font-size:14px;font-weight:700;">Photo added ✓</div>
             <div style="font-size:12px;opacity:0.85;">Saved with this run</div>
           </div>
-          <button onclick="takeRunPhoto()" style="border:none;border-radius:10px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer;background:var(--brand);color:var(--on-brand);">Retake</button>
+          <button onclick="takeRunPhoto()" style="border:none;border-radius:10px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:#E8720C;">Retake</button>
           <button onclick="clearRunPhoto()" aria-label="Remove photo" style="border:none;background:transparent;color:#fff;font-size:22px;line-height:1;cursor:pointer;padding:4px;">×</button>
         </div>
       </div>
@@ -602,7 +579,7 @@
       <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:8px;">Advice &amp; Recommendations</div>
     </div>
     <div class="card" style="background:var(--navy-light);border-left:4px solid var(--orange);">
-      <p style="font-size:16px;font-weight:700;color:var(--navy-dark);line-height:1.65;margin:0;font-style:italic;">Simple, practical advice from the team at Marathon Macaw.</p>
+      <p style="font-size:16px;font-weight:700;color:var(--navy-dark);line-height:1.65;margin:0;font-style:italic;">Simple, practical advice from the team at Marathon Rhino.</p>
     </div>
 
     <div class="card">
@@ -646,12 +623,12 @@
   <div class="page" id="pageCalendar">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 4px;">
       <button style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;" onclick="changeMonth(-1)">← Earlier</button>
-      <button style="font-size:12px;font-weight:700;color:var(--navy-deeper);background:none;border:none;cursor:pointer;" onclick="resetCalToToday()">Today</button>
+      <button style="font-size:12px;font-weight:600;color:#E8720C;background:none;border:none;cursor:pointer;" onclick="resetCalToToday()">Today</button>
       <button style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;" onclick="changeMonth(1)">Later →</button>
     </div>
     <div class="card" id="calCard0"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><div id="calLabel0" style="font-size:15px;font-weight:700;color:var(--navy-deeper);"></div><div id="calMiles0" style="font-size:13px;font-weight:700;color:var(--text-muted);"></div></div><div class="cal-grid" id="calDow0"></div><div class="cal-grid" id="calGrid0" style="margin-top:4px;"></div></div>
-    <div class="card" id="calCard1"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><div style="display:flex;align-items:center;gap:8px;"><div id="calLabel1" style="font-size:15px;font-weight:700;color:var(--navy-deeper);"></div><span id="calCurrentBadge1" style="display:none;font-size:10px;font-weight:700;color:var(--on-brand);background:var(--brand);padding:2px 8px;border-radius:20px;">Current month</span></div><div id="calMiles1" style="font-size:13px;font-weight:700;color:var(--text-muted);"></div></div><div class="cal-grid" id="calDow1"></div><div class="cal-grid" id="calGrid1" style="margin-top:4px;"></div></div>
-    <div class="card" id="calCard2"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><div style="display:flex;align-items:center;gap:8px;"><div id="calLabel2" style="font-size:15px;font-weight:700;color:var(--navy-deeper);"></div><span id="calCurrentBadge2" style="display:none;font-size:10px;font-weight:700;color:var(--on-brand);background:var(--brand);padding:2px 8px;border-radius:20px;">Current month</span></div><div id="calMiles2" style="font-size:13px;font-weight:700;color:var(--text-muted);"></div></div><div class="cal-grid" id="calDow2"></div><div class="cal-grid" id="calGrid2" style="margin-top:4px;"></div></div>
+    <div class="card" id="calCard1"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><div style="display:flex;align-items:center;gap:8px;"><div id="calLabel1" style="font-size:15px;font-weight:700;color:var(--navy-deeper);"></div><span id="calCurrentBadge1" style="display:none;font-size:10px;font-weight:700;color:#E8720C;background:#fff3e0;padding:2px 8px;border-radius:20px;">Current month</span></div><div id="calMiles1" style="font-size:13px;font-weight:700;color:var(--text-muted);"></div></div><div class="cal-grid" id="calDow1"></div><div class="cal-grid" id="calGrid1" style="margin-top:4px;"></div></div>
+    <div class="card" id="calCard2"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><div style="display:flex;align-items:center;gap:8px;"><div id="calLabel2" style="font-size:15px;font-weight:700;color:var(--navy-deeper);"></div><span id="calCurrentBadge2" style="display:none;font-size:10px;font-weight:700;color:#E8720C;background:#fff3e0;padding:2px 8px;border-radius:20px;">Current month</span></div><div id="calMiles2" style="font-size:13px;font-weight:700;color:var(--text-muted);"></div></div><div class="cal-grid" id="calDow2"></div><div class="cal-grid" id="calGrid2" style="margin-top:4px;"></div></div>
   </div>
 
   <!-- CHARITY PAGE -->
@@ -659,38 +636,38 @@
 
     <!-- Hero -->
     <div class="card" style="background:var(--navy-deeper);text-align:center;padding:0;overflow:hidden;">
-      <img src="branding/charity-hero.webp" alt="Two Great Green Macaws on a branch in the rainforest" style="width:100%;display:block;max-height:260px;object-fit:cover;object-position:center 35%;">
+      <img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Charityherophoto.png" alt="Rhino at sunset" style="width:100%;display:block;max-height:260px;object-fit:cover;object-position:center 60%;">
       <div style="padding:1.5rem;">
         <div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;">Running for a Better World</div>
-        <div style="font-size:14px;color:var(--navy-mid);line-height:1.6;">Marathon Macaw helps protect wildlife and preserve wild places.</div>
+        <div style="font-size:14px;color:var(--navy-mid);line-height:1.6;">Marathon Rhino helps protect wildlife and preserve wild places.</div>
       </div>
     </div>
 
     <!-- Overall commitment banner -->
-    <div class="card" style="background:linear-gradient(135deg,var(--brand) 0%,var(--brand-dark) 100%);text-align:center;padding:1.5rem;">
-      <div style="font-size:13px;font-weight:700;color:rgba(4,44,83,0.75);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;">Our commitment</div>
-      <div style="font-size:42px;font-weight:900;color:var(--on-brand);line-height:1;" data-charity-standard>50%</div>
-      <div style="font-size:14px;color:var(--on-brand);margin-top:6px;line-height:1.5;">of what we receive from subscriptions is donated to conservation charities — <span data-charity-awesome>75%</span> on the Awesome plan — split equally between our two partners.</div>
+    <div class="card" style="background:linear-gradient(135deg,#E8720C 0%,#c45e08 100%);text-align:center;padding:1.5rem;">
+      <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.8);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;">Our commitment</div>
+      <div style="font-size:42px;font-weight:900;color:#fff;line-height:1;" data-charity-standard>50%</div>
+      <div style="font-size:14px;color:rgba(255,255,255,0.9);margin-top:6px;line-height:1.5;">of what we receive from subscriptions is donated to conservation charities — <span data-charity-awesome>75%</span> on the Awesome plan — split equally between our two partners.</div>
     </div>
 
-    <!-- Ara Manzanillo card -->
+    <!-- Save the Rhino card -->
     <div class="card" style="border-left:4px solid var(--navy);padding:0;overflow:hidden;">
-      <img src="branding/ara-manzanillo.webp" alt="Great Green Macaws in the wild" style="width:100%;display:block;max-height:200px;object-fit:cover;object-position:center 35%;">
+      <img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Savetherhino.png" alt="Rhino in the wild" style="width:100%;display:block;max-height:200px;object-fit:cover;object-position:center 100%;">
       <div style="padding:1.25rem;">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
         <div>
-          <div style="font-size:16px;font-weight:800;color:var(--navy-deeper);">Ara Manzanillo</div>
-          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Macaw conservation · Costa Rica</div>
+          <div style="font-size:16px;font-weight:800;color:var(--navy-deeper);">Save the Rhino International</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Wildlife conservation · Global</div>
         </div>
         <div style="margin-left:auto;background:var(--navy-light);border-radius:12px;padding:6px 14px;text-align:center;flex-shrink:0;">
           <div style="font-size:22px;font-weight:900;color:var(--navy);line-height:1;">½</div>
           <div style="font-size:9px;color:var(--navy-dark);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">of our giving</div>
         </div>
       </div>
-      <p style="font-size:13px;color:var(--text);line-height:1.7;margin-bottom:12px;">Ara Manzanillo (the Ara Project Association) protects the critically endangered Great Green Macaw in the Caribbean rainforests of Costa Rica. Since 2010 it has released captive-raised macaws into the wild, helped wild pairs breed, replanted native forest and run environmental education with local communities.</p>
-      <p style="font-size:13px;color:var(--text);line-height:1.7;margin-bottom:14px;">Fewer than <strong>300 Great Green Macaws</strong> remain in the wild in Costa Rica. Marathon Macaw's donations support the work to bring them back.</p>
-      <a href="https://aramanzanillo.org/" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:6px;background:var(--navy);color:#fff;padding:11px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;text-decoration:none;">
-        Visit Ara Manzanillo →
+      <p style="font-size:13px;color:var(--text);line-height:1.7;margin-bottom:12px;">Save the Rhino International works to protect all five rhino species — Black, White, Greater One-Horned, Sumatran, and Javan — through anti-poaching operations, community engagement, wildlife monitoring, and advocacy across Africa and Asia.</p>
+      <p style="font-size:13px;color:var(--text);line-height:1.7;margin-bottom:14px;">Today, fewer than <strong>27,000 rhinos</strong> remain in the wild. Marathon Rhino's donations support the work to protect them.</p>
+      <a href="https://www.savetherhino.org" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;background:var(--navy);color:#fff;padding:11px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;text-decoration:none;">
+        Visit Save the Rhino International →
       </a>
       </div>
     </div>
@@ -720,8 +697,8 @@
     <!-- Why these charities -->
     <div class="card">
       <div class="card-title">Why these charities?</div>
-      <p style="font-size:13px;color:var(--text);line-height:1.7;margin-bottom:10px;">Endangered wildlife needs two things to survive: hands-on protection, and wild habitat to live in. Ara Manzanillo works directly to bring the Great Green Macaw back to Costa Rica's rainforest, while the World Land Trust protects threatened habitats around the world. Together they tackle both sides of that equation.</p>
-      <p style="font-size:13px;color:var(--text);line-height:1.7;">At The Marathon Rhino Company, we believe that the miles you run can do more than build fitness — they can help build a future where macaws and thousands of other species still fly free.</p>
+      <p style="font-size:13px;color:var(--text);line-height:1.7;margin-bottom:10px;">Rhinos need two things to survive: protection from poaching, and wild habitat to live in. Together, Save the Rhino International and the World Land Trust tackle both sides of that equation.</p>
+      <p style="font-size:13px;color:var(--text);line-height:1.7;">At The Marathon Rhino Company, we believe that the miles you run can do more than build fitness — they can help build a future where rhinos and thousands of other species still roam free.</p>
     </div>
 
   </div>
@@ -732,7 +709,7 @@
       <div class="profile-avatar" id="profileAvatar">JD</div>
       <div class="profile-name" id="profileName">John Doe</div>
       <div class="profile-email" id="profileEmail">john@example.com</div>
-      <div style="text-align:center;"><span id="profileSupporterBadge" style="display:none;align-items:center;gap:5px;margin-top:8px;background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:var(--on-brand);font-size:11px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;padding:4px 12px 4px 6px;border-radius:20px;"><img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/subscription-platinum-icon.webp" alt="" style="height:18px;width:auto;">Awesome supporter</span></div>
+      <div style="text-align:center;"><span id="profileSupporterBadge" style="display:none;align-items:center;gap:5px;margin-top:8px;background:linear-gradient(135deg,#E8720C,#c45e08);color:#fff;font-size:11px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;padding:4px 12px 4px 6px;border-radius:20px;"><img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/subscription-platinum-icon.webp" alt="" style="height:18px;width:auto;">Awesome supporter</span></div>
       <div id="profileMemberSince" style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:4px;"></div>
     </div>
     <div class="card">
@@ -808,16 +785,16 @@
         </div>
         <span id="subStatusBadge" style="font-size:11px;font-weight:700;background:#e8f5e8;color:#2d7a2d;padding:3px 10px;border-radius:20px;">Active</span>
       </div>
-      <div id="subWebBilledNote" style="display:none;padding:12px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-muted);line-height:1.5;">Your subscription is billed through your Marathon Macaw web account.</div>
+      <div id="subWebBilledNote" style="display:none;padding:12px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-muted);line-height:1.5;">Your subscription is billed through your Marathon Rhino web account.</div>
       <div id="subChangePlanSection" style="padding:12px 0;border-bottom:1px solid var(--border);">
         <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;">Choose plan</div>
         <div style="display:flex;flex-direction:column;gap:8px;">
           <label id="subLabelStandard" style="display:flex;align-items:flex-start;gap:10px;padding:10px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;" onclick="selectSubPlan('standard')">
-            <input type="radio" name="subPlan" value="standard" id="subRadioStandard" style="margin-top:2px;accent-color:var(--brand);">
+            <input type="radio" name="subPlan" value="standard" id="subRadioStandard" style="margin-top:2px;accent-color:#E8720C;">
             <div><div style="font-size:13px;font-weight:700;">Standard — $2.50/month</div><div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Full app access · We donate <span data-charity-standard>50%</span> of what we receive</div></div>
           </label>
           <label id="subLabelPlatinum" style="display:flex;align-items:flex-start;gap:10px;padding:10px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;" onclick="selectSubPlan('platinum')">
-            <input type="radio" name="subPlan" value="platinum" id="subRadioPlatinum" style="margin-top:2px;accent-color:var(--brand);">
+            <input type="radio" name="subPlan" value="platinum" id="subRadioPlatinum" style="margin-top:2px;accent-color:#E8720C;">
             <div><div style="font-size:13px;font-weight:700;"><img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/subscription-platinum-icon.webp" style="height:18px;width:auto;vertical-align:middle;margin-right:4px;">Awesome — $4.50/month</div><div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Full app access + Awesome supporter badge · We donate <span data-charity-awesome>75%</span> of what we receive</div></div>
           </label>
         </div>
@@ -864,7 +841,7 @@
           <div style="font-size:14px;font-weight:800;color:#fff;">Admin Panel</div>
           <div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">Manage news articles</div>
         </div>
-        <button onclick="openAdminNews()" style="background:var(--brand);color:var(--on-brand);border:none;border-radius:var(--radius-sm);padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;">Open</button>
+        <button onclick="openAdminNews()" style="background:#E8720C;color:#fff;border:none;border-radius:var(--radius-sm);padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;">Open</button>
       </div>
     </div>
 
@@ -922,7 +899,7 @@
         </div>
       </div>
       <label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;">
-        <input type="checkbox" id="inputNoGoal" style="accent-color:var(--brand);width:16px;height:16px;" onchange="toggleGoalInput(this.checked)">
+        <input type="checkbox" id="inputNoGoal" style="accent-color:#E8720C;width:16px;height:16px;" onchange="toggleGoalInput(this.checked)">
         <span style="font-size:13px;color:var(--text-muted);">No thanks, I just want to finish!</span>
       </label>
     </div>
@@ -1005,7 +982,7 @@
           <input type="radio" name="raceType" value="half" id="rhTypeHalf" style="accent-color:#f5c400;flex-shrink:0;width:16px;height:16px;">
           <span style="font-size:13px;font-weight:600;color:#a07700;">🟡 ½ Marathon</span>
         </label>
-        <label style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:2px solid var(--brand);border-radius:var(--radius-sm);cursor:pointer;" id="rtMarathon" onclick="selectRaceType('marathon')">
+        <label style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:2px solid #E8720C;border-radius:var(--radius-sm);cursor:pointer;" id="rtMarathon" onclick="selectRaceType('marathon')">
           <input type="radio" name="raceType" value="marathon" id="rhTypeMarathon" checked style="accent-color:#ff3333;flex-shrink:0;width:16px;height:16px;">
           <span style="font-size:13px;font-weight:600;color:#cc0000;">🔴 Marathon</span>
         </label>
@@ -1045,7 +1022,7 @@
 <!-- FIRST-LOGIN WELCOME MODAL (shown once per account, see showWelcomeIfNeeded in app-load.js) -->
 <div class="modal-overlay" id="welcomeModal" style="background:rgba(4,44,83,0.7);z-index:300;">
   <div class="modal-sheet" style="text-align:center;max-width:340px;">
-    <img src="branding/macaw-flying.webp" alt="Marathon Macaw" style="width:220px;max-width:70%;height:auto;display:block;margin:0 auto 10px;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.18));">
+    <img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/rhino-welcome.webp" onerror="this.onerror=null;this.src='https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Logo.png';" alt="Marathon Rhino" style="width:200px;max-width:70%;height:auto;display:block;margin:0 auto 10px;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.18));">
     <div style="font-size:26px;font-weight:800;color:var(--navy-deeper);margin-bottom:6px;">Welcome!</div>
     <p style="font-size:15px;color:var(--text-muted);line-height:1.55;margin:0 0 1.25rem;">Let's begin your marathon journey &amp; protect the Earth!</p>
     <button class="btn-primary" style="width:100%;font-size:16px;" onclick="closeModal('welcomeModal')">Let's go</button>
@@ -1055,7 +1032,7 @@
 <!-- ACHIEVEMENT UNLOCK MODAL -->
 <div class="modal-overlay" id="achievementModal" style="background:rgba(4,44,83,0.7);">
   <div class="modal-sheet" style="text-align:center;max-width:320px;">
-    <div style="font-size:13px;font-weight:700;color:var(--brand-text);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">🎉 Achievement Unlocked!</div>
+    <div style="font-size:13px;font-weight:700;color:#E8720C;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">🎉 Achievement Unlocked!</div>
     <div id="achievementModalImg" style="height:120px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;"></div>
     <div style="font-size:18px;font-weight:800;color:var(--navy-deeper);margin-bottom:6px;" id="achievementModalTitle"></div>
     <div style="font-size:14px;color:var(--text-muted);line-height:1.5;margin-bottom:1.5rem;" id="achievementModalText"></div>
@@ -1070,7 +1047,7 @@
     <div style="font-size:48px;margin-bottom:12px;">📍</div>
     <div class="modal-title" style="text-align:center;">Allow Location Access</div>
     <p style="font-size:14px;color:var(--text-muted);line-height:1.6;margin:0 0 1.25rem;">
-      Marathon Macaw uses your device's GPS to track your run distance and pace in real time.
+      Marathon Rhino uses your device's GPS to track your run distance and pace in real time.
       Your location is <strong>only active while you run</strong> and is never shared or stored beyond your personal run log.
     </p>
     <div style="background:var(--navy-light);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:1.25rem;font-size:13px;color:var(--navy-dark);text-align:left;line-height:1.6;">
@@ -1204,10 +1181,10 @@
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-title" style="color:#e24b4a;">Delete account</div>
-    <p style="font-size:13px;color:var(--text);line-height:1.6;margin:0 0 12px;">This permanently deletes your Marathon Macaw account, including all of your runs, races, photos and settings. <strong>This can't be undone.</strong></p>
-    <div id="daAppleNote" style="display:none;background:var(--brand-tint);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:#6B4A00;line-height:1.5;margin-bottom:12px;">
+    <p style="font-size:13px;color:var(--text);line-height:1.6;margin:0 0 12px;">This permanently deletes your Marathon Rhino account, including all of your runs, races, photos and settings. <strong>This can't be undone.</strong></p>
+    <div id="daAppleNote" style="display:none;background:#fff3e0;border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:#8a4a06;line-height:1.5;margin-bottom:12px;">
       If you subscribed through the App Store, deleting your account doesn't cancel the subscription. Cancel it in your iPhone's Settings → [your name] → Subscriptions so Apple stops billing you.
-      <button onclick="openAppleSubscriptions()" style="display:block;margin-top:6px;background:none;border:none;padding:0;font-size:12px;font-weight:700;color:var(--navy);text-decoration:underline;cursor:pointer;">Open App Store subscriptions</button>
+      <button onclick="openAppleSubscriptions()" style="display:block;margin-top:6px;background:none;border:none;padding:0;font-size:12px;font-weight:700;color:#E8720C;text-decoration:underline;cursor:pointer;">Open App Store subscriptions</button>
     </div>
     <div class="modal-field"><label>Password</label><input type="password" id="daPassword" autocomplete="current-password" placeholder="Enter your password"></div>
     <div class="modal-field"><label>Type DELETE to confirm</label><input type="text" id="daConfirm" autocomplete="off" autocapitalize="characters" placeholder="DELETE"></div>
@@ -1222,20 +1199,20 @@
 <!-- PAYWALL (iPhone app only — shown by billing.js when there's no active subscription) -->
 <div id="paywallScreen" style="display:none;">
   <div class="paywall-inner">
-    <img src="branding/macaw-flying.webp" alt="Marathon Macaw" style="width:160px;height:auto;object-fit:contain;align-self:center;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));">
+    <img src="https://ubxifthikgtekxilbswp.supabase.co/storage/v1/object/public/branding/Rhino-sunglasses.png" alt="Marathon Rhino" style="width:96px;height:96px;object-fit:contain;align-self:center;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));">
     <div style="font-size:24px;font-weight:800;color:#fff;text-align:center;">Start your free month</div>
-    <div style="font-size:14px;color:rgba(255,255,255,0.85);text-align:center;line-height:1.5;margin-bottom:6px;">GPS run tracking, your training calendar, race maps and achievements — and we donate <span data-charity-standard>50%</span> of what we receive (<span data-charity-awesome>75%</span> on Awesome) to macaw and habitat conservation.</div>
+    <div style="font-size:14px;color:rgba(255,255,255,0.85);text-align:center;line-height:1.5;margin-bottom:6px;">GPS run tracking, your training calendar, race maps and achievements — and we donate <span data-charity-standard>50%</span> of what we receive (<span data-charity-awesome>75%</span> on Awesome) to rhino and habitat conservation.</div>
     <label class="paywall-opt" id="paywallOptStandard" onclick="paywallSelect('standard')">
       <input type="radio" name="paywallPlan" id="paywallRadioStandard" checked>
       <div style="flex:1;">
-        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;"><span style="font-size:16px;font-weight:800;color:var(--text);">Standard</span><span style="font-size:17px;font-weight:800;color:var(--brand-text);">$2.50<span style="font-size:12px;color:var(--text-muted);font-weight:600;">/month</span></span></div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;"><span style="font-size:16px;font-weight:800;color:var(--text);">Standard</span><span style="font-size:17px;font-weight:800;color:#E8720C;">$2.50<span style="font-size:12px;color:var(--text-muted);font-weight:600;">/month</span></span></div>
         <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Full access to every feature</div>
       </div>
     </label>
     <label class="paywall-opt" id="paywallOptPlatinum" onclick="paywallSelect('platinum')">
       <input type="radio" name="paywallPlan" id="paywallRadioPlatinum">
       <div style="flex:1;">
-        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;"><span style="font-size:16px;font-weight:800;color:var(--text);">Awesome</span><span style="font-size:17px;font-weight:800;color:var(--brand-text);">$4.50<span style="font-size:12px;color:var(--text-muted);font-weight:600;">/month</span></span></div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;"><span style="font-size:16px;font-weight:800;color:var(--text);">Awesome</span><span style="font-size:17px;font-weight:800;color:#E8720C;">$4.50<span style="font-size:12px;color:var(--text-muted);font-weight:600;">/month</span></span></div>
         <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Full access + Awesome supporter badge · we donate <span data-charity-awesome>75%</span> of what we receive</div>
       </div>
     </label>

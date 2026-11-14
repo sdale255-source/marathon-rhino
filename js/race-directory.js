@@ -313,13 +313,13 @@ function renderRaceWebsiteBubble(){
       '<img src="'+_escHtml(info.image)+'" alt="Running photo" '+
         'style="width:100%;height:150px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:10px;" '+
         'onerror="this.style.display=\'none\'">'+
-      '<div style="font-size:11px;color:var(--brand-text);font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">Race website</div>'+
+      '<div style="font-size:11px;color:#E8720C;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">Race website</div>'+
       '<div style="font-size:15px;font-weight:700;color:var(--navy-deeper);margin-bottom:6px;line-height:1.4;">'+_escHtml(info.title)+'</div>'+
       '<div style="font-size:13px;color:var(--text-muted);line-height:1.6;">'+_escHtml(info.blurb)+'</div>'+
-      '<div style="font-size:13px;color:var(--navy);font-weight:600;margin-top:8px;">Visit '+_escHtml(info.host)+' &rarr;</div>'+
+      '<div style="font-size:13px;color:#E8720C;font-weight:600;margin-top:8px;">Visit '+_escHtml(info.host)+' &rarr;</div>'+
     '</a>'+
     // Non-affiliation notice — kept outside the <a> so it isn't part of the link
     '<div style="font-size:10px;color:var(--text-muted);line-height:1.5;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">'+
-      'Official race website &middot; Marathon Macaw is not affiliated with this event. Photo is illustrative.'+
+      'Official race website &middot; Marathon Rhino is not affiliated with this event. Photo is illustrative.'+
     '</div>';
 }

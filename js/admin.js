@@ -122,7 +122,7 @@ function openEditSingleRace(idx) {
 
 function selectEditRaceType(type) {
   const types = ['half','marathon','ultra'];
-  const colors = { half: '#f5c400', marathon: '#ff3333', ultra: 'var(--navy)' };
+  const colors = { half: '#f5c400', marathon: '#E8720C', ultra: 'var(--navy)' };
   types.forEach(t => {
     const el = document.getElementById('editRt' + t.charAt(0).toUpperCase() + t.slice(1));
     if (el) el.style.borderColor = t === type ? colors[t] : 'var(--border)';

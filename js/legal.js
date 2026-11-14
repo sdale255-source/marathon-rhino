@@ -83,7 +83,7 @@ const LEGAL_CONTENT = {
       <p>These Terms of Service are an agreement between you and <strong>${LEGAL_COMPANY}</strong>, a ${LEGAL_COMPANY_STATE} limited liability company ("we", "us", or "our"), which owns and operates Marathon Rhino. Please read them carefully. By creating an account or using Marathon Rhino, you agree to them.</p>
 
       <h3 ${_LH}>1. The Service</h3>
-      <p>Marathon Rhino is a marathon training app for logging runs, tracking races, recording runs with GPS, and viewing your running on maps. ${LEGAL_COMPANY} donates ${CHARITY_PCT_STANDARD}% of what it receives from Standard subscriptions and ${CHARITY_PCT_AWESOME}% of what it receives from Awesome subscriptions to conservation charities, split equally between Ara Manzanillo and World Land Trust. "What it receives" means subscription revenue actually received by the company after App Store or payment-processing fees, refunds, and any sales taxes. These donations are made by the company from its own revenue; they are not donations by you and are not tax-deductible for subscribers.</p>
+      <p>Marathon Rhino is a marathon training app for logging runs, tracking races, recording runs with GPS, and viewing your running on maps. ${LEGAL_COMPANY} donates ${CHARITY_PCT_STANDARD}% of what it receives from Standard subscriptions and ${CHARITY_PCT_AWESOME}% of what it receives from Awesome subscriptions to conservation charities, split equally between Save the Rhino International and World Land Trust. "What it receives" means subscription revenue actually received by the company after App Store or payment-processing fees, refunds, and any sales taxes. These donations are made by the company from its own revenue; they are not donations by you and are not tax-deductible for subscribers.</p>
 
       <h3 ${_LH}>2. Your Account</h3>
       <p>You must be at least 18 years old to create an account. You are responsible for keeping your password confidential and for activity under your account. Let us know right away if you suspect unauthorized use.</p>
@@ -164,7 +164,7 @@ function renderLegalStandalone(page, targetId) {
   const content = LEGAL_CONTENT[page];
   const el = document.getElementById(targetId);
   if (!content || !el) return;
-  document.title = content.title + ' — Marathon Macaw';
+  document.title = content.title + ' — Marathon Rhino';
   el.innerHTML = '<h1>' + content.title + '</h1>' + content.content;
 }
 

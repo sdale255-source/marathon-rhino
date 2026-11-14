@@ -1,6 +1,6 @@
 /* Shared styles for the public Privacy / Terms / Support pages. */
 :root {
-  --navy: #185FA5; --navy-deeper: #042C53; --orange: #F5B800;
+  --navy: #185FA5; --navy-deeper: #042C53; --orange: #E8720C;
   --text: #1a2a3a; --text-muted: #5a6a7e; --bg: #f3f6fa; --card: #ffffff;
 }
 * { box-sizing: border-box; }
@@ -18,7 +18,7 @@ body {
   color: #fff; font-weight: 800; font-size: 18px; text-decoration: none;
   display: flex; align-items: center; gap: 8px;
 }
-.legal-brand img { width: 60px; height: 40px; object-fit: contain; }
+.legal-brand img { width: 40px; height: 40px; object-fit: contain; }
 .legal-header nav { display: flex; gap: 16px; }
 .legal-header nav a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; font-weight: 600; }
 .legal-header nav a[aria-current="page"] { color: #fff; border-bottom: 2px solid var(--orange); }

@@ -4,14 +4,14 @@
 function selectPlan(plan) {
   const standard = document.getElementById('planStandardLabel');
   const platinum = document.getElementById('planPlatinumLabel');
-  if (standard) standard.style.background = plan === 'standard' ? '#FFF6D6' : '#fff';
-  if (platinum) platinum.style.background = plan === 'platinum' ? '#FFF6D6' : '#fff';
+  if (standard) standard.style.background = plan === 'standard' ? '#fff8f0' : '#fff';
+  if (platinum) platinum.style.background = plan === 'platinum' ? '#fff8f0' : '#fff';
 }
 function selectSubPlan(plan) {
   const ls = document.getElementById('subLabelStandard');
   const lp = document.getElementById('subLabelPlatinum');
-  if (ls) ls.style.borderColor = plan === 'standard' ? '#F5B800' : 'var(--border)';
-  if (lp) lp.style.borderColor = plan === 'platinum' ? '#F5B800' : 'var(--border)';
+  if (ls) ls.style.borderColor = plan === 'standard' ? '#E8720C' : 'var(--border)';
+  if (lp) lp.style.borderColor = plan === 'platinum' ? '#E8720C' : 'var(--border)';
 }
 function getSelectedSignupPlan() {
   const p = document.getElementById('planPlatinum');
@@ -33,7 +33,7 @@ function renderSubSettings() {
     if (trialActive) {
       const days = Math.ceil((new Date(trialEnd) - new Date()) / 86400000);
       badgeEl.textContent = `Free trial · ${days}d left`;
-      badgeEl.style.background = '#F5B800'; badgeEl.style.color = '#042C53';
+      badgeEl.style.background = '#fff3e0'; badgeEl.style.color = '#E8720C';
     } else {
       badgeEl.textContent = 'Active';
       badgeEl.style.background = '#e8f5e8'; badgeEl.style.color = '#2d7a2d';
@@ -182,7 +182,7 @@ async function submitDeleteAccount(){
     try{ localStorage.removeItem('sb_session'); }catch(e){}
     closeModal('deleteAccountModal');
     await doLogout();
-    setTimeout(function(){ alert('Your Marathon Macaw account and all of its data have been permanently deleted.'); }, 100);
+    setTimeout(function(){ alert('Your Marathon Rhino account and all of its data have been permanently deleted.'); }, 100);
   }catch(err){
     _daShowMessage((err && err.message) ? err.message : 'Something went wrong. Please try again.', false);
     if(btn){ btn.disabled=false; btn.textContent='Permanently delete my account'; }
