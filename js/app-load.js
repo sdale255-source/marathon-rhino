@@ -303,8 +303,8 @@ function syncUnitUI(){
 function syncMapDefaults(){if(state.country&&!state.mapsInitialized){applyMapDefaults(state.country);state.mapsInitialized=true;}}
 
 function enterApp(){
-  // Splash: the flapping macaw (a looping animated image) glides across the
-  // screen for 3 seconds, then the splash is dismissed.
+  // Splash: the flapping macaw (a looping animated image) flies in place in
+  // the centre of the screen for 3 seconds, then the splash is dismissed.
   var splash = document.getElementById('splash');
   splash.classList.remove('flying');
   splash.style.display = 'flex';

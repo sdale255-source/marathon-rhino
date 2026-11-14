@@ -69,15 +69,14 @@
   /* Header macaw: big enough that its tail hangs below the header's yellow line */
   .topbar-macaw { width: 142px; height: auto; flex-shrink: 0; position: relative; top: 17px; z-index: 2; margin: 0 0 0 -4px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35)); pointer-events: none; }
   @media (max-width: 389px) { .topbar-macaw { width: 128px; top: 16px; } .topbar-logo { font-size: 18px !important; } }
-  /* Login splash: the flapping macaw (animated image) glides across for 3 seconds */
+  /* Login splash: the flapping macaw (animated image) stays centred for 3 seconds */
   #splash.flying #splashImg { animation: macawFly 3s ease-in-out both; }
   @keyframes macawFly {
-    0%   { transform: translate(-30px, 20px) scale(0.94); opacity: 0; }
-    12%  { opacity: 1; }
-    88%  { opacity: 1; }
-    100% { transform: translate(30px, -24px) scale(1.03); opacity: 0; }
+    0%   { opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { opacity: 0; }
   }
-  @media (prefers-reduced-motion: reduce) { #splash.flying #splashImg { animation: none; } }
   .topbar-logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
   .topbar-tagline { font-size: 10px; color: rgba(255,255,255,0.6); letter-spacing: 0.03em; margin-top: 2px; }
   .topbar-welcome { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); margin-top: 4px; }
