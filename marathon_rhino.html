@@ -198,6 +198,53 @@
   .paywall-opt.selected { border-color: #E8720C; box-shadow: 0 0 0 3px rgba(232,114,12,0.25); }
   .paywall-opt input { accent-color: #E8720C; width: 18px; height: 18px; margin-top: 2px; }
   .paywall-link { background: none; border: none; color: rgba(255,255,255,0.85); font-size: 12px; text-decoration: underline; cursor: pointer; padding: 4px 0; }
+
+  /* ===================== DESKTOP / WIDE-SCREEN LAYOUT =====================
+     Phones (and narrow windows) keep the original single-column app.
+     From 900px wide the app fills the screen: the bottom tab bar becomes a
+     left sidebar, Home splits into two columns, Calendar shows three months
+     side by side, and reading pages are centred at a comfortable width. */
+  .home-col { display: contents; }
+  @media (min-width: 900px) {
+    body { background: var(--bg); }
+    .app-container { max-width: none; box-shadow: none !important; }
+    .app::before { left: 0; transform: none; width: 100%; max-width: none; }
+
+    .app.visible { display: grid; grid-template-columns: 220px minmax(0, 1fr); grid-template-rows: auto 1fr; }
+    .app > .topbar { grid-column: 1 / -1; grid-row: 1; padding-left: 1.25rem; padding-right: 1.5rem; }
+    .topbar-logo { font-size: 24px; }
+    .topbar-tagline { font-size: 12px; }
+    .topbar-welcome { font-size: 14px; }
+    .topbar-btn { font-size: 14px; }
+
+    /* Sidebar navigation */
+    .app > .bottom-nav { grid-column: 1; grid-row: 2; align-self: start; position: sticky; top: 84px; height: calc(100vh - 84px); flex-direction: column; justify-content: flex-start; gap: 4px; padding: 1.5rem 0.75rem; border-top: none; border-right: 3px solid #E8720C; box-shadow: 4px 0 20px rgba(0,0,0,0.08); }
+    .nav-btn { flex: 0 0 auto; flex-direction: row; justify-content: flex-start; gap: 12px; padding: 12px 16px; font-size: 15px; font-weight: 600; border-radius: 10px; }
+    .nav-btn:hover { background: var(--navy-light); color: var(--navy); }
+    .nav-btn.active, .nav-btn.active:hover { background: #fff3e6; color: #E8720C; }
+
+    /* Main content area */
+    .app > .page { grid-column: 2; grid-row: 2; width: 100%; max-width: 820px; justify-self: center; padding: 1.75rem 2rem 3rem; overflow: visible; }
+
+    /* Home: two columns */
+    .app > #pageHome { max-width: 1240px; }
+    #pageHome.active { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.25rem; align-items: start; }
+    .home-col { display: block; min-width: 0; }
+    .card { padding: 1.5rem; margin-bottom: 1.25rem; }
+    .day-box { min-height: 150px; padding: 8px 7px; }
+    .day-name, .day-date, .miles-label, .rest-area { font-size: 11px; }
+    .cal-day { min-height: 60px; }
+    .cal-day-num, .cal-day-miles { font-size: 11px; }
+
+    /* Calendar: three months side by side */
+    .app > #pageCalendar { max-width: 1240px; }
+    #pageCalendar.active { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; align-content: start; }
+    #pageCalendar > :first-child { grid-column: 1 / -1; margin-bottom: 0 !important; }
+    #pageCalendar > .card { margin-bottom: 0; }
+
+    /* Run tracker: keep the controls a sensible width in the middle */
+    .app > #pageRun { max-width: none; padding: 0; }
+    #pageRun > * { width: 100%; max-width: 520px; margin-left: auto; margin-right: auto; }
   }
 </style>
 </head>
@@ -360,6 +407,9 @@
 
   <!-- HOME PAGE -->
   <div class="page active" id="pageHome">
+    <!-- Two column wrappers: on phones they are invisible (cards stack in this same order);
+         on wide screens they become side-by-side columns. -->
+    <div class="home-col home-col-main">
     <div class="card">
       <div class="card-title">My next race</div>
       <div class="race-empty" id="raceEmpty">
@@ -429,6 +479,9 @@
       <div class="cal-grid" id="homeCalGrid" style="margin-top:4px;"></div>
     </div>
 
+    </div><!-- /home-col-main -->
+
+    <div class="home-col home-col-side">
     <div class="card"><div class="card-title">Personal stats</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="statsGrid"></div></div>
 
     <div class="card">
@@ -473,6 +526,7 @@
       <p style="font-size:14px;color:var(--text);line-height:1.6;margin-bottom:1rem;">Expert guidance on training, nutrition, injury prevention and more.</p>
       <button class="btn-outline-navy" style="width:100%;" onclick="showPage('pageAdvice')">Read the guide →</button>
     </div>
+    </div><!-- /home-col-side -->
   </div>
 
   <!-- RUN TRACKING PAGE -->
