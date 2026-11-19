@@ -7,7 +7,15 @@
 //     the signal is so weak a page takes longer than a few seconds to load).
 //   • Map and font libraries from their CDNs: their web addresses include a
 //     version number, so the saved copy is used straight away.
-//   • Everything else (Supabase sign-in, data, photos, Stripe, map tiles):
+//   • Race photos (private Supabase bucket): saved on the device the first
+//     time they're viewed and shown from that copy afterwards, so each photo
+//     downloads once instead of on every app load. A photo never changes
+//     after upload (a new photo always gets a new path), so the copy is
+//     always right. Matched by path, ignoring the ?token=... in the link.
+//   • App images from Supabase's public buckets (branding, trophies, stats
+//     icons): shown from the saved copy, re-downloaded once a week in case
+//     one was replaced.
+//   • Everything else (Supabase sign-in, data, Stripe, map tiles):
 //     not touched at all — it goes straight to the network as before.
 //
 // Bump CACHE_VERSION only to throw away every saved copy (rarely needed,
@@ -16,6 +24,14 @@
 const CACHE_VERSION = 'v1';
 const SITE_CACHE = 'mm-site-' + CACHE_VERSION;
 const CDN_CACHE = 'mm-cdn-' + CACHE_VERSION;
+const PHOTO_CACHE = 'mm-photos-' + CACHE_VERSION;
+const IMAGE_CACHE = 'mm-images-' + CACHE_VERSION;
+
+const SUPABASE_HOST = 'ubxifthikgtekxilbswp.supabase.co';
+const PHOTO_PREFIX = '/storage/v1/object/sign/race-photos/';
+const IMAGE_PREFIXES = ['/storage/v1/object/public/branding/',
+  '/storage/v1/object/public/trophies/', '/storage/v1/object/public/stats-icons/'];
+const IMAGE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
 // Saved when the service worker installs, so the app can open offline even
 // before every file has been visited once.
@@ -38,7 +54,8 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
       .then((keys) => Promise.all(keys
-        .filter((k) => (k.startsWith('mm-site-') && k !== SITE_CACHE) || (k.startsWith('mm-cdn-') && k !== CDN_CACHE))
+        .filter((k) => (k.startsWith('mm-site-') && k !== SITE_CACHE) || (k.startsWith('mm-cdn-') && k !== CDN_CACHE) ||
+          (k.startsWith('mm-photos-') && k !== PHOTO_CACHE) || (k.startsWith('mm-images-') && k !== IMAGE_CACHE))
         .map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
@@ -56,6 +73,14 @@ self.addEventListener('fetch', (event) => {
   }
   if (CDN_HOSTS.includes(url.hostname)) {
     event.respondWith(cacheFirst(req));
+    return;
+  }
+  if (url.hostname === SUPABASE_HOST) {
+    if (url.pathname.startsWith(PHOTO_PREFIX)) {
+      event.respondWith(savedImage(req, PHOTO_CACHE, 0));
+    } else if (IMAGE_PREFIXES.some((p) => url.pathname.startsWith(p))) {
+      event.respondWith(savedImage(req, IMAGE_CACHE, IMAGE_MAX_AGE_MS));
+    }
   }
   // Anything else: let the browser handle it normally.
 });
@@ -108,6 +133,33 @@ async function cacheFirst(req) {
   const res = await fetch(req);
   if (res && (res.ok || res.type === 'opaque')) cache.put(req, res.clone());
   return res;
+}
+
+// Supabase images: use the saved copy if there is one (and, when maxAgeMs is
+// set, it isn't older than that); otherwise download it once and save it.
+// Saved under the address without its ?query, so a photo's new signed link
+// still finds the copy saved from an older link.
+async function savedImage(req, cacheName, maxAgeMs) {
+  const url = new URL(req.url);
+  const key = url.origin + url.pathname;
+  const cache = await caches.open(cacheName);
+  const saved = await cache.match(key);
+  const savedAt = saved ? Number(saved.headers.get('x-saved-at') || 0) : 0;
+  if (saved && (!maxAgeMs || Date.now() - savedAt < maxAgeMs)) return saved;
+  try {
+    // Asked for with CORS (Supabase allows it) so the copy is a normal, readable
+    // response rather than an opaque one, which phones count as very large.
+    const res = await fetch(req.url, { mode: 'cors', credentials: 'omit' });
+    if (!res.ok) return saved || res;
+    const body = await res.blob();
+    const headers = new Headers({ 'Content-Type': res.headers.get('Content-Type') || body.type || 'image/jpeg',
+      'x-saved-at': String(Date.now()) });
+    await cache.put(key, new Response(body, { status: 200, headers })).catch(() => {});
+    return new Response(body, { status: 200, headers });
+  } catch (err) {
+    if (saved) return saved; // offline: an older copy is better than nothing
+    return fetch(req);
+  }
 }
 
 function offlinePage() {

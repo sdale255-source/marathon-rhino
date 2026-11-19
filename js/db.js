@@ -58,6 +58,7 @@ async function sbSignOut() {
   } catch(e) {}
   _sbToken = null;
   localStorage.removeItem('sb_session');
+  clearSavedPhotoLinks();
 }
 async function sbGetSession() {
   const saved = localStorage.getItem('sb_session');
@@ -216,6 +217,9 @@ async function sbUploadFile(bucket, path, file) {
       'apikey': SB_KEY,
       'Authorization': 'Bearer ' + (_sbToken || ''),
       'Content-Type': file.type || 'application/octet-stream',
+      // Photos never change once uploaded (each gets a new, unique path), so
+      // browsers may keep them for a year instead of Supabase's 1-hour default.
+      'cache-control': 'max-age=31536000',
       'x-upsert': 'true'
     },
     body: file
@@ -235,29 +239,53 @@ async function sbDeleteFile(bucket, path) {
     });
   } catch(e) { console.warn('Storage delete error:', e); }
 }
-// Signed URLs are needed to view files in a PRIVATE bucket. They expire, so we cache
-// each one in memory (per page session) and refresh shortly before it would expire.
-const _signedUrlCache = new Map(); // path -> {url, expiresAt}
+// Signed URLs are needed to view files in a PRIVATE bucket. Each new signed URL
+// looks like a brand-new file to the browser (it has a unique ?token=...), so
+// making a fresh one on every app load meant every photo was re-downloaded in
+// full every time. Instead, each link lasts 7 days and is saved on this device
+// (localStorage) and reused until shortly before it expires, so the browser —
+// and the service worker in sw.js — can serve the photo from its saved copy.
+const PHOTO_LINK_SECONDS = 7 * 24 * 60 * 60;   // how long each signed link works
+const PHOTO_LINK_REFRESH_MS = 60 * 60 * 1000;  // get a new link 1 hour before expiry
+const PHOTO_LINKS_KEY = 'mr_photo_links';      // localStorage: path -> {url, expiresAt}
+let _signedUrlCache = null;
+function _photoLinks() {
+  if (!_signedUrlCache) {
+    try { _signedUrlCache = JSON.parse(localStorage.getItem(PHOTO_LINKS_KEY) || '{}') || {}; }
+    catch(e) { _signedUrlCache = {}; }
+  }
+  return _signedUrlCache;
+}
+function _savePhotoLinks() {
+  const links = _photoLinks(), now = Date.now();
+  Object.keys(links).forEach(p => { if (!links[p] || links[p].expiresAt <= now) delete links[p]; });
+  try { localStorage.setItem(PHOTO_LINKS_KEY, JSON.stringify(links)); } catch(e) {}
+}
+function clearSavedPhotoLinks() {
+  _signedUrlCache = {};
+  try { localStorage.removeItem(PHOTO_LINKS_KEY); } catch(e) {}
+}
 async function getSignedPhotoUrl(path) {
   if (!path) return '';
   // Backward compatibility: photos saved before this fix are raw base64 data URLs
   // (or could be a plain http(s) URL) rather than a storage path — use them as-is.
   if (path.startsWith('data:') || path.startsWith('http://') || path.startsWith('https://')) return path;
-  const cached = _signedUrlCache.get(path);
-  if (cached && cached.expiresAt > Date.now()) return cached.url;
+  const cached = _photoLinks()[path];
+  if (cached && cached.expiresAt - PHOTO_LINK_REFRESH_MS > Date.now()) return cached.url;
   try {
     await ensureFreshToken();
     const res = await fetch(SB_URL + '/storage/v1/object/sign/race-photos/' + path, {
       method: 'POST',
       headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + (_sbToken || ''), 'Content-Type': 'application/json' },
-      body: JSON.stringify({ expiresIn: 3600 })
+      body: JSON.stringify({ expiresIn: PHOTO_LINK_SECONDS })
     });
     const data = await res.json();
     if (!res.ok || !data.signedURL) throw new Error(data.message || 'Could not load photo');
     let suffix = data.signedURL;
     if (!suffix.startsWith('/storage/v1')) suffix = '/storage/v1' + suffix; // Supabase sometimes omits this prefix
     const url = SB_URL + suffix;
-    _signedUrlCache.set(path, { url, expiresAt: Date.now() + 55*60*1000 }); // refresh 5 min early
+    _photoLinks()[path] = { url, expiresAt: Date.now() + PHOTO_LINK_SECONDS * 1000 };
+    _savePhotoLinks();
     return url;
   } catch(e) {
     console.warn('getSignedPhotoUrl error:', path, e.message);
