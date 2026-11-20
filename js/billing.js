@@ -86,6 +86,7 @@ function subscriptionSource(sub) {
 // Read the user's real subscription status from the database.
 async function loadSubscription() {
   if (!state.user) return;
+  state.subscriptionCheckFailed = false;
   try {
     const rows = await dbSelect('subscriptions', 'user_id=eq.' + state.user.id);
     const sub = Array.isArray(rows) ? rows[0] : rows;
@@ -99,7 +100,11 @@ async function loadSubscription() {
       state.user.trialEnd = sub.status === 'trialing' ? sub.current_period_end : null;
     }
   } catch (e) {
+    // Couldn't reach the database (no signal, Supabase down or over quota).
+    // That is NOT the same as "not subscribed" — remember it so the access
+    // gate doesn't send a paying subscriber back to Stripe Checkout.
     console.warn('loadSubscription failed', e);
+    state.subscriptionCheckFailed = true;
     state.isSubscribed = false;
     state.subscriptionSource = null;
   }
@@ -340,6 +345,7 @@ async function enforceAccessGate(justPaid) {
   if (justPaid) return false;
   await loadSubscription();
   if (state.isSubscribed) return false;
+  if (state.subscriptionCheckFailed) return false;      // unknown, not "unpaid": let them in
   const tier = (state.user && state.user.subscriptionTier) || 'standard';
   if (isNativeApp()) { showPaywall(tier); return true; }
   await startCheckout(tier);                            // redirect back to Stripe
