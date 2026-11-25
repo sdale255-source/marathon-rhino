@@ -62,7 +62,7 @@
   .auth-note { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 8px; }
   .app { display: none; flex-direction: column; min-height: 100vh; }
   .app.visible { display: flex; }
-  .topbar { background: linear-gradient(135deg, var(--navy-deeper) 0%, #0C447C 100%); border-bottom: 3px solid #E8720C; color: #fff; padding: 0 0.6rem 0 0.5rem; display: flex; align-items: center; justify-content: space-between; height: 84px; position: sticky; top: 0; z-index: 100; isolation: isolate; }
+  .topbar { background: var(--navy-deeper) linear-gradient(135deg, var(--navy-deeper) 0%, #0C447C 100%); border-bottom: 3px solid #E8720C; color: #fff; padding: 0 0.6rem 0 0.5rem; display: flex; align-items: center; justify-content: space-between; height: 84px; position: sticky; top: 0; z-index: 100; isolation: isolate; }
   .topbar-logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
   .topbar-tagline { font-size: 10px; color: rgba(255,255,255,0.6); letter-spacing: 0.03em; margin-top: 2px; }
   .topbar-welcome { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); margin-top: 4px; }
@@ -181,6 +181,17 @@
      of them. These are 0 on normal web browsers, so the website is unaffected. */
   .topbar { padding-top: env(safe-area-inset-top, 0px); height: calc(84px + env(safe-area-inset-top, 0px)); }
   .bottom-nav { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  /* iOS 26/27 Home Screen app: iOS draws a frosted blur across the top of the
+     screen that reaches below the status bar and smeared the header. iOS skips
+     it when a solid, fixed box covers the very top edge (taller than 10px, and
+     it must take taps so iOS's check finds it). It sits under the status bar,
+     so it hides nothing. Only in the installed app on iPhone/iPad. */
+  #iosTopEdge { display: none; }
+  @media (display-mode: standalone) {
+    @supports (-webkit-touch-callout: none) {
+      #iosTopEdge { display: block; position: fixed; top: 0; left: 0; right: 0; height: 12px; background: #042C53; z-index: 100000; }
+    }
+  }
   .auth-wrap { padding-top: calc(2rem + env(safe-area-inset-top, 0px)); padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px)); }
   /* Run page on shorter phones: shrink the big numbers so Start Run stays on screen */
   @media (max-height: 900px) {
@@ -274,6 +285,7 @@
 </style>
 </head>
 <body>
+<div id="iosTopEdge" aria-hidden="true"></div>
 <div id="splash" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#042C53;z-index:99999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;">
   <img id="splashImg" src="images/rhino-splash-v2.webp" alt="" style="width:110px;height:auto;object-fit:contain;">
 </div>
